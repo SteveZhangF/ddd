@@ -1,0 +1,111 @@
+.form-editor .alert i {
+	float: left;
+}
+
+.form-editor h5 {
+	font-size: 22px;
+	margin: 0 0 50px 50px;
+	color: #696d73;
+	font-style: italic;
+}
+
+.form-editor form {
+	margin-left: 50px;
+}
+
+.form-editor .field-box {
+	margin-bottom: 20px;
+}
+
+.form-editor label {
+	display: inline-block;
+	float: left;
+	font-weight: 600;
+	font-size: 13px;
+	cursor: auto;
+	width: 20%;
+	margin-right: 10px;
+}
+
+.form-editor .input[type="text"] {
+	font-weight: 600;
+}
+
+.form-editor .ui-select {
+	width: 50%;
+	margin-bottom: 10px;
+}
+
+.form-editor .actions {
+	margin-bottom: 25px;
+	margin-left: 0;
+	margin-top: 30px;
+	float: left;
+	text-align: right;
+}
+
+.form-editor .actions span {
+	text-transform: uppercase;
+	color: #7e91aa;
+	font-weight: 600;
+	display: inline-block;
+	vertical-align: middle;
+	margin: 0 2px 0 8px;
+}
+
+.form-editor input.reset {
+	color: #7e91aa;
+	font-weight: 500;
+}
+
+/* responsive */
+@media ( max-width : 767px) {
+	#pad-wrapper {
+		padding: 0px 20px;
+	}
+	.avatar-box {
+		text-align: center;
+	}
+	.form-editor {
+		border: 0 none;
+		box-shadow: none;
+		margin-top: 40px;
+	}
+	.form-editor h5.personal-title {
+		margin-left: 0;
+	}
+	.form-editor .field-box {
+		margin-left: 0;
+	}
+	.form-editor .ui-select {
+		width: 90%;
+	}
+	.form-editor label {
+		width: 100%;
+	}
+	.form-editor .actions {
+		text-align: center;
+	}
+	.form-editor form {
+		margin-left: 0;
+		padding: 0px 10px 0px 10px;
+	}
+}
+
+@media ( min-width : 768px) and (max-width: 979px) {
+	.form-editor .ui-select {
+		width: 77%;
+	}
+}
+
+@media ( min-width : 768px) {
+	.form-editor .alert {
+		margin-left: 50px;
+	}
+}
+
+@media ( min-width : 980px) {
+	.form-editor .ui-select {
+		width: 60%;
+	}
+}

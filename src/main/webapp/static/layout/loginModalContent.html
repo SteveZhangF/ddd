@@ -1,0 +1,22 @@
+<div class="modal-header">
+	<h3 class="modal-title">I'm a modal!</h3>
+</div>
+<div class="modal-body">
+	<form id="login_form" class="login">
+		<h1>Login to Your Account</h1>
+		<br> <input type="text" name="email" placeholder="Email">
+		<input type="password" name="password" placeholder="Password">
+	</form>
+	<form id="register_form" class="hidden register">
+		<h1>Create new Account</h1>
+		<br> <input type="text" name="email" placeholder="Email"
+			onfocus="checkEmail(this);"> <input type="password"
+			name="password" placeholder="Password"> <input
+			type="password" name="confrim password"
+			placeholder="Confrim Password">
+	</form>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+	<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+</div>
