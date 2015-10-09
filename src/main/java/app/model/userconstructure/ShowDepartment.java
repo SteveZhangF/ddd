@@ -22,13 +22,13 @@ public class ShowDepartment extends OrganizationElement {
 		sb.append("<ul><li><span class=\"department\"><input type='hidden' name='department_id' value='"+department.getUuid()+"'><i class=\"icon-sitemap\"></i>");
 		sb.append(department.getName());
 		sb.append("</span>");
-		for (Department subd : department.getSubDepartment()) {
-			sb.append(this.show(subd));
-			System.out.println(this.show(subd));
-		}
-		for (Employee e : department.getEmployees()) {
-			sb.append(new ShowEmployee().show(e));
-		}
+//		for (Department subd : department.getSubDepartment()) {
+//			sb.append(this.show(subd));
+//			System.out.println(this.show(subd));
+//		}
+//		for (Employee e : department.getEmployees()) {
+//			sb.append(new ShowEmployee().show(e));
+//		}
 		sb.append("</li></ul>");
 		return sb.toString();
 	}
