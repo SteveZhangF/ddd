@@ -34,9 +34,9 @@ public class CompanyServiceImpl implements CompanyService {
 			entity.setAddress(company.getAddress());
 			entity.setCompany_id(company.getCompany_id());
 			entity.setFormType(company.getFormType());
-			entity.setModules(company.getModules());
+//			entity.setModules(company.getModules());
 			entity.setPhone(company.getPhone());
-			entity.setRecords(company.getRecords());
+//			entity.setRecords(company.getRecords());
 			entity.setUser_id(company.getUser_id());
 		}
 

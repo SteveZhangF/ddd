@@ -1,4 +1,4 @@
-package app.config;
+package app.config.hibernate;
 
 
 import java.util.Properties;
@@ -17,9 +17,9 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
  
-@Configuration
+@Configuration()
 @EnableTransactionManagement
-@ComponentScan({ "app" })
+@ComponentScan({ "app.service,app.dao" })
 @PropertySource(value = { "classpath:application.properties" })
 public class HibernateConfiguration {
  
@@ -30,7 +30,7 @@ public class HibernateConfiguration {
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
-        sessionFactory.setPackagesToScan(new String[] { "app.model" });
+        sessionFactory.setPackagesToScan("app.model");
         sessionFactory.setHibernateProperties(hibernateProperties());
         return sessionFactory;
      }

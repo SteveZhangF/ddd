@@ -1,6 +1,5 @@
 package app.model.userconstructure;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -14,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import app.model.form.FormType;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.GenericGenerator;
@@ -22,18 +22,12 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import app.model.form.Form.FormType;
-import app.model.form.record.FormRecord;
 
 @Entity
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS) 
 @Table(name="organizationelement")
 public abstract class OrganizationElement {
-	@JsonIgnore
-	@OneToMany(mappedBy="oe")
-	@LazyCollection(LazyCollectionOption.EXTRA)
-	private List<FormRecord> records = new ArrayList<FormRecord>();
-	
+
 	@Id
 	@GeneratedValue(generator = "idGenerator")
 	@GenericGenerator(name = "idGenerator", strategy = "uuid")
@@ -77,21 +71,6 @@ public abstract class OrganizationElement {
 	}
 
 
-
-	public void addRecord(FormRecord fr){
-		this.records.add(fr);
-	}
-
-	
-
-	public List<FormRecord> getRecords() {
-		return records;
-	}
-
-	public void setRecords(List<FormRecord> records) {
-		this.records = records;
-	}
-	
 	public abstract String show(OrganizationElement oe);
 
 
@@ -139,16 +118,7 @@ public abstract class OrganizationElement {
 		this.formType = formType;
 	}
 	
-//	public LinkedList<Form> getMyForms(){
-//		LinkedList<Form> forms = new LinkedList<>();
-//		for(Module module: this.getCompany().getModules()){
-//			for(Form f:module.getFormbyType(this.getFormType())){
-//				forms.add(f);
-//			}
-//		}
-//		return forms;
-//	}
-	
+
 	 
     @Override
     public String toString() {

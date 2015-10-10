@@ -83,10 +83,10 @@ public class CompanyController {
         currentCompany.setAddress(company.getAddress());
         currentCompany.setCompany_id(company.getCompany_id());
         currentCompany.setFormType(company.getFormType());
-        currentCompany.setModules(company.getModules());
+//        currentCompany.setModules(company.getModules());
         currentCompany.setName(company.getName());
         currentCompany.setPhone(company.getPhone());
-        currentCompany.setRecords(company.getRecords());
+//        currentCompany.setRecords(company.getRecords());
         currentCompany.setUser_id(company.getUser_id());
           
         companyService.updateCompany(currentCompany);

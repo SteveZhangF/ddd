@@ -1,11 +1,9 @@
 package app.model.userconstructure;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import app.model.form.FormType;
 
-import app.model.form.Form.FormType;
+import javax.persistence.Entity;
+
 
 
 

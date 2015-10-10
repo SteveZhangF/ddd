@@ -226,17 +226,18 @@ var leipiFormDesign = {
             //异步提交数据
             $.ajax({
                 type: 'POST',
-                url : '/index.php?s=/index/parse.html',
+                url : '/formtable/',
                 //dataType : 'json',
                 data : {'type' : type_value,'formid':formid,'parse_form':parse_form},
                 success : function(data){
                     if(confirm('查看js解析后，提交到服务器的数据，请临时允许弹窗'))
                     {
-                        win_parse=window.open('','','width=800,height=600');
-                        //这里临时查看，所以替换一下，实际情况下不需要替换
-                        data  = data.replace(/<\/+textarea/,'&lt;textarea');
-                        win_parse.document.write('<textarea style="width:100%;height:100%">'+data+'</textarea>');
-                        win_parse.focus();
+                        console.log(data);
+                        //win_parse=window.open('','','width=800,height=600');
+                        ////这里临时查看，所以替换一下，实际情况下不需要替换
+                        //data  = data.replace(/<\/+textarea/,'&lt;textarea');
+                        //win_parse.document.write('<textarea style="width:100%;height:100%">'+data+'</textarea>');
+                        //win_parse.focus();
                     }
 
                     /*

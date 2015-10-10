@@ -11,7 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
  
-@Configuration
+@Configuration()
 @EnableWebMvc
 @ComponentScan(basePackages = "app")
 public class HelloWorldConfiguration extends WebMvcConfigurerAdapter {
