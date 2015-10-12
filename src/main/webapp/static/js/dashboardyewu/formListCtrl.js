@@ -5,7 +5,7 @@ var app = angular.module("dashboardApp");
 
 app.controller('formListCtrl', ['$scope', "FormService", function ($scope, FormService) {
     console.log("test form list in");
-    $scope.myHtml = "<h1>Hello World</h1>";
+    $scope.myHtml = {value:"<h1>Do ur Best</h1>"};
     $scope.froalaOptions = {
         toolbarButtons : ["bold", "italic", "underline", "sep", "align", "formDesigner","showFormDesign","formDesignText"]
     };
@@ -96,6 +96,14 @@ app.controller('formListCtrl', ['$scope', "FormService", function ($scope, FormS
     };
     $scope.save = function () {
         //TODO
+        var form = FormService.parse_form($scope.formDetail.context,0);
+        form.creator = $scope.formDetail.creator;
+        form._del = false;
+        form.form_desc = $scope.formDetail.form_desc;
+        form.form_name = $scope.formDetail.form_name;
+        form.id="";
+        console.log(form);
+        $scope.saveForm(form);
         $scope.editing = false;
     };
     $scope.update = function () {

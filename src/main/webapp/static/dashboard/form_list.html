@@ -46,35 +46,33 @@
         </table>
     </div>
     <div ng-if="editing">
-        editing...{{formDetail.id}}}
-
+        <div class="well">
+            <div class="alert alert-info">
+                Component List
+            </div>
+            <p>
+                <button type="button" onclick="showDialog('text')" class="btn btn-info btn-small">Text Field
+                </button>
+                <button type="button" onclick="leipiDialog.exec('textarea');" class="btn btn-info btn-small">Text Area
+                </button>
+                <button type="button" onclick="leipiDialog.exec('select');" class="btn btn-info btn-small">Drop Down
+                </button>
+                <button type="button" onclick="leipiDialog.exec('radios');" class="btn btn-info btn-small">Radio</button>
+                <button type="button" onclick="leipiDialog.exec('checkboxs');" class="btn btn-info btn-small">Check Box
+                </button>
+                <button type="button" onclick="leipiDialog.exec('macros');" class="btn btn-info btn-small">Macro</button>
+                <button type="button" onclick="leipiDialog.exec('progressbar');" class="btn btn-info btn-small">Progress
+                    Bar
+                </button>
+                <button type="button" onclick="leipiDialog.exec('listctrl');" class="btn btn-info btn-small">List</button>
+            </p>
+        </div>
+        <div id="formDesigner" froala="froalaOptions" ng-model="formDetail.context"></div>
         <button ng-if="isNew" ng-click="save()">Save</button>
         <button ng-if="!isNew" ng-click="update()">update</button>
         <button ng-click="cancel()">Cancel</button>
     </div>
-    <div class="well">
-        <div class="alert alert-info">
-            Component List
-        </div>
-        <p>
-            <button type="button" onclick="showDialog('text')" class="btn btn-info btn-small">Text Field
-            </button>
-            <button type="button" onclick="leipiDialog.exec('textarea');" class="btn btn-info btn-small">Text Area
-            </button>
-            <button type="button" onclick="leipiDialog.exec('select');" class="btn btn-info btn-small">Drop Down
-            </button>
-            <button type="button" onclick="leipiDialog.exec('radios');" class="btn btn-info btn-small">Radio</button>
-            <button type="button" onclick="leipiDialog.exec('checkboxs');" class="btn btn-info btn-small">Check Box
-            </button>
-            <button type="button" onclick="leipiDialog.exec('macros');" class="btn btn-info btn-small">Macro</button>
-            <button type="button" onclick="leipiDialog.exec('progressbar');" class="btn btn-info btn-small">Progress
-                Bar
-            </button>
-            <button type="button" onclick="leipiDialog.exec('listctrl');" class="btn btn-info btn-small">List</button>
-        </p>
-    </div>
-    <div id="formDesigner" froala="froalaOptions" ng-model="myHtml"></div>
-    <button onclick="test();">test</button>
+
 </div>
 
 <style>
@@ -90,7 +88,6 @@
 </style>
 <script>
     $(document).ready(function () {
-        console.log($('#formDesigner').find('.fr-wrapper'));
         $('#formDesigner').on('mouseover', 'input' ,function (event) {
             console.log('mouse over........');
             $('#formDesigner').froalaEditor("formDesigner.showEdit", event);
@@ -100,11 +97,12 @@
 //            $('#formDesigner').froalaEditor("formDesigner.hideEdit");
 //        })
     });
-
-
     function showDialog(url) {
         url = "fd/"+url + ".html";
-        $editor = $('#formDesigner').froalaEditor("formDesigner.showPopup", url);
+        $('#formDesigner').froalaEditor("formDesigner.showPopup", url);
+    }
+    function deleteElement(){
+        $('#formDesigner').froalaEditor("formDesigner.deleteSelectedElement");
     }
 </script>
 

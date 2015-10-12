@@ -1,22 +1,6 @@
 /**
  * Created by steve on 10/11/15.
  */
-(function ($, undefined) {
-    $.fn.getCursorPosition = function () {
-        var el = $(this).get(0);
-        var pos = 0;
-        if ('selectionStart' in el) {
-            pos = el.selectionStart;
-        } else if ('selection' in document) {
-            el.focus();
-            var Sel = document.selection.createRange();
-            var SelLength = document.selection.createRange().text.length;
-            Sel.moveStart('character', -el.value.length);
-            pos = Sel.text.length - SelLength;
-        }
-        return pos;
-    }
-})(jQuery);
 
 (function ($) {
     /**
@@ -96,6 +80,7 @@
                     // Assign hide handler.
                     editor.popups.onHide('formDesigner.popup', function () {
                         console.log('hide');
+                        selectedElement = null;
                     });
 
                     /**
@@ -173,21 +158,16 @@
          * */
         function showEdit(event) {
             console.log(event);
-            $currentTarget = $(event.currentTarget);
-            var type = $currentTarget.attr('leipiplugins');
+            currentTarget = event.currentTarget;
+            var type = currentTarget.getAttribute('leipiplugins');
             if (type) {
-                editorTmp.custom_layer = "<nobr>Text Field: <span onclick=''>Edit</span>&nbsp;&nbsp;<span onclick=\"showDialog('"+type+"')\">Delete</span></nobr>";
-                $popup = editor.popups.get('formDesigner.popup');
-
-                selectedElement = $currentTarget;
-
-                console.log(editorTmp.custom_layer);
+                editorTmp.custom_layer = "<nobr>Text Field: <a href='javascript:void(0)'onclick=\"showDialog('"+type+"')\">Edit</a>&nbsp;&nbsp;<a href='javascript:void(0)' onclick='deleteElement()'>Delete</a></nobr>";
+                $popup = editor.popups.get('formDesigner.popup')
+                selectedElement = currentTarget;
              //   editorTmp.custom_layer = editorTmp.custom_layer + "<script>$(\'#formDesigner\').froalaEditor(\"formDesigner._ok_callback\", ok);</script>";
-                console.log("it is a text field");
                 editor.popups.create('formDesigner.popupEdit', editorTmp);
-
-                var left = $currentTarget.offset().left;
-                var top = $currentTarget.offset().top;
+                var left = $(currentTarget).offset().left;
+                var top = $(currentTarget).offset().top;
                 editor.popups.show('formDesigner.popupEdit', left, top, top);
 
             }
@@ -202,6 +182,11 @@
             console.log(selectedElement+"==>in designer");
             f(selectedElement);
             return selectedElement;
+        }
+        function deleteSelectedElement(){
+            console.log('deleting...'+ selectedElement);
+            $(selectedElement).remove();
+            selectedElement = null;
         }
 
         /**
@@ -220,7 +205,8 @@
             showEdit: showEdit,
             hideEdit: hideEdit,
             _show_callback:_show_callback,
-            getSelectedElement: getSelectedElement
+            getSelectedElement: getSelectedElement,
+            deleteSelectedElement:deleteSelectedElement
         }
     };
     // Define an icon and command for the button that opens the custom popup.

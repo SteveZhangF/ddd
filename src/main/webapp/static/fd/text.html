@@ -75,54 +75,8 @@
     $G = function (id) {
         return document.getElementById(id)
     };
-//    $('#formDesigner').froalaEditor("formDesigner.getSelectedElement");
-    console.log();
-
-    //    var ok = function(){
-    //        if ($('#orgname').value == '') {
-    //            alert('Please input the name');
-    //            return false;
-    //        }
-    //        var gValue = $G('orgvalue').value.replace(/\"/g, "&quot;"), gTitle = $G('orgname').value.replace(/\"/g, "&quot;"), gFontSize = $G('orgfontsize').value, gAlign = $G('orgalign').value, gWidth = $G('orgwidth').value, gHeight = $G('orgheight').value, gType = $G('orgtype').value;
-    //        console.log(gValue);
-    //        return gValue;
-    //    };
-
-    //    var oNode = null, thePlugins = 'text';
-    //    window.onload = function () {
-    //        if (UE.plugins[thePlugins].editdom) {
-    //            oNode = UE.plugins[thePlugins].editdom;
-    //            var gValue = '';
-    //            if (oNode.getAttribute('value'))
-    //                gValue = oNode.getAttribute('value').replace(/&quot;/g, "\"");
-    //            var gTitle = oNode.getAttribute('title').replace(/&quot;/g, "\""), gHidden = oNode.getAttribute('orghide'), gFontSize = oNode.getAttribute('orgfontsize'), gAlign = oNode.getAttribute('orgalign'), gWidth = oNode.getAttribute('orgwidth'), gHeight = oNode.getAttribute('orgheight'), gType = oNode.getAttribute('orgtype');
-    //            gValue = gValue == null ? '' : gValue;
-    //            gTitle = gTitle == null ? '' : gTitle;
-    //            $G('orgvalue').value = gValue;
-    //            $G('orgname').value = gTitle;
-    //            if (gHidden == '1') {
-    //                $G('orghide').checked = true;
-    //            }
-    //            $G('orgfontsize').value = gFontSize;
-    //            $G('orgwidth').value = gWidth;
-    //            $G('orgheight').value = gHeight;
-    //            $G('orgalign').value = gAlign;
-    //            $G('orgtype').value = gType;
-    //        }
-    //    }
-    //    dialog.oncancel = function () {
-    //        if (UE.plugins[thePlugins].editdom) {
-    //            delete UE.plugins[thePlugins].editdom;
-    //        }
-    ////    };
-    //    ok = function () {
-    //        var oNode = null;
-    //        if ($('#orgname').value == '') {
-    //            alert('Please input the name');
-    //            return false;
-    //        }
+    var oNode = null;
     var ok = function () {
-        var oNode = null;
 
         if ($('#orgname').value == '') {
             alert('Please input the name');
@@ -135,12 +89,8 @@
                 gWidth = $G('orgwidth').value,
                 gHeight = $G('orgheight').value,
                 gType = $G('orgtype').value;
-//        console.log(gValue);
-
-//        return gValue;
-//        var gValue = $('orgvalue').value.replace(/\"/g, "&quot;"), gTitle = $('orgname').value.replace(/\"/g, "&quot;"), gFontSize = $('orgfontsize').value, gAlign = $('orgalign').value, gWidth = $('orgwidth').value, gHeight = $('orgheight').value, gType = $('orgtype').value;
         try {
-            oNode = createElement('input', 'leipiNewField');
+            if(oNode==null)oNode = createElement('input', 'leipiNewField');
             oNode.setAttribute('type', 'text');
             oNode.setAttribute('title', gTitle);
             oNode.setAttribute('value', gValue);
@@ -191,13 +141,30 @@
 
     };
 
-    function shown(){
+    function shown() {
         console.log("I'm showing ..");
-        $('#formDesigner').froalaEditor('formDesigner.getSelectedElement',function(data){
-            $popup  = data;
+        $('#formDesigner').froalaEditor('formDesigner.getSelectedElement', function (data) {
+            var popup = data;
+            if (popup) {
+                oNode = popup;
+                var gValue = '';
+                if (oNode.getAttribute('value'))
+                    gValue = oNode.getAttribute('value').replace('&quot;', "\"");
+                var gTitle = oNode.getAttribute('title').replace('&quot;', "\""), gHidden = oNode.getAttribute('orghide'), gFontSize = oNode.getAttribute('orgfontsize'), gAlign = oNode.getAttribute('orgalign'), gWidth = oNode.getAttribute('orgwidth'), gHeight = oNode.getAttribute('orgheight'), gType = oNode.getAttribute('orgtype');
+                gValue = gValue == null ? '' : gValue;
+                gTitle = gTitle == null ? '' : gTitle;
+                $G('orgvalue').value = gValue;
+                $G('orgname').value = gTitle;
+                if (gHidden == '1') {
+                    $G('orghide').checked = true;
+                }
+                $G('orgfontsize').value = gFontSize;
+                $G('orgwidth').value = gWidth;
+                $G('orgheight').value = gHeight;
+                $G('orgalign').value = gAlign;
+                $G('orgtype').value = gType;
+            }
         });
-
-
     }
     $editor = $('#formDesigner').froalaEditor("formDesigner._ok_callback", ok);
     $editor = $('#formDesigner').froalaEditor("formDesigner._show_callback", shown);
