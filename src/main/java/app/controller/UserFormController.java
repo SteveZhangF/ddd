@@ -1,12 +1,19 @@
 package app.controller;
 
 import app.model.form.FormTable;
+import app.service.form.FormService;
+import app.service.form.UserFormService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import java.util.Map;
 
 /**
  * Created by steve on 10/10/15.
@@ -15,16 +22,28 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class UserFormController {
 
-    @RequestMapping(value = "/userform/view/{id}", method = RequestMethod.DELETE)
+
+    @Autowired
+    FormService formService;
+    @Autowired
+    UserFormService userFormService;
+
+    // view the form
+    @RequestMapping(value = "/userform/view/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<FormTable> su(@PathVariable("id") int id) {
 
-//        FormTable formTable = formService.findbyID(id);
-//        if (formTable == null) {
-//            return new ResponseEntity<FormTable>(HttpStatus.NOT_FOUND);
-//        }
-//
-//
-//        formService.delete(formTable);
-        return new ResponseEntity<FormTable>(HttpStatus.OK);
+        FormTable formTable = formService.findbyID(id);
+        if (formTable == null) {
+            return new ResponseEntity<FormTable>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<FormTable>(formTable, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/userform/viewrecord/",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity viewRecord (@RequestBody Map<String,String> map) throws ClassNotFoundException {
+        userFormService.query(Integer.valueOf(map.get("form_id")),null);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
 }

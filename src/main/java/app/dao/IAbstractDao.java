@@ -7,6 +7,8 @@ import java.io.Serializable;
  */
 public interface IAbstractDao<PK extends Serializable, T> {
     T getByKey(PK key);
-    void persist(T entity) ;
+
+    void persist(T entity);
+
     void delete(T entity);
 }

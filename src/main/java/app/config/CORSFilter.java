@@ -1,18 +1,12 @@
 package app.config;
- 
-import java.io.IOException;
- 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+
+import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
- 
- 
+import java.io.IOException;
+
+
 public class CORSFilter implements Filter {
- 
+
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         System.out.println("Filtering on...........................................................");
         HttpServletResponse response = (HttpServletResponse) res;
@@ -22,9 +16,11 @@ public class CORSFilter implements Filter {
         response.setHeader("Access-Control-Allow-Headers", "x-requested-with, Content-Type");
         chain.doFilter(req, res);
     }
- 
-    public void init(FilterConfig filterConfig) {}
- 
-    public void destroy() {}
- 
+
+    public void init(FilterConfig filterConfig) {
+    }
+
+    public void destroy() {
+    }
+
 }

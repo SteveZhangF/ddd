@@ -1,5 +1,8 @@
 package app.model.form;
 
+import app.model.wordflow.WorkFlowNode;
+import app.model.wordflow.WorkFlowNodeElement;
+
 import javax.persistence.*;
 
 /**
@@ -31,7 +34,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "tbl_form_column")
-public class ColumnAttribute {
+public class ColumnAttribute implements WorkFlowNodeElement{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -39,6 +42,8 @@ public class ColumnAttribute {
     private String column_Name;
     private String plugins; // the element type in html such as <input type="text"/> here is the plugins is text
     private String title;
+
+    private boolean isForeign;
     @Lob
     @Column(name = "content", columnDefinition = "BLOB")
     private String content;// used to display the element in the html but not the value ( for the user to fill in)
@@ -46,6 +51,17 @@ public class ColumnAttribute {
     @ManyToOne
     @JoinColumn(name = "formTable")
     private FormTable formTable;
+
+    public String getOrgtype() {
+        return orgtype;
+    }
+
+    public void setOrgtype(String orgtype) {
+        this.orgtype = orgtype;
+    }
+
+    // 主要处理macros
+    private String orgtype = "";
 
 
     public int getLength() {
@@ -112,6 +128,14 @@ public class ColumnAttribute {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public boolean isForeign() {
+        return isForeign;
+    }
+
+    public void setIsForeign(boolean isForeign) {
+        this.isForeign = isForeign;
     }
 
 }

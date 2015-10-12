@@ -1,12 +1,13 @@
 .editor-header {
-	margin-top: -10px;
+    margin-top: -10px;
 }
-#editor { 
+
+#editor {
     height: 525px;
     width: 100%;
-	border: 1px solid #dbdbdb;
-	border-radius: 4px;
-	border-bottom-right-radius: 0px;
-	margin-bottom: 100px;
-	margin-top: 25px;
+    border: 1px solid #dbdbdb;
+    border-radius: 4px;
+    border-bottom-right-radius: 0px;
+    margin-bottom: 100px;
+    margin-top: 25px;
 }

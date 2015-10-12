@@ -1,14 +1,15 @@
 package app.helper;
 
+import app.model.form.ColumnAttribute;
 import app.model.form.FormTable;
 import freemarker.template.Template;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
-import javax.sql.DataSource;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -20,14 +21,16 @@ public class TableGenerator {
      * tableVo
      */
     private FormTable tableVo;
+    private List<ColumnAttribute> columnAttributes;
 
     /**
      * 构造函数
      *
      * @param tableVo
      */
-    public TableGenerator(FormTable tableVo) {
+    public TableGenerator(FormTable tableVo,List<ColumnAttribute> columnAttributes) {
         this.tableVo = tableVo;
+        this.columnAttributes = columnAttributes;
     }
 
 
@@ -35,7 +38,7 @@ public class TableGenerator {
      *
      */
     public void generatorTable() {
-        if (tableVo.getColumnAttributes().isEmpty()) {
+        if (this.columnAttributes.isEmpty()) {
             System.out.println(" column attr list size==0 ");
             return;
         }

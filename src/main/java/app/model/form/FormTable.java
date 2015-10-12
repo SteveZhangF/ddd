@@ -1,10 +1,12 @@
 package app.model.form;
 
-import org.hibernate.annotations.*;
+import app.model.wordflow.WorkFlowNodeElement;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +16,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "tbl_forms")
-public class FormTable {
+public class FormTable implements WorkFlowNodeElement{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -53,10 +55,10 @@ public class FormTable {
         this.updateTime = updateTime;
     }
 
-
+    @JsonIgnore
     @OneToMany(mappedBy = "formTable") // --->
-    @Cascade({ org.hibernate.annotations.CascadeType.ALL})
-    @LazyCollection(LazyCollectionOption.EXTRA) // --->
+    @Cascade({org.hibernate.annotations.CascadeType.ALL})
+    @LazyCollection(LazyCollectionOption.FALSE) // --->
     private List<ColumnAttribute> columnAttributes = new ArrayList<ColumnAttribute>();
 
 

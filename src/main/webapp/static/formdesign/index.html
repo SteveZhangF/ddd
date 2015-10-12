@@ -29,43 +29,19 @@
 
 <body>
 
-<!-- fixed navbar -->
-<div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container">
-            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="brand" href="http://www.leipi.org" target="_blank">雷劈网</a>
-
-            <div class="nav-collapse collapse">
-                <ul class="nav">
-                    <li class="active"><a href="/">表单设计器</a></li>
-                    <li><a href="http://formdesign.leipi.org/doc.html">文档</a></li>
-                    <li><a href="http://formdesign.leipi.org/demo.html">实例</a></li>
-                    <li><a href="http://formdesign.leipi.org/downloads.html">下载</a></li>
-                    <li><a href="http://formdesign.leipi.org/feedback.html">公开讨论</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
 <div class="container">
     <form method="post" id="saveform" name="saveform" action="/index.php?s=/index/parse.html">
-        <input type="hidden" name="fields" id="fields" value="0">
+        <hr/>
+        <hr/>
+        <input id="form_id" type = "hidden" name="form_id" value=""/>
+        <input id="creator" type = "hidden" name="creator" value=""/>
+        <input type="hidden" name="fields" id="fields" value="0"/>
+        <div class="form-inline"> <label>Form Name:</label><input type="text" name="form_name" id="form_name"/></div>
+        <div class="form-inline">
+            <label>Form Description:</label><textarea id = "form_desc" name="form_desc"></textarea></div>
 
-        <div class="alert">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>提醒：</strong>单选框和复选框，如：<code>{|-</code>选项<code>-|}</code>两边边界是防止误删除控件，程序会把它们替换为空，请不要手动删除！
-        </div>
-
+        <hr/>
         <div class="row">
-
             <div class="span2">
                 <ul class="nav nav-list">
                     <li class="nav-header">两栏布局</li>
@@ -90,8 +66,8 @@
 
             </div>
 
-            <div class="span10">
 
+            <div class="span10">
                 <script id="myFormDesign" type="text/plain" style="width:100%;">
                     <p style="text-align: center;">
                         <br/>
@@ -190,6 +166,7 @@
                         <img name="leipiNewField" title="进度条" leipiplugins="progressbar" orgvalue="20"
                              orgsigntype="progress-info" src="js/ueditor/formdesign/images/progressbar.gif"/>
                     </p>
+
 
 
                 </script>

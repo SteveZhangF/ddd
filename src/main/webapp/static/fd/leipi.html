@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>表单设计器 - 清单</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="generator" content="www.leipi.org"/>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <!--[if lte IE 6]>
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap-ie6.css">
+    <![endif]-->
+    <!--[if lte IE 7]>
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/ie.css">
+    <![endif]-->
+    <link rel="stylesheet" href="leipi.style.css">
+    <script type="text/javascript" src="../dialogs/internal.js"></script>
+</head>
+<body>
+
+<div class="well">
+    <div class="alert alert-info">
+        Component List
+    </div>
+    <p>
+        <button type="button" onclick="showDialog('fd/text.html')" class="btn btn-info btn-small">Text Field
+        </button>
+        <button type="button" onclick="showDialog('textarea');" class="btn btn-info btn-small">Text Area
+        </button>
+        <button type="button" onclick="showDialog('select');" class="btn btn-info btn-small">Drop Down
+        </button>
+        <button type="button" onclick="showDialog('radios');" class="btn btn-info btn-small">Radio</button>
+        <button type="button" onclick="showDialog('checkboxs');" class="btn btn-info btn-small">Check Box
+        </button>
+        <button type="button" onclick="showDialog('macros');" class="btn btn-info btn-small">Macro</button>
+        <button type="button" onclick="showDialog('progressbar');" class="btn btn-info btn-small">Progress
+            Bar
+        </button>
+        <button type="button" onclick="showDialog('listctrl');" class="btn btn-info btn-small">List</button>
+    </p>
+</div>
+<script type="text/javascript">
+    function showDialog(url) {
+        $editor = $('#formDesigner').froalaEditor("formDesigner.showPopup", url);
+    }
+</script>
+</body>
+</html>

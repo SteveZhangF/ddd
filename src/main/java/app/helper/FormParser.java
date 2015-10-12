@@ -6,12 +6,9 @@ package app.helper;
 
 
 import app.model.form.ColumnAttribute;
-import app.model.form.FormInfo;
 import app.model.form.FormTable;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
@@ -33,41 +30,64 @@ public class FormParser {
     }
 
     public FormTable parseForm() {
+//            id: formid,
+//                    form_name: form_name,
+//                    form_desc: form_desc,
+//                    creator: creator,
+//                    fields_count: fields_count,
+//                    context: parse_form.context,
+//                    context_parse: parse_form.context_parse,
+//                    data:parse_form.data
         ObjectMapper mapper = new ObjectMapper();
         FormTable formTable = new FormTable();
         try {
             JsonNode rootNode = mapper.readTree(formInfo); // 读取Json
-
-            formTable.setFields_count(Integer.valueOf(rootNode.get("fields").asInt()));
-
-            formTable.setContext(rootNode.get("template").asText());
-            formTable.setContext_parse(rootNode.get("parse").asText());
+            formTable.setFields_count(Integer.valueOf(rootNode.get("fields_count").asInt()));
+            formTable.setCreator(rootNode.get("creator").asText());
+            formTable.setId(rootNode.get("id").asInt());
+            formTable.setForm_desc(rootNode.get("form_desc").asText());
+            formTable.setContext(rootNode.get("context").asText());
+            formTable.setContext_parse(rootNode.get("context_parse").asText());
 
 
             JsonNode dataNodes = rootNode.path("data");
-            for(int i=0;i<dataNodes.size();i++){
+            for (int i = 0; i < dataNodes.size(); i++) {
+                ColumnAttribute ca = new ColumnAttribute();
                 JsonNode fields = dataNodes.get(i);
                 String plugins = fields.get("leipiplugins").asText();
                 String title = fields.get("title").asText();
                 String content = fields.get("content").asText();
                 String name = fields.get("name").asText();
-
-                ColumnAttribute ca = new ColumnAttribute();
-                ca.setFormTable(formTable);
-                //TODO  for name just set the type to string and the length to 100 need to be fixed
-                ca.setLength(100);
+                name = name.replace(",","__");
                 ca.setColumn_type("string");
+                ca.setFormTable(formTable);
+                ca.setLength(100);
                 ca.setColumn_Name(name);
                 ca.setContent(content);
                 ca.setTitle(title);
                 ca.setPlugins(plugins);
+                //macros
+                if(plugins.equals("macros")){
+                    System.out.println(fields);
+                    String orgtype = fields.get("orgtype").asText();
+                    ca.setOrgtype(orgtype);
+                    // now date
+
+                    if(orgtype.equals("sys_date_cn")){
+                        ca.setColumn_type("date");
+                    }else{
+                        ca.setIsForeign(true);
+                    }
+                }
+
+
+                //TODO  for name just set the type to string and the length to 100 need to be fixed
+
                 formTable.getColumnAttributes().add(ca);
             }
-        }catch(IOException ioe){
+        } catch (IOException ioe) {
             ioe.printStackTrace();
         }
         return formTable;
     }
-
-
 }

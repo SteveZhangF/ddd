@@ -4,19 +4,17 @@ import app.dao.AbstractDao;
 import app.model.form.FormTable;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Time;
-import java.util.Date;
 import java.util.List;
 
 /**
  * Created by steve on 10/9/15.
  */
 @Repository("formDao")
-public class FormDaoImpl extends AbstractDao<Integer,FormTable> implements FormDao{
+public class FormDaoImpl extends AbstractDao<Integer, FormTable> implements FormDao {
     @Override
     public void update(FormTable formTable) {
         FormTable ft = super.getByKey(formTable.getId());
-        if(ft!=null){
+        if (ft != null) {
 
             ft.setForm_name(formTable.getForm_name());
             ft.setForm_desc(formTable.getForm_desc());
@@ -34,6 +32,7 @@ public class FormDaoImpl extends AbstractDao<Integer,FormTable> implements FormD
 
     @Override
     public FormTable getByKey(int key) {
+
         return super.getByKey(key);
     }
 

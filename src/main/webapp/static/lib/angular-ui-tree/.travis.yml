@@ -7,7 +7,7 @@ before_script:
   - bower install
 
 script:
-  - npm test
+  - npm configuration
 
 notifications:
   - email: false

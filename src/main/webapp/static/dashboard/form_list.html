@@ -1,0 +1,110 @@
+<div ng-controller="formListCtrl as controller" class="row">
+    <button ng-if="!editing" ng-click="addNewForm()">Add new Form</button>
+    <div ng-if="!editing">
+        <table st-table="users" class="table table-striped">
+            <thead>
+            <tr>
+                <th st-sort="id">ID</th>
+                <th st-sort="form_name">Form Name</th>
+                <th st-sort="fields_count">Fields Count</th>
+                <th st-sort="creator">creator</th>
+                <th st-sort="createTime">Create Time</th>
+                <th st-sort="updateTime">Update Time</th>
+            </tr>
+            <tr>
+                <th colspan="1">
+                    <input st-search="form_name" placeholder="search for Form Name" class="input-sm form-control"
+                           type="search"/>
+                </th>
+                <th colspan="2">
+                    <input st-search="creator" placeholder="search for Creator" class="input-sm form-control"
+                           type="search"/>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="x in forms">
+                <td>{{ $index + 1 }}</td>
+                <td>{{ x.id }}</td>
+                <td>{{x.form_name}}</td>
+                <td>{{x.fields_count}}</td>
+                <td>{{x.creator}}</td>
+                <td>{{x.createTime}}</td>
+                <td>{{x.updateTime}}</td>
+                <td>
+                    <button type="button" ng-click="editForm(x)" class="btn btn-sm">
+                        <i class="glyphicon glyphicon-remove-circle">
+                        </i>
+                    </button>
+                    <button type="button" ng-click="deleteForm(x)" class="btn btn-sm btn-danger">
+                        <i class="glyphicon glyphicon-remove-circle">
+                        </i>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div ng-if="editing">
+        editing...{{formDetail.id}}}
+
+        <button ng-if="isNew" ng-click="save()">Save</button>
+        <button ng-if="!isNew" ng-click="update()">update</button>
+        <button ng-click="cancel()">Cancel</button>
+    </div>
+    <div class="well">
+        <div class="alert alert-info">
+            Component List
+        </div>
+        <p>
+            <button type="button" onclick="showDialog('text')" class="btn btn-info btn-small">Text Field
+            </button>
+            <button type="button" onclick="leipiDialog.exec('textarea');" class="btn btn-info btn-small">Text Area
+            </button>
+            <button type="button" onclick="leipiDialog.exec('select');" class="btn btn-info btn-small">Drop Down
+            </button>
+            <button type="button" onclick="leipiDialog.exec('radios');" class="btn btn-info btn-small">Radio</button>
+            <button type="button" onclick="leipiDialog.exec('checkboxs');" class="btn btn-info btn-small">Check Box
+            </button>
+            <button type="button" onclick="leipiDialog.exec('macros');" class="btn btn-info btn-small">Macro</button>
+            <button type="button" onclick="leipiDialog.exec('progressbar');" class="btn btn-info btn-small">Progress
+                Bar
+            </button>
+            <button type="button" onclick="leipiDialog.exec('listctrl');" class="btn btn-info btn-small">List</button>
+        </p>
+    </div>
+    <div id="formDesigner" froala="froalaOptions" ng-model="myHtml"></div>
+    <button onclick="test();">test</button>
+</div>
+
+<style>
+
+    .st-sort-ascent:before {
+        content: '\25B2';
+    }
+
+    .st-sort-descent:before {
+        content: '\25BC';
+    }
+
+</style>
+<script>
+    $(document).ready(function () {
+        console.log($('#formDesigner').find('.fr-wrapper'));
+        $('#formDesigner').on('mouseover', 'input' ,function (event) {
+            console.log('mouse over........');
+            $('#formDesigner').froalaEditor("formDesigner.showEdit", event);
+        });
+//        $('#formDesigner').on('mouseout', 'input' ,function (event) {
+//            console.log('mouse out........');
+//            $('#formDesigner').froalaEditor("formDesigner.hideEdit");
+//        })
+    });
+
+
+    function showDialog(url) {
+        url = "fd/"+url + ".html";
+        $editor = $('#formDesigner').froalaEditor("formDesigner.showPopup", url);
+    }
+</script>
+

@@ -1,21 +1,61 @@
-<html ng-app="clientApp">
-<div ng-include="'layout/head.html'"></div>
+<html ng-app="dashboardApp">
+<div ng-include="'dashboardlayout/head.html'"></div>
 <body>
-<div ng-include="'layout/top_nav_bar.html'"></div>
-<div ng-include="'layout/side_bar.html'"></div>
-<div ng-view></div>
+
+
+<div ng-include="'dashboardlayout/top_nav_bar.html'"></div>
+<div class="row">
+<div class="col-md-2" ng-include="'dashboardlayout/side_bar.html'"></div>
+<div class="col-md-10" ng-view ></div>
+
+</div>
+<script src="lib/jquery/dist/jquery.js"></script>
 <script src="lib/angular/angular.js"></script>
+<script src="lib/wysiwyg/js/froala_editor.min.js"></script>
 <script src="lib/angular-route/angular-route.js"></script>
 <script src="lib/angular-bootstrap/ui-bootstrap.js"></script>
 <script src="lib/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-<script src="js/app.js"></script>
-<script src="js/service/login_service.js"></script>
-<script type="text/javascript" src="js/useryewu/company_service.js"></script>
-<script type="text/javascript" src="js/useryewu/company_controller.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/dashboardyewu/login_service.js"></script>
 <script src="lib/angular-bootstrap-contextmenu/contextMenu.js"></script>
-<script src="js/glo/contextmenu_controller.js"></script>
-<script src="lib/angular-ui-tree/dist/angular-ui-tree.js"></script>
-<script src="js/glo/tree.js"></script>
 <script src="lib/tree/abn_tree.js"></script>
+<script src="js/glo/list.js"></script>
+<script src="js/dashboardyewu/userlistController.js"></script>
+<script src="js/dashboardyewu/user_service.js"></script>
+<script src="lib/angular-smart-table/dist/smart-table.js"></script>
+<script src="js/dashboardyewu/userTableCtrl.js"></script>
+<script src="js/dashboardyewu/formservice.js"></script>
+<script src="js/dashboardyewu/formListCtrl.js"></script>
+<script src="js/glo/formEditor.js"></script>
+<script src=""></script>
+<script src="lib/froala/froala-sanitize.js"></script>
+<script src="lib/froala/froala.js"></script>
+
+<script src="lib/wysiwyg/js/plugins/align.min.js"></script>
+<script src="lib/wysiwyg/js/plugins/char_counter.min.js"></script>
+<script src="lib/wysiwyg/js/plugins/code_view.min.js"></script>
+<script src="lib/wysiwyg/js/plugins/colors.min.js"></script>
+<script src="lib/wysiwyg/js/plugins/emoticons.min.js"></script>
+<script src="lib/wysiwyg/js/plugins/entities.min.js"></script>
+<script src="lib/wysiwyg/js/plugins/file.min.js"></script>
+<script src="lib/wysiwyg/js/plugins/font_family.min.js"></script>
+<script src="lib/wysiwyg/js/plugins/font_size.min.js"></script>
+<script src="lib/wysiwyg/js/plugins/fullscreen.min.js"></script>
+<script src="lib/wysiwyg/js/plugins/image.min.js"></script>
+<script src="lib/wysiwyg/js/plugins/image_manager.min.js"></script>
+<script src="lib/wysiwyg/js/plugins/inline_style.min.js"></script>
+<script src="lib/wysiwyg/js/plugins/line_breaker.min.js"></script>
+<script src="lib/wysiwyg/js/plugins/link.min.js"></script>
+<script src="lib/wysiwyg/js/plugins/lists.min.js"></script>
+<script src="lib/wysiwyg/js/plugins/paragraph_format.min.js"></script>
+<script src="lib/wysiwyg/js/plugins/paragraph_style.min.js"></script>
+<script src="lib/wysiwyg/js/plugins/quote.min.js"></script>
+<script src="lib/wysiwyg/js/plugins/save.min.js"></script>
+<script src="lib/wysiwyg/js/plugins/table.min.js"></script>
+<script src="lib/wysiwyg/js/plugins/url.min.js"></script>
+<script src="lib/wysiwyg/js/plugins/video.min.js"></script>
+<script src="fd/formdesign.js"></script>
+
 </body>
 </html>
+

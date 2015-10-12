@@ -1,89 +1,102 @@
 'use strict';
 
-var app = angular.module('dashboardApp', [ 'ngRoute', 'ui.bootstrap','ui.bootstrap.contextMenu' ,'angularBootstrapNavTree']);
+var app = angular.module('dashboardApp', ['ngRoute', 'ui.bootstrap', 'ui.bootstrap.contextMenu', 'angularBootstrapNavTree','virtualList','smart-table','formEditor','froala']);
 
 // add an interceptor to add the token to the request head
-app.config(['$httpProvider', function($httpProvider) {
-    $httpProvider.interceptors.push(['$q', '$location', '$window', function($q, $location, $window) {
-            return {
-                'request': function (config) {
-                    config.headers = config.headers || {};
-                    if($window.sessionStorage["userInfo"]){
-                    	var token = JSON.parse($window.sessionStorage["userInfo"]);
-                        if(token){
-                        	config.headers['X-AUTH-TOKEN'] = token.accessToken;
-                        }
-                    }else{
-                    	$location.path('/');
+app.config(['$httpProvider', function ($httpProvider) {
+    $httpProvider.interceptors.push(['$q', '$location', '$window', function ($q, $location, $window) {
+        return {
+            'request': function (config) {
+                config.headers = config.headers || {};
+                if ($window.sessionStorage["userInfo"]) {
+                    var token = JSON.parse($window.sessionStorage["userInfo"]);
+                    if (token) {
+                        config.headers['X-AUTH-TOKEN'] = token.accessToken;
                     }
-                    return config;
-                },
-                'responseError': function(response) {
-                    if(response.status === 401 || response.status === 403) {
-                        $location.path('/');
-                    }
-                    return $q.reject(response);
+                } else {
+                    $location.path('/');
                 }
-            };
-        }]);
+                return config;
+            },
+            'responseError': function (response) {
+                if (response.status === 401 || response.status === 403) {
+                    $location.path('/');
+                }
+                return $q.reject(response);
+            }
+        };
+    }]);
 }]);
-
+//store the login data
+app.factory('LogInData', function () {
+    return {
+        isLogedIn: false,
+        userInfo: null
+    }
+});
+//watch the route changes and check the login information
 app.run([
-		"$rootScope",
-		"$location",
-		function($rootScope, $location) {
-			$rootScope.$on("$routeChangeSuccess", function(userInfo) {
-				console.log(userInfo);
-			});
+    "$rootScope",
+    "$location",
+    function ($rootScope, $location) {
+        $rootScope.$on("$routeChangeSuccess", function (userInfo) {
+            console.log(userInfo);
+        });
 
-			$rootScope.$on("$routeChangeError", function(event, current,
-					previous, eventObj) {
-				if (eventObj.authenticated === false) {
-					// $location.path("/login");
-					// show the log in page
-				}
-			});
-		} ]);
+        $rootScope.$on("$routeChangeError", function (event, current,
+                                                      previous, eventObj) {
+            if (eventObj.authenticated === false) {
+                // $location.path("/login");
+                // show the log in page
+            }
+        });
+    }]);
 //router
-app.config([ '$routeProvider', function($routeProvider) {
-	var resolve = {
-		auth : [ "$q", "LoginService", function($q, LoginService) {
-			var userInfo = LoginService.getUserInfo();
-			if (userInfo) {
-				return $q.when(userInfo);
-			} else {
-				return $q.reject({
-					authenticated : false
-				});
-			}
-		} ]
-	}
-	$routeProvider.when("/", {
-		resolve:resolve
-	}).when("/company",{
-		templateUrl : "user/company.html",
-		resolve:resolve
-	})
-} ]);
-app.filter('checkmark', function() {
-	return function(input) {
-		return input ? '\u2713' : '\u2718';
-	};
+app.config(['$routeProvider', function ($routeProvider) {
+    var resolve = {
+        auth: ["$q", "LoginService", function ($q, LoginService) {
+            var userInfo = LoginService.getUserInfo();
+            if (userInfo) {
+                return $q.when(userInfo);
+            } else {
+                return $q.reject({
+                    authenticated: false
+                });
+            }
+        }]
+    }
+    $routeProvider.when("/", {
+        resolve: resolve
+    }).when("/users", {
+        templateUrl: "dashboard/user_list.html",
+        //TODO remove resolve
+        //resolve: resolve
+    }).when("/forms",{
+        templateUrl:"dashboard/form_list.html",
+        //TODO remove resolve commit
+        //resolve: resolve
+    })
+
+}]);
+app.filter('checkmark', function () {
+    return function (input) {
+        return input ? '\u2713' : '\u2718';
+    };
 });
 
-app.controller('DropdownCtrl', function($scope, $log) {
-	$scope.status = {
-		isopen : false
-	};
+app.controller('DropdownCtrl', function ($scope, $log) {
+    $scope.status = {
+        isopen: false
+    };
 
-	$scope.toggled = function(open) {
-		$log.log('Dropdown is now: ', open);
-	};
+    $scope.toggled = function (open) {
+        $log.log('Dropdown is now: ', open);
+    };
 
-	$scope.toggleDropdown = function($event) {
-		$event.preventDefault();
-		$event.stopPropagation();
-		$scope.status.isopen = !$scope.status.isopen;
-	};
+    $scope.toggleDropdown = function ($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.status.isopen = !$scope.status.isopen;
+    };
 });
 

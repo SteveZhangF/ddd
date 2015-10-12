@@ -1,87 +1,85 @@
-
 <!-- navbar -->
 <div class="navbar navbar-inverse">
-	<div class="navbar-inner">
+    <div class="navbar-inner">
 
-		<div ng-controller="DropdownCtrl" class="btn-group pull-right"
-			dropdown is-open="status.isopen">
-			<button id="single-button" type="button" class="btn btn-primary"
-				dropdown-toggle ng-disabled="disabled">
-				Profile <span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
+        <div ng-controller="DropdownCtrl" class="btn-group pull-right"
+             dropdown is-open="status.isopen">
+            <button id="single-button" type="button" class="btn btn-primary"
+                    dropdown-toggle ng-disabled="disabled">
+                Profile <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
 
-				<li ng-hide="logindata.isLogedIn" role="menuitem"
-					ng-controller="LoginModalCtrl"><a href="#" ng-click="open()">Login</a></li>
+                <li ng-hide="logindata.isLogedIn" role="menuitem"
+                    ng-controller="LoginModalCtrl"><a href="#" ng-click="open()">Login</a></li>
 
-				<li><a href="index.html"><span>Home</span> </a></li>
-				<li><a href="#/company"><span>Company</span></a></li>
-				<li><a href="#/allmodule"><span>All Modules</span></a></li>
+                <li><a href="index.html"><span>Home</span> </a></li>
+                <li><a href="#/company"><span>Company</span></a></li>
+                <li><a href="#/allmodule"><span>All Modules</span></a></li>
 
 
-
-				<li class="divider"></li>
-				<li ng-show='logindata.isLogedIn' role="menuitem"
-					ng-controller="loginController" ng-click="logout()"><a
-					href="#">Logout</a></li>
-			</ul>
-		</div>
-	</div>
+                <li class="divider"></li>
+                <li ng-show='logindata.isLogedIn' role="menuitem"
+                    ng-controller="loginController" ng-click="logout()"><a
+                        href="#">Logout</a></li>
+            </ul>
+        </div>
+    </div>
 </div>
 <!-- end navbar -->
 <!-- login modal start -->
 
 <script type="text/ng-template" id="loginModalContent.html">
-<div ng-hide='ifnewuser'>
-<div class="modal-header">
-	<h3>Login</h3>
-</div>
-<div class="modal-body">
-	<form name="loginForm" novalidate>
+    <div ng-hide='ifnewuser'>
+        <div class="modal-header">
+            <h3>Login</h3>
+        </div>
+        <div class="modal-body">
+            <form name="loginForm" novalidate>
 
-		<label for="username">Username:</label> <input type="text"
-			id="username" ng-model="ssoId" required> <label
-			for="password">Password:</label> <input type="password" id="password"
-			ng-model="password" required>
-	</form>
+                <label for="username">Username:</label> <input type="text"
+                                                               id="username" ng-model="ssoId" required> <label
+                    for="password">Password:</label> <input type="password" id="password"
+                                                            ng-model="password" required>
+            </form>
 
-</div>
-<div class="modal-footer">
-	<button class="btn btn-primary" ng-click="ok()">OK</button>
-	<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-</div>
-</div>
-<div ng-show='ifnewuser'>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+    </div>
+    <div ng-show='ifnewuser'>
 
-	<div class="modal-header">
-		<h3>New User</h3>
-	</div>
-	<div class="modal-body" >
-		<form name="registerForm" novalidate>
+        <div class="modal-header">
+            <h3>New User</h3>
+        </div>
+        <div class="modal-body">
+            <form name="registerForm" novalidate>
 
-			<label for="username">Username:</label> <input type="text"
-				id="username" ng-model="ssoId" required> <label
-				for="password">Password:</label> <input type="password"
-				id="password" ng-model="password" required> <label
-				for="password2">Password Confirm:</label> <input type="password"
-				id="password2" ng-model="password2" required>
-				
-				 <label
-				for="email">Email:</label> <input type="email"
-				id="email" ng-model="email" required>
-		</form>
+                <label for="username">Username:</label> <input type="text"
+                                                               id="username" ng-model="ssoId" required> <label
+                    for="password">Password:</label> <input type="password"
+                                                            id="password" ng-model="password" required> <label
+                    for="password2">Password Confirm:</label> <input type="password"
+                                                                     id="password2" ng-model="password2" required>
 
-	</div>
-	<div class="modal-footer">
-		<button class="btn btn-primary" ng-click="ok()">OK</button>
-		<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-	</div>
+                <label
+                        for="email">Email:</label> <input type="email"
+                                                          id="email" ng-model="email" required>
+            </form>
 
-</div>
-<span ng-hide='ifnewuser'><a href="#" ng-click='register()'>Register</a></span>
-<span ng-show='ifnewuser'><a href='#' ng-click='login()'>Log In</a></span>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
 
-    </script>
+    </div>
+    <span ng-hide='ifnewuser'><a href="#" ng-click='register()'>Register</a></span>
+    <span ng-show='ifnewuser'><a href='#' ng-click='login()'>Log In</a></span>
+
+</script>
 <!-- login modal end -->
 
 

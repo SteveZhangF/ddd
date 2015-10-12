@@ -1,6 +1,5 @@
 package app.dao.form;
 
-import app.dao.IAbstractDao;
 import app.model.form.FormTable;
 
 import java.util.List;
@@ -10,9 +9,13 @@ import java.util.List;
  */
 public interface FormDao {
     void update(FormTable formTable);
+
     FormTable getByKey(int key);
-    void persist(FormTable entity) ;
+
+    void persist(FormTable entity);
+
     void delete(FormTable entity);
+
     List<FormTable> list();
 
 }
