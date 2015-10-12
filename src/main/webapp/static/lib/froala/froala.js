@@ -66,7 +66,6 @@ angular.module('froala', []).
 
                 ctrl.updateModelView = function () {
                     var returnedHtml = element.froalaEditor('html.get');
-
                     if (angular.isString(returnedHtml)){
                         ngModel.$setViewValue(returnedHtml);
                     }

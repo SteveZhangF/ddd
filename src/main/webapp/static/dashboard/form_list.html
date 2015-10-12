@@ -23,6 +23,7 @@
             </tr>
             </thead>
             <tbody>
+            {{forms.length}}
             <tr ng-repeat="x in forms">
                 <td>{{ $index + 1 }}</td>
                 <td>{{ x.id }}</td>
@@ -47,25 +48,50 @@
     </div>
     <div ng-if="editing">
         <div class="well">
+            form.creator = $scope.formDetail.creator;
+            form._del = false;
+            form.form_desc = $scope.formDetail.form_desc;
+            form.form_name = $scope.formDetail.form_name;
             <div class="alert alert-info">
-                Component List
+                <form class="form-inline">
+                    <div class="form-group">
+                        <label for="Creator">Creator:</label>
+                        <input ng-model="formDetail.creator" type="text" class="form-control" id="Creator" placeholder="Jane Doe" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="FormName">Form Name:</label>
+                        <input ng-model="formDetail.form_name" type="text" class="form-control" id="FormName" placeholder="Employee Training">
+                    </div>
+                    <input ng-model="formDetail.id" type="hidden"/>
+                </form>
+
+                <textarea ng-model="formDetail.form_desc" class="form-control" rows="3"></textarea>
             </div>
-            <p>
-                <button type="button" onclick="showDialog('text')" class="btn btn-info btn-small">Text Field
-                </button>
-                <button type="button" onclick="leipiDialog.exec('textarea');" class="btn btn-info btn-small">Text Area
-                </button>
-                <button type="button" onclick="leipiDialog.exec('select');" class="btn btn-info btn-small">Drop Down
-                </button>
-                <button type="button" onclick="leipiDialog.exec('radios');" class="btn btn-info btn-small">Radio</button>
-                <button type="button" onclick="leipiDialog.exec('checkboxs');" class="btn btn-info btn-small">Check Box
-                </button>
-                <button type="button" onclick="leipiDialog.exec('macros');" class="btn btn-info btn-small">Macro</button>
-                <button type="button" onclick="leipiDialog.exec('progressbar');" class="btn btn-info btn-small">Progress
-                    Bar
-                </button>
-                <button type="button" onclick="leipiDialog.exec('listctrl');" class="btn btn-info btn-small">List</button>
-            </p>
+            <div class="alert alert-warning">
+                Component List
+                <p>
+                    <button type="button" onclick="showDialog('text')" class="btn btn-info btn-small">Text Field
+                    </button>
+                    <button type="button" onclick="leipiDialog.exec('textarea');" class="btn btn-info btn-small">Text
+                        Area
+                    </button>
+                    <button type="button" onclick="leipiDialog.exec('select');" class="btn btn-info btn-small">Drop Down
+                    </button>
+                    <button type="button" onclick="leipiDialog.exec('radios');" class="btn btn-info btn-small">Radio
+                    </button>
+                    <button type="button" onclick="leipiDialog.exec('checkboxs');" class="btn btn-info btn-small">Check
+                        Box
+                    </button>
+                    <button type="button" onclick="leipiDialog.exec('macros');" class="btn btn-info btn-small">Macro
+                    </button>
+                    <button type="button" onclick="leipiDialog.exec('progressbar');" class="btn btn-info btn-small">
+                        Progress
+                        Bar
+                    </button>
+                    <button type="button" onclick="leipiDialog.exec('listctrl');" class="btn btn-info btn-small">List
+                    </button>
+                </p>
+            </div>
         </div>
         <div id="formDesigner" froala="froalaOptions" ng-model="formDetail.context"></div>
         <button ng-if="isNew" ng-click="save()">Save</button>
@@ -88,7 +114,7 @@
 </style>
 <script>
     $(document).ready(function () {
-        $('#formDesigner').on('mouseover', 'input' ,function (event) {
+        $('#formDesigner').on('mouseover', 'input', function (event) {
             console.log('mouse over........');
             $('#formDesigner').froalaEditor("formDesigner.showEdit", event);
         });
@@ -98,10 +124,10 @@
 //        })
     });
     function showDialog(url) {
-        url = "fd/"+url + ".html";
+        url = "fd/" + url + ".html";
         $('#formDesigner').froalaEditor("formDesigner.showPopup", url);
     }
-    function deleteElement(){
+    function deleteElement() {
         $('#formDesigner').froalaEditor("formDesigner.deleteSelectedElement");
     }
 </script>
