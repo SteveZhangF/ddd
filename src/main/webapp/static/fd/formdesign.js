@@ -68,7 +68,7 @@
                     ready = true;
                     $popup = editor.popups.get('formDesigner.popup');
                     editor.popups.setContainer('formDesigner.popup', editor.$tb);
-                    var $btn = editor.$tb.find('.fr-command[data-cmd="showFormDesign"]');
+                    var $btn = editor.$tb;
                     var left = $btn.offset().left + $btn.outerWidth() / 2;
                     var top = $btn.offset().top + (editor.opts.toolbarBottom ? 10 : $btn.outerHeight() - 10);
                     editor.popups.show('formDesigner.popup', left, top, $btn.outerHeight());
@@ -105,7 +105,7 @@
             if (ready = true) {
                 //editor.destory('formDesigner.popup');
                 editor.popups.setContainer('formDesigner.popup', editor.$tb);
-                var $btn = editor.$tb.find('.fr-command[data-cmd="showFormDesign"]');
+                var $btn = editor.$tb;
                 var left = $btn.offset().left + $btn.outerWidth() / 2;
                 var top = $btn.offset().top + (editor.opts.toolbarBottom ? 10 : $btn.outerHeight() - 10);
 
@@ -143,6 +143,7 @@
                 var value = _ok();
                 editor.selection.restore();
                 console.log("restore..");
+                console.log(value);
                 editor.html.insert(value, true);
             }
         }

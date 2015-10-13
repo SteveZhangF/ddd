@@ -9,6 +9,7 @@
 package test.service.form;
 
 import app.config.hibernate.HibernateConfiguration;
+import app.helper.FormParser;
 import app.model.form.FormTable;
 import app.service.form.FormService;
 import com.fasterxml.jackson.core.JsonGenerationException;
@@ -19,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
@@ -30,8 +33,9 @@ import java.util.List;
 /**
  * Created by steve on 10/10/15.
  */
+
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes =FormServiceTestContextConfiguration.class ,loader = AnnotationConfigContextLoader.class)
 public class FormServiceTest {
 
     @Autowired
@@ -39,29 +43,53 @@ public class FormServiceTest {
     @Autowired
     HibernateConfiguration hibernateConfiguration;
 
+//    @Test
+//    public void getTest() throws IOException {
+//        int id = 18;
+//        FormTable formTable = formService.findbyID(id);
+//        ObjectMapper mapper = new ObjectMapper();
+//        StringWriter sw = new StringWriter();
+//        mapper.writeValue(sw,formTable);
+//        System.out.println(sw.toString());
+//        assert (sw.toString().contains(formTable.getId()+""));
+//    }
+//
+//    @Test
+//    public void saveTest(){
+//        String json = "{\"id\":\"\",\"fields_count\":1,\"creator\":\"\",\"createTime\":\"\",\"updateTime\":\"\",\"_del\":\"\",\"context_parse\":\"<p>ddddd{data_1}z</p>\",\"context\":\"<p>ddddd<input name=\\\"data_1\\\" type=\\\"text\\\" title=\\\"w\\\" value=\\\"\\\" leipiplugins=\\\"text\\\" orghide=\\\"0\\\" orgalign=\\\"left\\\" orgwidth=\\\"150\\\" orgtype=\\\"text\\\" style=\\\"text-align: left; width: 150px;\\\">z</p>\",\"form_desc\":\"\",\"form_name\":\"\",\"data\":[{\"name\":\"data_1\",\"type\":\"text\",\"title\":\"w\",\"value\":\"\",\"leipiplugins\":\"text\",\"orghide\":\"0\",\"orgalign\":\"left\",\"orgwidth\":\"150\",\"orgtype\":\"text\",\"style\":\"text-align: left; width: 150px;\",\"content\":\"<input name=\\\"data_1\\\" type=\\\"text\\\" title=\\\"w\\\" value=\\\"\\\" leipiplugins=\\\"text\\\" orghide=\\\"0\\\" orgalign=\\\"left\\\" orgwidth=\\\"150\\\" orgtype=\\\"text\\\" style=\\\"text-align: left; width: 150px;\\\">\"}]}";
+//        FormParser formParser = new FormParser(json);
+//        FormTable ft = formParser.parseForm();
+//        formService.save(ft);
+//        formService.generatorTable(ft);
+//    }
 
     @Test
-    public void saveTest(){
+    public void updateTest(){
+        String json = "{\"id\":\"20\",\"fields_count\":1,\"creator\":\"\",\"createTime\":\"\",\"updateTime\":\"\",\"_del\":\"\",\"context_parse\":\"<p>ddddd{data_1}z</p>\",\"context\":\"<p>ddddd<input name=\\\"data_1\\\" type=\\\"text\\\" title=\\\"w\\\" value=\\\"\\\" leipiplugins=\\\"text\\\" orghide=\\\"0\\\" orgalign=\\\"left\\\" orgwidth=\\\"150\\\" orgtype=\\\"text\\\" style=\\\"text-align: left; width: 150px;\\\">z</p>\",\"form_desc\":\"\",\"form_name\":\"\",\"data\":[{\"name\":\"data_1\",\"type\":\"text\",\"title\":\"w\",\"value\":\"\",\"leipiplugins\":\"text\",\"orghide\":\"0\",\"orgalign\":\"left\",\"orgwidth\":\"150\",\"orgtype\":\"text\",\"style\":\"text-align: left; width: 150px;\",\"content\":\"<input name=\\\"data_1\\\" type=\\\"text\\\" title=\\\"w\\\" value=\\\"\\\" leipiplugins=\\\"text\\\" orghide=\\\"0\\\" orgalign=\\\"left\\\" orgwidth=\\\"150\\\" orgtype=\\\"text\\\" style=\\\"text-align: left; width: 150px;\\\">\"}]}";
 
+        FormParser formParser = new FormParser(json);
+        FormTable ft = formParser.parseForm();
+        System.out.print(ft.getColumnAttributes().size());
+        formService.update(ft);
+//        System.out.print(ft.getColumnAttributes().size());
+//        FormTable ft2 = formService.findbyID(19);
+//        System.out.println(ft2.getColumnAttributes().size());
+        formService.generatorTable(ft);
     }
 
-    @Test
-    public void listTest() throws IOException {
-        List<FormTable> formTables = formService.list();
-        ObjectMapper mapper = new ObjectMapper();
-        StringWriter sw = new StringWriter();
-        mapper.writeValue(sw,formTables);
-        System.out.println(sw.toString());
-        assert (sw.toString().contains(""));
-    }
 
-    @Configuration
-    @ComponentScan("app.config.hibernate")
-    static class ContextConfig{
-        HibernateConfiguration hibernateConfiguration = new HibernateConfiguration();
-        @Bean
-        public HibernateConfiguration getHibernateConfiguration(){
-            return hibernateConfiguration;
-        }
-    }
+//    @Test
+//    public void deleteTest(){
+//        formService.delete(formService.findbyID(18));
+//    }
+
+//    @Test
+//    public void listTest() throws IOException {
+//        List<FormTable> formTables = formService.list();
+//        ObjectMapper mapper = new ObjectMapper();
+//        StringWriter sw = new StringWriter();
+//        mapper.writeValue(sw,formTables);
+//        System.out.println(sw.toString());
+//        assert (sw.toString().contains(""));
+//    }
 }

@@ -44,12 +44,13 @@ public class FormParser {
             JsonNode rootNode = mapper.readTree(formInfo); // 读取Json
             formTable.setFields_count(Integer.valueOf(rootNode.get("fields_count").asInt()));
             formTable.setCreator(rootNode.get("creator").asText());
-            formTable.setId(rootNode.get("id").asInt());
+           // formTable.setId(rootNode.get("id").asInt());
             formTable.setForm_desc(rootNode.get("form_desc").asText());
             formTable.setContext(rootNode.get("context").asText());
             formTable.setContext_parse(rootNode.get("context_parse").asText());
+            formTable.setForm_name(rootNode.get("form_name").asText());
 
-
+            formTable.getColumnAttributes().clear();
             JsonNode dataNodes = rootNode.path("data");
             for (int i = 0; i < dataNodes.size(); i++) {
                 ColumnAttribute ca = new ColumnAttribute();
@@ -79,12 +80,10 @@ public class FormParser {
                         ca.setIsForeign(true);
                     }
                 }
-
-
                 //TODO  for name just set the type to string and the length to 100 need to be fixed
-
                 formTable.getColumnAttributes().add(ca);
             }
+
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }

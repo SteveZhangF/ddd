@@ -34,14 +34,16 @@ public class FormServiceImpl implements FormService {
         // if (ft.getId() == 0 ||formDao.getByKey(ft.getId()) == null) {
         formDao.persist(ft);
         int id = ft.getId();
-        ft.setForm_name("CSTBL_" + id);
+//        ft.setForm_name("CSTBL_" + id);
         //  }
+        ft.setTable_name("CSTBL_"+id);
         formDao.update(ft);
-        //this.generatorTable(ft);
+      //  this.generatorTable(ft);
     }
 
     @Override
     public void update(FormTable formTable) {
+        formTable.setTable_name("CSTBL_"+formTable.getId());
         formDao.update(formTable);
     }
 

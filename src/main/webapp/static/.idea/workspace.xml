@@ -2,9 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dfbfe4d9-c416-4264-b1a7-23e9b7b916e1" name="Default" comment="update form parser">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fd/formParse.js" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../java/app/controller/FormController.java" afterPath="$PROJECT_DIR$/../../java/app/controller/FormController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../java/app/helper/FormParser.java" afterPath="$PROJECT_DIR$/../../java/app/helper/FormParser.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../java/app/service/form/FormServiceImpl.java" afterPath="$PROJECT_DIR$/../../java/app/service/form/FormServiceImpl.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../test/test/service/form/FormServiceTest.java" afterPath="$PROJECT_DIR$/../../../test/test/service/form/FormServiceTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dashboard.html" afterPath="$PROJECT_DIR$/dashboard.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/dashboardyewu/formListCtrl.js" afterPath="$PROJECT_DIR$/js/dashboardyewu/formListCtrl.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/formdesign/js/formParse.js" afterPath="$PROJECT_DIR$/formdesign/js/formParse.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dashboard/form_list.html" afterPath="$PROJECT_DIR$/dashboard/form_list.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/froala/froala.js" afterPath="$PROJECT_DIR$/lib/froala/froala.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fd/formdesign.js" afterPath="$PROJECT_DIR$/fd/formdesign.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/dashboardyewu/formservice.js" afterPath="$PROJECT_DIR$/js/dashboardyewu/formservice.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/formdesign/js/ueditor/third-party/SyntaxHighlighter/shCore.js" afterPath="$PROJECT_DIR$/formdesign/js/ueditor/third-party/SyntaxHighlighter/shCore.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fd/text.html" afterPath="$PROJECT_DIR$/fd/text.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/dashboardyewu/userTableCtrl.js" afterPath="$PROJECT_DIR$/js/dashboardyewu/userTableCtrl.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="static.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -25,11 +37,78 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="formListCtrl.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="formdesign.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/fd/formdesign.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="142" column="34" selection-start-line="142" selection-start-column="34" selection-end-line="142" selection-end-column="34" />
+              <folding>
+                <element signature="e#62#120#0" expanded="false" />
+                <element signature="e#200#321#0" expanded="false" />
+                <element signature="e#392#501#0" expanded="false" />
+                <element signature="e#7936#8143#0" expanded="false" />
+                <element signature="e#8316#8580#0" expanded="false" />
+                <element signature="e#8702#8872#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="formListCtrl.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/dashboardyewu/formListCtrl.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7977528">
-              <caret line="71" column="42" selection-start-line="71" selection-start-column="42" selection-end-line="71" selection-end-column="42" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="113" column="47" selection-start-line="113" selection-start-column="47" selection-end-line="113" selection-end-column="47" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/formdesign/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-12.961538">
+              <caret line="169" column="0" selection-start-line="169" selection-start-column="0" selection-end-line="169" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="text.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/fd/text.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-22.23077">
+              <caret line="120" column="55" selection-start-line="120" selection-start-column="55" selection-end-line="120" selection-end-column="55" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="formservice.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/js/dashboardyewu/formservice.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.30607477">
+              <caret line="73" column="174" selection-start-line="73" selection-start-column="174" selection-end-line="73" selection-end-column="174" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="formParse.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/formdesign/js/formParse.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="36" column="74" selection-start-line="36" selection-start-column="74" selection-end-line="36" selection-end-column="74" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="userTableCtrl.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/js/dashboardyewu/userTableCtrl.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -38,8 +117,8 @@
       <file leaf-file-name="form_list.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dashboard/form_list.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-11.076923">
-              <caret line="25" column="26" selection-start-line="25" selection-start-column="26" selection-end-line="25" selection-end-column="26" />
+            <state vertical-scroll-proportion="-16.692308">
+              <caret line="119" column="76" selection-start-line="119" selection-start-column="11" selection-end-line="119" selection-end-column="76" />
               <folding />
             </state>
           </provider>
@@ -73,16 +152,13 @@
         <option value="$PROJECT_DIR$/js/dashboardyewu/formcontroller.js" />
         <option value="$PROJECT_DIR$/lib/angular-smart-table/dist/smart-table.js" />
         <option value="$PROJECT_DIR$/dashboard/user_list.html" />
-        <option value="$PROJECT_DIR$/js/dashboardyewu/userTableCtrl.js" />
         <option value="$PROJECT_DIR$/Flowdesign/index.html" />
         <option value="$PROJECT_DIR$/js/dashboardyewu/formlistController.js" />
         <option value="$PROJECT_DIR$/js/dashboardyewu/ddd.js" />
         <option value="$PROJECT_DIR$/dashboardlayout/side_bar.html" />
-        <option value="$PROJECT_DIR$/formdesign/js/formParse.js" />
         <option value="$PROJECT_DIR$/js/glo/formEditor.js" />
         <option value="$PROJECT_DIR$/lib/froala/froala-sanitize.js" />
         <option value="$PROJECT_DIR$/js/dashboard.js" />
-        <option value="$PROJECT_DIR$/dashboard.html" />
         <option value="$PROJECT_DIR$/dashboardlayout/head.html" />
         <option value="$PROJECT_DIR$/lib/wysiwyg/js/plugins/align.min.js" />
         <option value="$PROJECT_DIR$/lib/wysiwyg/js/plugins/table.min.js" />
@@ -90,13 +166,17 @@
         <option value="$PROJECT_DIR$/lib/wysiwyg/js/plugins/link.min.js" />
         <option value="$PROJECT_DIR$/lib/wysiwyg/js/froala_editor.min.js" />
         <option value="$PROJECT_DIR$/fd/leipi.html" />
-        <option value="$PROJECT_DIR$/fd/text.html" />
-        <option value="$PROJECT_DIR$/fd/formdesign.js" />
         <option value="$PROJECT_DIR$/fd/formParse.js" />
-        <option value="$PROJECT_DIR$/js/dashboardyewu/formservice.js" />
         <option value="$PROJECT_DIR$/lib/froala/froala.js" />
+        <option value="$PROJECT_DIR$/js/dashboardyewu/userTableCtrl.js" />
         <option value="$PROJECT_DIR$/dashboard/form_list.html" />
+        <option value="$PROJECT_DIR$/formdesign/js/ueditor/third-party/SyntaxHighlighter/shCore.js" />
+        <option value="$PROJECT_DIR$/dashboard.html" />
+        <option value="$PROJECT_DIR$/formdesign/js/formParse.js" />
         <option value="$PROJECT_DIR$/js/dashboardyewu/formListCtrl.js" />
+        <option value="$PROJECT_DIR$/fd/formdesign.js" />
+        <option value="$PROJECT_DIR$/fd/text.html" />
+        <option value="$PROJECT_DIR$/js/dashboardyewu/formservice.js" />
       </list>
     </option>
   </component>
@@ -109,8 +189,8 @@
   </component>
   <component name="ProjectFrameBounds">
     <option name="y" value="23" />
-    <option name="width" value="1280" />
-    <option name="height" value="691" />
+    <option name="width" value="1920" />
+    <option name="height" value="971" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -164,38 +244,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="lib" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="static" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="static" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lib" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="froala" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="static" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="static" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="js" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -215,20 +263,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="dashboardyewu" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="static" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="static" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fd" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -397,6 +431,9 @@
     <configuration default="false" name="dashboard.html" type="JavascriptDebugType" factoryName="JavaScript Debug" temporary="true" nameIsGenerated="true" uri="http://localhost:63343/static/dashboard.html">
       <method />
     </configuration>
+    <configuration default="false" name="index.html" type="JavascriptDebugType" factoryName="JavaScript Debug" temporary="true" nameIsGenerated="true" uri="http://localhost:63343/static/formdesign/index.html">
+      <method />
+    </configuration>
     <configuration default="true" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
       <method />
     </configuration>
@@ -435,14 +472,16 @@
       <envs />
       <method />
     </configuration>
-    <list size="2">
+    <list size="3">
       <item index="0" class="java.lang.String" itemvalue="JavaScript Debug.form_list.html" />
       <item index="1" class="java.lang.String" itemvalue="JavaScript Debug.dashboard.html" />
+      <item index="2" class="java.lang.String" itemvalue="JavaScript Debug.index.html" />
     </list>
     <recent_temporary>
-      <list size="2">
+      <list size="3">
         <item index="0" class="java.lang.String" itemvalue="JavaScript Debug.dashboard.html" />
-        <item index="1" class="java.lang.String" itemvalue="JavaScript Debug.form_list.html" />
+        <item index="1" class="java.lang.String" itemvalue="JavaScript Debug.index.html" />
+        <item index="2" class="java.lang.String" itemvalue="JavaScript Debug.form_list.html" />
       </list>
     </recent_temporary>
   </component>
@@ -469,17 +508,17 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1280" height="691" extended-state="6" />
+    <frame x="0" y="23" width="1920" height="971" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22936508" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15210526" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32993197" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32993197" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.069767445" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.45124716" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -533,41 +572,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/dashboard/modal_list.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dashboard/user_list.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.30769232">
-          <caret line="39" column="28" selection-start-line="0" selection-start-column="0" selection-end-line="56" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dashboardlayout/side_bar.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.10817308">
-          <caret line="6" column="32" selection-start-line="6" selection-start-column="32" selection-end-line="6" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/dashboardyewu/userlistController.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.07009346">
-          <caret line="4" column="37" selection-start-line="4" selection-start-column="37" selection-end-line="4" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/dashboardyewu/formcontroller.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.28037384">
-          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/glo/list.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -627,13 +631,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/formdesign/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-25.692308">
-          <caret line="190" column="0" selection-start-line="190" selection-start-column="0" selection-end-line="190" selection-end-column="107" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/app.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -673,6 +670,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.37850466">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -799,14 +797,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dashboard.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-8.307693">
-          <caret line="12" column="46" selection-start-line="12" selection-start-column="46" selection-end-line="12" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/formdesign/js/ueditor/third-party/video-js/video.dev.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33294392">
@@ -845,66 +835,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/formdesign/js/ueditor/third-party/SyntaxHighlighter/shCore.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.27604166">
-          <caret line="343" column="4" selection-start-line="343" selection-start-column="4" selection-end-line="343" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/formdesign/js/formParse.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/formdesign/js/ueditor/formdesign/text.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="1.7709091">
           <caret line="95" column="60" selection-start-line="95" selection-start-column="53" selection-end-line="95" selection-end-column="60" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fd/text.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-14.230769">
-          <caret line="168" column="79" selection-start-line="168" selection-start-column="14" selection-end-line="168" selection-end-column="79" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fd/formdesign.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.34375">
-          <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-          <folding>
-            <element signature="e#62#120#0" expanded="false" />
-            <element signature="e#200#321#0" expanded="false" />
-            <element signature="e#392#501#0" expanded="false" />
-            <element signature="e#635#7800#0" expanded="false" />
-            <element signature="e#7994#8201#0" expanded="false" />
-            <element signature="e#8374#8638#0" expanded="false" />
-            <element signature="e#8760#8930#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/dashboardyewu/formservice.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.65625">
-          <caret line="228" column="14" selection-start-line="222" selection-start-column="11" selection-end-line="228" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fd/formParse.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0625">
-          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -927,18 +861,123 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/js/dashboardyewu/user_controller.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/dashboardyewu/userlistController.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="25" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/dashboardyewu/userTableCtrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/dashboard/form_list.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.076923">
-          <caret line="25" column="26" selection-start-line="25" selection-start-column="26" selection-end-line="25" selection-end-column="26" />
+        <state vertical-scroll-proportion="-16.692308">
+          <caret line="119" column="76" selection-start-line="119" selection-start-column="11" selection-end-line="119" selection-end-column="76" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/dashboardyewu/formcontroller.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.10514019">
+          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavaScriptLanguage.jar!/com/intellij/lang/javascript/index/predefined/E4X.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33294392">
+          <caret line="236" column="0" selection-start-line="236" selection-start-column="0" selection-end-line="236" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dashboard.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-15.307693">
+          <caret line="43" column="59" selection-start-line="43" selection-start-column="59" selection-end-line="43" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/formdesign/js/ueditor/third-party/SyntaxHighlighter/shCore.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.35397196">
+          <caret line="344" column="34" selection-start-line="344" selection-start-column="34" selection-end-line="344" selection-end-column="34" />
+          <folding>
+            <element signature="e#14948#15279#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/formdesign/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-12.961538">
+          <caret line="169" column="0" selection-start-line="169" selection-start-column="0" selection-end-line="169" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/formdesign/js/formParse.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="36" column="74" selection-start-line="36" selection-start-column="74" selection-end-line="36" selection-end-column="74" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/dashboardyewu/formListCtrl.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7977528">
-          <caret line="71" column="42" selection-start-line="71" selection-start-column="42" selection-end-line="71" selection-end-column="42" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="113" column="47" selection-start-line="113" selection-start-column="47" selection-end-line="113" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fd/formdesign.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="142" column="34" selection-start-line="142" selection-start-column="34" selection-end-line="142" selection-end-column="34" />
+          <folding>
+            <element signature="e#62#120#0" expanded="false" />
+            <element signature="e#200#321#0" expanded="false" />
+            <element signature="e#392#501#0" expanded="false" />
+            <element signature="e#7936#8143#0" expanded="false" />
+            <element signature="e#8316#8580#0" expanded="false" />
+            <element signature="e#8702#8872#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fd/text.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-22.23077">
+          <caret line="120" column="55" selection-start-line="120" selection-start-column="55" selection-end-line="120" selection-end-column="55" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/dashboardyewu/formservice.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.30607477">
+          <caret line="73" column="174" selection-start-line="73" selection-start-column="174" selection-end-line="73" selection-end-column="174" />
           <folding />
         </state>
       </provider>

@@ -29,15 +29,13 @@ var leipiFormDesign = {
      */
     parse_form: function (template, fields) {
         //正则  radios|checkboxs|select 匹配的边界 |--|  因为当使用 {} 时js报错
-        console.log(fields);
-
         var preg = /(\|-<span(((?!<span).)*leipiplugins=\"(radios|checkboxs|select)\".*?)>(.*?)<\/span>-\||<(img|input|textarea|select).*?(<\/select>|<\/textarea>|\/>))/gi, preg_attr = /(\w+)=\"(.?|.+?)\"/gi, preg_group = /<input.*?\/>/gi;
         if (!fields) fields = 0;
-
         var template_parse = template, template_data = new Array(), add_fields = new Object(), checkboxs = 0;
 
         var pno = 0;
         template.replace(preg, function (plugin, p1, p2, p3, p4, p5, p6) {
+            console.log('replacing');
             var parse_attr = new Array(), attr_arr_all = new Object(), name = '', select_dot = '', is_new = false;
             var p0 = plugin;
             var tag = p6 ? p6 : p4;

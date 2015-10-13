@@ -131,11 +131,6 @@
             // editor.execCommand('insertHtml', oNode.outerHTML);
         } catch (e) {
             console.log(e);
-            try {
-                editor.execCommand('error');
-            } catch (e) {
-                alert('控件异常，请到 [雷劈网] 反馈或寻求帮助！');
-            }
             return false;
         }
 

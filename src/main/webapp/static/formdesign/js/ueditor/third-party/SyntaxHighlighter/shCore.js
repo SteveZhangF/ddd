@@ -342,6 +342,7 @@ if (XRegExp) {
     // during replacement iterations. Note that this doesn't support SpiderMonkey's proprietary
     // third (`flags`) parameter
     String.prototype.replace = function (search, replacement) {
+        console.log('replaceing');
         var isRegex = XRegExp.isRegExp(search),
             captureNames, result, str, origLastIndex;
 

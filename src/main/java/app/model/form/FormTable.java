@@ -2,11 +2,12 @@ package app.model.form;
 
 import app.model.wordflow.WorkFlowNodeElement;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,19 +17,23 @@ import java.util.List;
  */
 @Entity
 @Table(name = "tbl_forms")
-public class FormTable implements WorkFlowNodeElement{
+public class FormTable implements WorkFlowNodeElement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String form_name;// name of the form
 
+    private String table_name;
+
+    private FormType formType;
+
     private String form_desc;// description of the form
     @Lob
-    @Column(name = "context", columnDefinition = "BLOB")
+    @Column(columnDefinition = "BLOB")
     private String context;// the origin context
     @Lob
-    @Column(name = "context_parse", columnDefinition = "BLOB")
+    @Column( columnDefinition = "BLOB")
     private String context_parse; // the pared context
 
     private int fields_count; // the columnAttributes count
@@ -57,7 +62,7 @@ public class FormTable implements WorkFlowNodeElement{
 
     @JsonIgnore
     @OneToMany(mappedBy = "formTable") // --->
-    @Cascade({org.hibernate.annotations.CascadeType.ALL})
+    @Cascade({CascadeType.ALL})
     @LazyCollection(LazyCollectionOption.FALSE) // --->
     private List<ColumnAttribute> columnAttributes = new ArrayList<ColumnAttribute>();
 
@@ -134,5 +139,21 @@ public class FormTable implements WorkFlowNodeElement{
         this.creator = creator;
     }
 
+
+    public FormType getFormType() {
+        return formType;
+    }
+
+    public void setFormType(FormType formType) {
+        this.formType = formType;
+    }
+
+    public String getTable_name() {
+        return table_name;
+    }
+
+    public void setTable_name(String table_name) {
+        this.table_name = table_name;
+    }
 
 }

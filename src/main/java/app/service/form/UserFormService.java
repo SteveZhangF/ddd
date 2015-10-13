@@ -10,9 +10,8 @@ public interface UserFormService {
     /**
      * insert value into the customized table
      * @param formID which table;
-     * @param oe_id the id of who had filled the form and submit
      * */
-    public void insert(int formID,int oe_id,Map<String,Object> values);
+    public void insert(int formID,Map<String,Object> values);
     /**
      * get the result
      * @Param formID

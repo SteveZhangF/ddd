@@ -7,7 +7,6 @@ app.controller('userTableCtrl', ['$scope',"$filter", "UserService", function ($s
     var users = "[{\"id\":5,\"ssoId\":\"www\",\"password\":\"qqq\",\"companyId\":null,\"email\":\"wwwW2@we\"" +
         ",\"state\":\"Active\",\"userProfiles\":[]},{\"id\":6,\"ssoId\":\"ddd\",\"password\":\"www\",\"companyId\":null,\"email\":" + "\"ddd\",\"state\":\"Active\",\"userProfiles\":[]}]";
     $scope.users = JSON.parse(users);
-    console.log("dddd");
 
     self.fetchAllUsers = function () {
         UserService.fetchAllUsers()

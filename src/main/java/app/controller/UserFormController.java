@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.print.attribute.standard.Media;
 import java.util.Map;
 
 /**
@@ -46,4 +47,10 @@ public class UserFormController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @RequestMapping(value="",method=RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity insertRecord(@RequestBody Map<String,Object> map){
+        int form_id = Integer.valueOf((String)map.get("form_id"));
+        userFormService.insert(form_id,map);
+        return null;
+    }
 }

@@ -7,12 +7,12 @@ app.controller('formListCtrl', ['$scope', "FormService", function ($scope, FormS
     console.log("test form list in");
     $scope.myHtml = {value:"<h1>Do ur Best</h1>"};
     $scope.froalaOptions = {
-        toolbarButtons : ["bold", "italic", "underline", "sep", "align", "formDesigner","showFormDesign","formDesignText"]
+      //  toolbarButtons : ["bold", "italic", "underline", "sep", "align", "formDesigner","showFormDesign","formDesignText"]
     };
 
     $scope.forms = [];
 
-    $scope.formDetail = {
+    var formDetail_ = {
         id: "",
         fields_count: "",
         creator: "",
@@ -22,10 +22,11 @@ app.controller('formListCtrl', ['$scope', "FormService", function ($scope, FormS
         context_parse: "",
         context: "",
         form_desc: "",
-        form_name: ""
+        form_name: "",
+        data:""
     };
     //backup for null form
-    var formDetail_ = $scope.formDetail;
+    $scope.formDetail = formDetail_;
     $scope.editing = false;
     self.fetchAllForms = function () {
         FormService.fetchAllForms()
@@ -61,7 +62,19 @@ app.controller('formListCtrl', ['$scope', "FormService", function ($scope, FormS
     $scope.addNewForm = function () {
         $scope.editing = true;
         $scope.isNew = true;
-        $scope.formDetail = formDetail_;
+        $scope.formDetail = {
+            id: "",
+            fields_count: "",
+            creator: "",
+            createTime: "",
+            updateTime: "",
+            _del: "",
+            context_parse: "",
+            context: "",
+            form_desc: "",
+            form_name: "",
+            data:""
+        };
         console.log("adding..");
     };
     $scope.deleteForm = function (form) {
@@ -97,21 +110,20 @@ app.controller('formListCtrl', ['$scope', "FormService", function ($scope, FormS
      * */
     $scope.save = function () {
         //TODO
-        console.log($scope.formDetail);
+        console.log("get from editor");
+        console.log($scope.formDetail.context);
+        console.log('end get from editor');
         var form = FormService.parse_form($scope.formDetail.context,0);
-        form.creator = $scope.formDetail.creator;
-        form._del = false;
-        form.form_desc = $scope.formDetail.form_desc;
-        form.form_name = $scope.formDetail.form_name;
-        form.id=$scope.formDetail.id;
-        console.log(form);
+        $scope.formDetail.context = form.context;
+        $scope.formDetail.context_parse = form.context_parse;
+        $scope.formDetail.fields_count = form.fields_count;
+        $scope.formDetail.data=form.data;
         //$scope.saveForm(form);
+        console.log(JSON.stringify($scope.formDetail));
         $scope.forms.push(form);
         $scope.editing = false;
     };
     $scope.update = function () {
-        //TODO
-        console.log($scope.formDetail);
         var form = FormService.parse_form($scope.formDetail.context,0);
         //form.creator = $scope.formDetail.creator;
         //form._del = false;
@@ -119,8 +131,10 @@ app.controller('formListCtrl', ['$scope', "FormService", function ($scope, FormS
         //form.form_name = $scope.formDetail.form_name;
         //form.id=$scope.formDetail.id;
         $scope.formDetail.context = form.context;
+        console.log(form.context);
         $scope.formDetail.context_parse = form.context_parse;
         $scope.formDetail.fields_count = form.fields_count;
+        //TODO
         //$scope.updateForm(form);
         $scope.editing = false;
     };

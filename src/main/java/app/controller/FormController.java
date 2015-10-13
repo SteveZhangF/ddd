@@ -36,7 +36,7 @@ public class FormController {
     //-------------------Retrieve Single FormTable--------------------------------------------------------
 
     @RequestMapping(value = "/formtable/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<FormTable> getUser(@PathVariable("id") int id) {
+    public ResponseEntity<FormTable> getForm(@PathVariable("id") int id) {
         FormTable formTable = formService.findbyID(id);
         if (formTable == null) {
             return new ResponseEntity<FormTable>(HttpStatus.NOT_FOUND);
@@ -55,16 +55,21 @@ public class FormController {
         FormParser formParser = new FormParser(formTable);
         FormTable ft = formParser.parseForm();
         formService.save(ft);
+        formService.generatorTable(ft);
         return new ResponseEntity<FormTable>(ft, HttpStatus.CREATED);
     }
 
     //------------------- Update a FormTable (maybe not useful) --------------------------------------------------------
 
     @RequestMapping(value = "/formtable/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<FormTable> updateFormTable(@PathVariable("id") int id, @RequestBody FormTable formTable) {
-        formTable.setId(id);
-        formService.update(formTable);
-        return new ResponseEntity<FormTable>(formTable, HttpStatus.OK);
+    public ResponseEntity<FormTable> updateFormTable(@PathVariable("id") int id, @RequestBody String formTable) {
+//        formTable.setId(id);
+//        formService.update(formTable);
+        FormParser formParser = new FormParser(formTable);
+        FormTable ft = formParser.parseForm();
+        formService.save(ft);
+        formService.generatorTable(ft);
+        return new ResponseEntity<FormTable>(ft, HttpStatus.OK);
     }
 
 

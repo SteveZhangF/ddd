@@ -6,7 +6,7 @@
 <hibernate-mapping>
     <class
             name="${entity.form_name}"
-            table="${entity.form_name}"
+            table="${entity.table_name}"
             dynamic-update="false"
             dynamic-insert="false"
             select-before-update="false"

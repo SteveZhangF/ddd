@@ -2,8 +2,12 @@ package app.model.form;
 
 import app.model.wordflow.WorkFlowNode;
 import app.model.wordflow.WorkFlowNodeElement;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * Created by steve on 10/9/15.
@@ -50,6 +54,7 @@ public class ColumnAttribute implements WorkFlowNodeElement{
 
     @ManyToOne
     @JoinColumn(name = "formTable")
+    @Cascade({CascadeType.ALL})
     private FormTable formTable;
 
     public String getOrgtype() {

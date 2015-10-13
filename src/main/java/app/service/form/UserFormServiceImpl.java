@@ -41,20 +41,26 @@ public class UserFormServiceImpl implements UserFormService {
     private SessionFactory sessionFactory;
 
     @Override
-    public void insert(int formID, int oe_id, Map<String, Object> values) {
+    public void insert(int formID, Map<String, Object> values) {
         String insert = formService.generateInsertSQL(formID);
         Session session = sessionFactory.openSession();
         session.getTransaction().begin();
         Query query = session.createSQLQuery(insert);
-        for (String key : values.keySet()) {
-            Object value = values.get(key);
-            query.setParameter(key, value);
+        for(ColumnAttribute columnAttribute : formService.findbyID(formID).getColumnAttributes()){
+            if(columnAttribute.getColumn_type().equals("macros")){
+                String orgType = columnAttribute.getOrgtype();
+                query.setParameter(orgType,values.get(orgType));
+            }else {
+                query.setParameter(columnAttribute.getColumn_Name(),values.get(columnAttribute.getColumn_Name()));
+            }
         }
         System.out.print(query
                 .getQueryString());
         query.executeUpdate();
         session.close();
     }
+
+
 
     @Override
     public List query(int formID, Map<String, Object> foreignMap) throws ClassNotFoundException {
