@@ -8,20 +8,9 @@
 
 package app.model.wordflow;
 
-import java.util.HashMap;
-
 /**
- * Created by steve on 10/13/15.
+ * Created by steve on 10/14/15.
  */
-public class BranchNode extends WorkFlowNode {
+public class Connection {
 
-    private HashMap<String,WorkFlowNode> processtoBranch = new HashMap<>();
-
-    public HashMap<String, WorkFlowNode> getProcesstoBranch() {
-        return processtoBranch;
-    }
-
-    public void setProcesstoBranch(HashMap<String, WorkFlowNode> processtoBranch) {
-        this.processtoBranch = processtoBranch;
-    }
 }

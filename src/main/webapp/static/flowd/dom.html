@@ -1,55 +1,106 @@
-<div class="col-md-2" id="left" ng-controller="flowToolBarController as controller">
-    <button ng-click="showNodes()">Actions</button>
-    <button ng-click="showForms()">Forms</button>
-    <div id="controllernodes" ng-show="toolbar_nodes">
-        <button ng-click="save()">Save</button>
-        <div class="node radius" id="node1">Start</div>
-        <div class="node" id="node2">Action</div>
-        <div class="node" id="node3">Question</div>
-        <div class="node radius" id="node4">End</div>
+<div ng-controller="flowToolBarController as controller">
+
+    <button ng-if="!editing" ng-click="addNewWorkflow()">Add new Workflow</button>
+    <div ng-if="!editing">
+
+        <table st-table="workflows" class="table table-striped">
+            <thead>
+            <tr>
+                <th st-sort="id">ID</th>
+                <th st-sort="workflowname">Work Flow Name</th>
+                <th st-sort="creator">creator</th>
+                <th st-sort="createTime">Create Time</th>
+                <th st-sort="updateTime">Update Time</th>
+            </tr>
+            <tr>
+                <th colspan="1">
+                    <input st-search="workflowname" placeholder="search for Workflow Name" class="input-sm form-control"
+                           type="search"/>
+                </th>
+                <th colspan="2">
+                    <input st-search="creator" placeholder="search for Creator" class="input-sm form-control"
+                           type="search"/>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {{workflows.length}}
+            <tr ng-repeat="x in workflows">
+                <td>{{ $index + 1 }}</td>
+                <td>{{ x.id }}</td>
+                <td>{{x.workflowname}}</td>
+                <td>{{x.creator}}</td>
+                <td>{{x.createTime}}</td>
+                <td>{{x.updateTime}}</td>
+                <td>
+                    <button type="button" ng-click="editWorkFlow(x)" class="btn btn-sm">
+                        <i class="glyphicon glyphicon-remove-circle">
+                        </i>
+                    </button>
+                    <button type="button" ng-click="deleteWorkFlow(x)" class="btn btn-sm btn-danger">
+                        <i class="glyphicon glyphicon-remove-circle">
+                        </i>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 
-    <div ng-show="toolbar_forms">
-        <ui-virtual-list ui-data-provider="controller.dataProvider" ui-on-select="controller.onSelect(option)"
-                         ng-model="controller.selectedOption"></ui-virtual-list>
-        <div class="node" id="previewNode" nodetype="{{selectedNode.nodetype}}" node_data="{{selectedNode.data}}">
-            {{selectedNode.label}}
+    <div id="editArea" ng-show="editing">
+        <div class="well">
+            <div class="alert alert-info">
+                <form class="form-inline">
+                    <div class="form-group">
+                        <label for="Creator">Creator:</label>
+                        <input ng-model="workflowDetail.creator" type="text" class="form-control" id="Creator"
+                               placeholder="Jane Doe" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="FormName">Form Name:</label>
+                        <input ng-model="workflowDetail.workflowname" type="text" class="form-control" id="FormName"
+                               placeholder="Employee Training">
+                    </div>
+                    <button class="submit" ng-click="saveWorkFlow()">Save</button>
+                    <input ng-model="workflowDetail.id" type="hidden"/>
+                </form>
+                <form class="form-inline">
+                    <div class="form-group">
+                        <label for="wf_desc">Description:</label>
+                        <textarea id="wf_desc" ng-model="workflowDetail.workflow_desc" class="form-control"
+                                  rows="3"></textarea>
+                    </div>
+                </form>
+
+            </div>
+
+            <div class="row">
+
+                <div id="left" class="col-md-2 alert alert-info">
+                    <button ng-click="showNodes()">Actions</button>
+                    <button ng-click="showForms()">Forms</button>
+                    <div id="controllernodes" ng-show="toolbar_nodes">
+                        <div class="node radius" id="node1">Start</div>
+                        <div class="node" id="node2">Action</div>
+                        <div class="node" id="node3">Question</div>
+                        <div class="node radius" id="node4">End</div>
+                    </div>
+
+                    <div ng-show="toolbar_forms">
+                        <ui-virtual-list ui-data-provider="controller.dataProvider"
+                                         ui-on-select="controller.onSelect(option)"
+                                         ng-model="controller.selectedOption"></ui-virtual-list>
+                        <div class="node" id="previewNode" nodetype="{{selectedNode.nodetype}}"
+                             node_data="{{selectedNode.data}}">
+                            {{selectedNode.label}}
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-10 alert alert-warning" id="diagramarea"></div>
+            </div>
         </div>
     </div>
-    <div id="questionDialog" class='modal'>
-        <div class="modal-body">
-            <form>
-                <table>
-                    <tr>{{options.selected_question}}
-                        <td>Question Name</td>
-                        <td><input ng-model='options.selected_question.question_name'name="question_name" type="text" value=""/></td>
-                    </tr>
-                    <tr>
-                        <td>Branch Count</td>
-                        <td><input ng-model="options.selected_question.branches.length" name="branch_count" type="number" value="2"></td>
-                    </tr>
-                    <tr>
-                        <td>Branch Name</td>
-                        <td>Branch Value</td>
-                        <td ng-click="options.selected_question.branches.push({branch_name:'',branch_value:''})"><span>Add</span></td>
-                    </tr>
-                    <tr ng-repeat="b in options.selected_question.branches">
-                        <td><input type="text" ng-model="b.branch_name" ></td>
-                        <td><input type="text" ng-model="b.branch_value"></td>
-                    </tr>
-
-
-                </table>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-primary" type="button" ng-click="questionDialogok()">OK</button>
-            <button class="btn btn-warning" type="button" ng-click="questionDialogcancel()">Cancel</button>
-        </div>
-    </div>
-</div>
-
-<div class="col-md-10" id="diagramarea">
 </div>
 <style type="text/css">
 
@@ -138,14 +189,14 @@
     }
 
     #left {
-        border: 1px solid #00bfff;
-        width: 200px;
+        /*border: 1px solid #00bfff;*/
+        /*width: 200px;*/
         height: 750px;
     }
 
     #diagramarea {
-        border: 1px solid #00bfff;
-        width: 1024px;
+        /*border: 1px solid #00bfff;*/
+        /*width: 1024px;*/
         height: 750px;
     }
 

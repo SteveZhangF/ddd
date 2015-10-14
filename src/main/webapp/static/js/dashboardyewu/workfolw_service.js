@@ -1,6 +1,6 @@
 'use strict';
 
-app.factory('FormService', ['$http', '$q', function ($http, $q) {
+app.factory('WorkFlowService', ['$http', '$q', function ($http, $q) {
 
     return {
 
