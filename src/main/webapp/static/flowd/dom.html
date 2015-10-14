@@ -1,0 +1,230 @@
+<div class="col-md-2" id="left" ng-controller="flowToolBarController as controller">
+    <button ng-click="showNodes()">Actions</button>
+    <button ng-click="showForms()">Forms</button>
+    <div id="controllernodes" ng-show="toolbar_nodes">
+        <button ng-click="save()">Save</button>
+        <div class="node radius" id="node1">Start</div>
+        <div class="node" id="node2">Action</div>
+        <div class="node" id="node3">Question</div>
+        <div class="node radius" id="node4">End</div>
+    </div>
+
+    <div ng-show="toolbar_forms">
+        <ui-virtual-list ui-data-provider="controller.dataProvider" ui-on-select="controller.onSelect(option)"
+                         ng-model="controller.selectedOption"></ui-virtual-list>
+        <div class="node" id="previewNode" nodetype="{{selectedNode.nodetype}}" node_data="{{selectedNode.data}}">
+            {{selectedNode.label}}
+        </div>
+    </div>
+    <div id="questionDialog" class='modal'>
+        <div class="modal-body">
+            <form>
+                <table>
+                    <tr>{{options.selected_question}}
+                        <td>Question Name</td>
+                        <td><input ng-model='options.selected_question.question_name'name="question_name" type="text" value=""/></td>
+                    </tr>
+                    <tr>
+                        <td>Branch Count</td>
+                        <td><input ng-model="options.selected_question.branches.length" name="branch_count" type="number" value="2"></td>
+                    </tr>
+                    <tr>
+                        <td>Branch Name</td>
+                        <td>Branch Value</td>
+                        <td ng-click="options.selected_question.branches.push({branch_name:'',branch_value:''})"><span>Add</span></td>
+                    </tr>
+                    <tr ng-repeat="b in options.selected_question.branches">
+                        <td><input type="text" ng-model="b.branch_name" ></td>
+                        <td><input type="text" ng-model="b.branch_value"></td>
+                    </tr>
+
+
+                </table>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="questionDialogok()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="questionDialogcancel()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-10" id="diagramarea">
+</div>
+<style type="text/css">
+
+
+    #questionDialog {
+        z-index: 900;
+        position: absolute;
+        width: 500px;
+        height: 300px;
+        border: 2px solid #00bfff;
+        filter: alpha(opacity=45);
+        background: grey;
+    }
+
+    .row {
+        margin: 0 !important;
+    }
+
+    ui-virtual-list {
+        max-height: 200px;
+        overflow-y: auto;
+        display: block;
+    }
+
+    ui-virtual-list .canvas {
+        background-color: #eee;
+        position: relative;
+    }
+
+    ui-virtual-list div.renderer {
+        display: block;
+        width: 100%;
+        cursor: pointer;
+        position: absolute;
+        height: 30px;
+        line-height: 30px;
+    }
+
+    ui-virtual-list div.renderer span {
+        margin-left: 10px;
+    }
+
+    ui-virtual-list div.renderer.selected {
+        background-color: #ccc;
+    }
+
+    ui-virtual-list div.renderer:hover {
+        background-color: #666;
+        color: white;
+    }
+
+    .dragActive {
+        border: 2px dotted orange;
+    }
+
+    .dropHover {
+        border: 1px dotted red;
+    }
+
+    .item {
+        border: 1px solid black;
+        background-color: #ddddff;
+        width: 100px;
+        height: 100px;
+        position: absolute;
+    }
+
+    #node1 {
+        left: 15px;
+        top: 100px;
+    }
+
+    #node2 {
+        left: 15px;
+        top: 200px;
+    }
+
+    #node3 {
+        left: 15px;
+        top: 300px;
+    }
+
+    #node4 {
+        left: 15px;
+        top: 400px;
+    }
+
+    #left {
+        border: 1px solid #00bfff;
+        width: 200px;
+        height: 750px;
+    }
+
+    #diagramarea {
+        border: 1px solid #00bfff;
+        width: 1024px;
+        height: 750px;
+    }
+
+    .node {
+        border: 1px solid #346789;
+        box-shadow: 2px 2px 19px #aaa;
+        -o-box-shadow: 2px 2px 19px #aaa;
+        -webkit-box-shadow: 2px 2px 19px #aaa;
+        -moz-box-shadow: 2px 2px 19px #aaa;
+        -moz-border-radius: 0.5em;
+        border-radius: 0.5em;
+        opacity: 0.8;
+        width: 80px;
+        height: 80px;
+        line-height: 80px;
+        cursor: pointer;
+        text-align: center;
+        z-index: 20;
+        position: absolute;
+        background-color: #eeeeef;
+        color: black;
+        font-family: helvetica, sans-serif;
+        padding: 0.5em;
+        font-size: 0.9em;
+        -webkit-transition: -webkit-box-shadow 0.15s ease-in;
+        -moz-transition: -moz-box-shadow 0.15s ease-in;
+        -o-transition: -o-box-shadow 0.15s ease-in;
+        transition: box-shadow 0.15s ease-in;
+    }
+
+    .node:hover {
+        box-shadow: 2px 2px 19px #444;
+        -o-box-shadow: 2px 2px 19px #444;
+        -webkit-box-shadow: 2px 2px 19px #444;
+        -moz-box-shadow: 2px 2px 19px #444;
+        opacity: 0.6;
+    }
+
+    /*.node {*/
+    /*box-shadow: 2px 2px 19px #aaa;*/
+    /*-o-box-shadow: 2px 2px 19px #aaa;*/
+    /*-webkit-box-shadow: 2px 2px 19px #aaa;*/
+    /*-moz-box-shadow: 2px 2px 19px #aaa;*/
+    /*-moz-border-radius: 0.5em;*/
+    /*border-radius: 0.5em;*/
+    /*opacity: 0.8;*/
+    /*filter: alpha(opacity=80);*/
+    /*border: 1px solid #346789;*/
+    /*width: 150px;*/
+    /*/!*line-height: 40px;*!/*/
+    /*text-align: center;*/
+    /*z-index: 20;*/
+    /*position: absolute;*/
+    /*background-color: #eeeeef;*/
+    /*color: black;*/
+    /*padding: 10px;*/
+    /*font-size: 9pt;*/
+    /*cursor: pointer;*/
+    /*height: 50px;*/
+    /*line-height: 50px;*/
+    /*}*/
+
+    .radius {
+        border-radius: 25em;
+    }
+
+    /*.node:hover {*/
+    /*box-shadow: 2px 2px 19px #444;*/
+    /*-o-box-shadow: 2px 2px 19px #444;*/
+    /*-webkit-box-shadow: 2px 2px 19px #444;*/
+    /*-moz-box-shadow: 2px 2px 19px #444;*/
+    /*opacity: 0.8;*/
+    /*filter: alpha(opacity=80);*/
+    /*}*/
+
+    .current {
+        background-color: #32cd32 !important;
+    }
+</style>
+
+<script>
+</script>

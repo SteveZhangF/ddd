@@ -54,7 +54,7 @@ public class ColumnAttribute implements WorkFlowNodeElement{
 
     @ManyToOne
     @JoinColumn(name = "formTable")
-    @Cascade({CascadeType.ALL})
+    @Cascade({CascadeType.SAVE_UPDATE})
     private FormTable formTable;
 
     public String getOrgtype() {

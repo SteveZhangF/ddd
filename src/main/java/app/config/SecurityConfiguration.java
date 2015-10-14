@@ -37,7 +37,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.exceptionHandling().and().anonymous().and().servletApi().and().headers().cacheControl().and().and()
                 .authorizeRequests()
                 .antMatchers("/").permitAll().antMatchers("/favicon.ico").permitAll()
-                .antMatchers("/formtable/").permitAll()
+                .antMatchers("/formtable/*").permitAll()
                 .antMatchers("/static/**").permitAll()
                 .antMatchers("/**/*.html")
                 .permitAll().antMatchers("/**/*.css").permitAll().antMatchers("/**/*.js").permitAll().antMatchers("/static/font/*.*").permitAll()

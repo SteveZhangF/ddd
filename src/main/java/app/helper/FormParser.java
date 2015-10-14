@@ -29,7 +29,12 @@ public class FormParser {
         this.formInfo = input;
     }
 
-    public FormTable parseForm() {
+    /**
+     * parse and generate or update the form table
+     * @Para formTable the form Table which need to be updated, set null when create a new one
+     * @return  return the updated form table or new one
+     * */
+    public FormTable parseForm(FormTable formTable) {
 //            id: formid,
 //                    form_name: form_name,
 //                    form_desc: form_desc,
@@ -39,18 +44,23 @@ public class FormParser {
 //                    context_parse: parse_form.context_parse,
 //                    data:parse_form.data
         ObjectMapper mapper = new ObjectMapper();
-        FormTable formTable = new FormTable();
+        if(formTable == null){
+            formTable = new FormTable();
+            System.out.println("============================");
+            System.err.println("creating new form table");
+            System.out.println("============================");
+        }
         try {
             JsonNode rootNode = mapper.readTree(formInfo); // 读取Json
             formTable.setFields_count(Integer.valueOf(rootNode.get("fields_count").asInt()));
             formTable.setCreator(rootNode.get("creator").asText());
-           // formTable.setId(rootNode.get("id").asInt());
+//            formTable.setId(rootNode.get("id").asInt());
             formTable.setForm_desc(rootNode.get("form_desc").asText());
             formTable.setContext(rootNode.get("context").asText());
             formTable.setContext_parse(rootNode.get("context_parse").asText());
             formTable.setForm_name(rootNode.get("form_name").asText());
 
-            formTable.getColumnAttributes().clear();
+//            formTable.getColumnAttributes().clear();
             JsonNode dataNodes = rootNode.path("data");
             for (int i = 0; i < dataNodes.size(); i++) {
                 ColumnAttribute ca = new ColumnAttribute();
@@ -81,7 +91,7 @@ public class FormParser {
                     }
                 }
                 //TODO  for name just set the type to string and the length to 100 need to be fixed
-                formTable.getColumnAttributes().add(ca);
+                formTable.addColumn(ca);
             }
 
         } catch (IOException ioe) {

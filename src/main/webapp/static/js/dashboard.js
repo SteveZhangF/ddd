@@ -75,7 +75,9 @@ app.config(['$routeProvider', function ($routeProvider) {
         templateUrl:"dashboard/form_list.html",
         //TODO remove resolve commit
         //resolve: resolve
-    })
+    }).when("/workflows",{
+        templateUrl:"dashboard/workflow.html"
+    });
 
 }]);
 app.filter('checkmark', function () {
@@ -99,4 +101,20 @@ app.controller('DropdownCtrl', function ($scope, $log) {
         $scope.status.isopen = !$scope.status.isopen;
     };
 });
+
+app.controller('flowDesignerController',function($scope){
+    $scope.datajson = [{id:'1',label:'dddd'}];
+    return {
+    }
+});
+
+app.controller('Ctrl', function($scope, $timeout) {
+    $scope.name = 'Tobias';
+    $scope.hideDialog = function () {
+        $scope.dialogIsHidden = true;
+        $timeout(function () {
+            $scope.dialogIsHidden = false;
+        }, 2000);
+    };
+})
 

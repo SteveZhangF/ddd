@@ -4,6 +4,7 @@ import app.dao.form.FormDao;
 import app.helper.ObjectGenerator;
 import app.model.form.ColumnAttribute;
 import app.model.form.FormTable;
+import app.newService.BaseGenericServiceImpl;
 import freemarker.template.Template;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
@@ -24,43 +25,45 @@ import java.util.Properties;
 
 @Service("formService")
 @Transactional
-public class FormServiceImpl implements FormService {
+public class FormServiceImpl extends BaseGenericServiceImpl<FormTable,Integer> implements FormService {
+
+
     @Autowired
     FormDao formDao;
-
     @Override
-    public void save(FormTable ft) {
-        // formDao.persist(formTable);
-        // if (ft.getId() == 0 ||formDao.getByKey(ft.getId()) == null) {
-        formDao.persist(ft);
-        int id = ft.getId();
-//        ft.setForm_name("CSTBL_" + id);
-        //  }
-        ft.setTable_name("CSTBL_"+id);
-        formDao.update(ft);
-      //  this.generatorTable(ft);
+    public void delete(FormTable entity) {
+//        super.delete(entity);
+        formDao.delete(entity);
     }
 
     @Override
-    public void update(FormTable formTable) {
-        formTable.setTable_name("CSTBL_"+formTable.getId());
-        formDao.update(formTable);
+    public FormTable get(Integer id) {
+        return formDao.get(id);
     }
 
     @Override
-    public void delete(FormTable formTable) {
-        formDao.delete(formTable);
+    public FormTable load(Integer id) {
+        return formDao.load(id);
     }
 
     @Override
-    public FormTable findbyID(int id) {
-        FormTable ft = formDao.getByKey(id);
-        return ft;
+    public List<FormTable> loadAll() {
+        return formDao.loadAll();
     }
 
     @Override
-    public List<FormTable> list() {
-        return formDao.list();
+    public void save(FormTable entity) {
+        formDao.save(entity);
+    }
+
+    @Override
+    public void saveOrUpdate(FormTable entity) {
+        formDao.saveOrUpdate(entity);
+    }
+
+    @Override
+    public void update(FormTable entity) {
+        formDao.update(entity);
     }
 
     /**
@@ -96,33 +99,8 @@ public class FormServiceImpl implements FormService {
         }
     }
 
-    /**
-     * INSERT INTO `osha`.`CSTBL_18`
-     * (`ID`,
-     * `data_1`,
-     * `data_2`,
-     * `data_3`,
-     * `data_4__data_5__data_6`,
-     * `sys_date_cn`,
-     * `data_8`,
-     * `data_9`,
-     * `data_10`,
-     * `data_11`)
-     * VALUES
-     * (<{ID: }>,
-     * <{data_1: }>,
-     * <{data_2: }>,
-     * <{data_3: }>,
-     * <{data_4__data_5__data_6: }>,
-     * <{sys_date_cn: }>,
-     * <{data_8: }>,
-     * <{data_9: }>,
-     * <{data_10: }>,
-     * <{data_11: }>);
-     */
     @Override
-    public String generateInsertSQL(int formTable_id) {
-        FormTable formTable = formDao.getByKey(formTable_id);
+    public String generateInsertSQL(FormTable formTable) {
         if (formTable.getColumnAttributes().isEmpty()) {
             System.out.println(" column attr list size==0 ");
             return null;
@@ -147,8 +125,7 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public Map<String, Object> generateSelectSQL(int formTable_id, Map<String, Object> foreignMap) throws ClassNotFoundException {
-        FormTable formTable = formDao.getByKey(formTable_id);
+    public Map<String, Object> generateSelectSQL(FormTable formTable, Map<String, Object> foreignMap) throws ClassNotFoundException {
         Map<String, Object> result = new HashMap<>();
         if (formTable.getColumnAttributes().isEmpty()) {
             System.out.println(" column attr list size==0 ");

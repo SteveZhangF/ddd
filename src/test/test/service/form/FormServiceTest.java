@@ -10,10 +10,12 @@ package test.service.form;
 
 import app.config.hibernate.HibernateConfiguration;
 import app.helper.FormParser;
+import app.model.form.ColumnAttribute;
 import app.model.form.FormTable;
 import app.service.form.FormService;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hibernate.SessionFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,56 +42,61 @@ public class FormServiceTest {
 
     @Autowired
     FormService formService;
-    @Autowired
-    HibernateConfiguration hibernateConfiguration;
+
+
+//    @Autowired
+//    HibernateConfiguration hibernateConfiguration;
 
 //    @Test
 //    public void getTest() throws IOException {
-//        int id = 18;
-//        FormTable formTable = formService.findbyID(id);
+//        int id = 20;
+//        FormTable formTable = formService.get(id);
 //        ObjectMapper mapper = new ObjectMapper();
 //        StringWriter sw = new StringWriter();
 //        mapper.writeValue(sw,formTable);
 //        System.out.println(sw.toString());
 //        assert (sw.toString().contains(formTable.getId()+""));
 //    }
-//
-//    @Test
-//    public void saveTest(){
-//        String json = "{\"id\":\"\",\"fields_count\":1,\"creator\":\"\",\"createTime\":\"\",\"updateTime\":\"\",\"_del\":\"\",\"context_parse\":\"<p>ddddd{data_1}z</p>\",\"context\":\"<p>ddddd<input name=\\\"data_1\\\" type=\\\"text\\\" title=\\\"w\\\" value=\\\"\\\" leipiplugins=\\\"text\\\" orghide=\\\"0\\\" orgalign=\\\"left\\\" orgwidth=\\\"150\\\" orgtype=\\\"text\\\" style=\\\"text-align: left; width: 150px;\\\">z</p>\",\"form_desc\":\"\",\"form_name\":\"\",\"data\":[{\"name\":\"data_1\",\"type\":\"text\",\"title\":\"w\",\"value\":\"\",\"leipiplugins\":\"text\",\"orghide\":\"0\",\"orgalign\":\"left\",\"orgwidth\":\"150\",\"orgtype\":\"text\",\"style\":\"text-align: left; width: 150px;\",\"content\":\"<input name=\\\"data_1\\\" type=\\\"text\\\" title=\\\"w\\\" value=\\\"\\\" leipiplugins=\\\"text\\\" orghide=\\\"0\\\" orgalign=\\\"left\\\" orgwidth=\\\"150\\\" orgtype=\\\"text\\\" style=\\\"text-align: left; width: 150px;\\\">\"}]}";
-//        FormParser formParser = new FormParser(json);
-//        FormTable ft = formParser.parseForm();
-//        formService.save(ft);
-//        formService.generatorTable(ft);
-//    }
+
+    @Test
+    public void saveTest(){
+        String json = "{\"id\":\"\",\"fields_count\":1,\"creator\":\"\",\"createTime\":\"\",\"updateTime\":\"\",\"_del\":\"\",\"context_parse\":\"<p>ddddd{data_1}z</p>\",\"context\":\"<p>ddddd<input name=\\\"data_1\\\" type=\\\"text\\\" title=\\\"w\\\" value=\\\"\\\" leipiplugins=\\\"text\\\" orghide=\\\"0\\\" orgalign=\\\"left\\\" orgwidth=\\\"150\\\" orgtype=\\\"text\\\" style=\\\"text-align: left; width: 150px;\\\">z</p>\",\"form_desc\":\"\",\"form_name\":\"\",\"data\":[{\"name\":\"data_1\",\"type\":\"text\",\"title\":\"w\",\"value\":\"\",\"leipiplugins\":\"text\",\"orghide\":\"0\",\"orgalign\":\"left\",\"orgwidth\":\"150\",\"orgtype\":\"text\",\"style\":\"text-align: left; width: 150px;\",\"content\":\"<input name=\\\"data_1\\\" type=\\\"text\\\" title=\\\"w\\\" value=\\\"\\\" leipiplugins=\\\"text\\\" orghide=\\\"0\\\" orgalign=\\\"left\\\" orgwidth=\\\"150\\\" orgtype=\\\"text\\\" style=\\\"text-align: left; width: 150px;\\\">\"}]}";
+        FormParser formParser = new FormParser(json);
+        FormTable ft = formParser.parseForm(null);
+        formService.save(ft);
+        ft.setTable_name("CSTBL_"+ft.getId());
+        formService.update(ft);
+        formService.generatorTable(ft);
+    }
 
     @Test
     public void updateTest(){
-        String json = "{\"id\":\"20\",\"fields_count\":1,\"creator\":\"\",\"createTime\":\"\",\"updateTime\":\"\",\"_del\":\"\",\"context_parse\":\"<p>ddddd{data_1}z</p>\",\"context\":\"<p>ddddd<input name=\\\"data_1\\\" type=\\\"text\\\" title=\\\"w\\\" value=\\\"\\\" leipiplugins=\\\"text\\\" orghide=\\\"0\\\" orgalign=\\\"left\\\" orgwidth=\\\"150\\\" orgtype=\\\"text\\\" style=\\\"text-align: left; width: 150px;\\\">z</p>\",\"form_desc\":\"\",\"form_name\":\"\",\"data\":[{\"name\":\"data_1\",\"type\":\"text\",\"title\":\"w\",\"value\":\"\",\"leipiplugins\":\"text\",\"orghide\":\"0\",\"orgalign\":\"left\",\"orgwidth\":\"150\",\"orgtype\":\"text\",\"style\":\"text-align: left; width: 150px;\",\"content\":\"<input name=\\\"data_1\\\" type=\\\"text\\\" title=\\\"w\\\" value=\\\"\\\" leipiplugins=\\\"text\\\" orghide=\\\"0\\\" orgalign=\\\"left\\\" orgwidth=\\\"150\\\" orgtype=\\\"text\\\" style=\\\"text-align: left; width: 150px;\\\">\"}]}";
+        String json = "{\"id\":\"47\",\"fields_count\":1,\"creator\":\"\",\"createTime\":\"\",\"updateTime\":\"\",\"_del\":\"\",\"context_parse\":\"<p>ddddd{data_1}z</p>\",\"context\":\"<p>ddddd<input name=\\\"data_1\\\" type=\\\"text\\\" title=\\\"w\\\" value=\\\"\\\" leipiplugins=\\\"text\\\" orghide=\\\"0\\\" orgalign=\\\"left\\\" orgwidth=\\\"150\\\" orgtype=\\\"text\\\" style=\\\"text-align: left; width: 150px;\\\">z</p>\",\"form_desc\":\"\",\"form_name\":\"\",\"data\":[{\"name\":\"data_1\",\"type\":\"text\",\"title\":\"w\",\"value\":\"\",\"leipiplugins\":\"text\",\"orghide\":\"0\",\"orgalign\":\"left\",\"orgwidth\":\"150\",\"orgtype\":\"text\",\"style\":\"text-align: left; width: 150px;\",\"content\":\"<input name=\\\"data_1\\\" type=\\\"text\\\" title=\\\"w\\\" value=\\\"\\\" leipiplugins=\\\"text\\\" orghide=\\\"0\\\" orgalign=\\\"left\\\" orgwidth=\\\"150\\\" orgtype=\\\"text\\\" style=\\\"text-align: left; width: 150px;\\\">\"}]}";
 
         FormParser formParser = new FormParser(json);
-        FormTable ft = formParser.parseForm();
-        System.out.print(ft.getColumnAttributes().size());
-        formService.update(ft);
-//        System.out.print(ft.getColumnAttributes().size());
-//        FormTable ft2 = formService.findbyID(19);
-//        System.out.println(ft2.getColumnAttributes().size());
-        formService.generatorTable(ft);
+        FormTable ft2 = formService.get(37);
+        ft2.clearColumn();
+        System.out.println(ft2.getTable_name());
+        formParser.parseForm(ft2);
+        System.out.println("==========================");
+        System.out.println(ft2.getTable_name());
+        System.out.println("==========================");
+        formService.update(ft2);
+        formService.generatorTable(ft2);
     }
 
 
 //    @Test
 //    public void deleteTest(){
-//        formService.delete(formService.findbyID(18));
+//        formService.delete(formService.get(37));
 //    }
 
 //    @Test
 //    public void listTest() throws IOException {
-//        List<FormTable> formTables = formService.list();
+//        List<FormTable> formTables = formService.loadAll();
 //        ObjectMapper mapper = new ObjectMapper();
 //        StringWriter sw = new StringWriter();
 //        mapper.writeValue(sw,formTables);
 //        System.out.println(sw.toString());
-//        assert (sw.toString().contains(""));
 //    }
 }

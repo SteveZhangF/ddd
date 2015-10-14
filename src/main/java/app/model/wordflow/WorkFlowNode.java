@@ -1,8 +1,5 @@
 package app.model.wordflow;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by steve on 10/9/15.
  */
@@ -20,8 +17,8 @@ public class WorkFlowNode {
     private int id;
     private int top;
     private int left;
-    private List<WorkFlowNode> process_to = new ArrayList<WorkFlowNode>();
 
+    private WorkFlowNode processto;
 
     public WorkFlowNodeElement getElement() {
         return element;
@@ -55,11 +52,13 @@ public class WorkFlowNode {
         this.left = left;
     }
 
-    public List<WorkFlowNode> getProcess_to() {
-        return process_to;
+
+    public WorkFlowNode getProcessto() {
+        return processto;
     }
 
-    public void setProcess_to(List<WorkFlowNode> process_to) {
-        this.process_to = process_to;
+    public void setProcessto(WorkFlowNode processto) {
+        this.processto = processto;
     }
+
 }

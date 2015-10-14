@@ -12,10 +12,14 @@ package app.newDao;
  * Created by steve on 10/12/15.
  */
 
+import app.config.hibernate.HibernateConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
+import org.springframework.stereotype.Repository;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -32,17 +36,22 @@ import java.util.List;
  * @Description：TODO(HibernateBaseGenericDAOImpl DAO层泛型基类，实现了基本的DAO功能 利用了Spring的HibernateDaoSupport功能)
  * @date：Jul 9, 2012 1:41:37 PM
  */
+@Repository("hibernateBaseGenericDao")
 @SuppressWarnings("all")
 public class HibernateBaseGenericDAOImpl<T, PK extends Serializable> extends HibernateDaoSupport implements IBaseGenericDAO<T, PK> {
 
     private static Log logger = LogFactory.getLog(HibernateBaseGenericDAOImpl.class);
 
     private Class<T> entityClass;
+//    @Autowired
+//    SessionFactory sessionFactory;
 
     /**
      * 构造方法，根据实例类自动获取实体类类型
      */
-    public HibernateBaseGenericDAOImpl() {
+    @Autowired
+    public HibernateBaseGenericDAOImpl(SessionFactory sessionFactory) {
+        this.setSessionFactory(sessionFactory);
         this.entityClass = null;
         Class c = getClass();
         Type t = c.getGenericSuperclass();

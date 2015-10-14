@@ -18,7 +18,7 @@ import java.util.Properties;
 
 @Configuration()
 @EnableTransactionManagement
-@ComponentScan({"app.service,app.dao"})
+@ComponentScan({"app.service,app.dao,app.newDao,app.newService"})
 @PropertySource(value = {"classpath:application.properties"})
 public class HibernateConfiguration {
 

@@ -33,7 +33,7 @@ public class UserFormController {
     @RequestMapping(value = "/userform/view/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<FormTable> su(@PathVariable("id") int id) {
 
-        FormTable formTable = formService.findbyID(id);
+        FormTable formTable = formService.get(id);
         if (formTable == null) {
             return new ResponseEntity<FormTable>(HttpStatus.NOT_FOUND);
         }

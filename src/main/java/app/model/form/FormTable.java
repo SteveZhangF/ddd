@@ -2,15 +2,15 @@ package app.model.form;
 
 import app.model.wordflow.WorkFlowNodeElement;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Created by steve on 10/9/15.
@@ -33,7 +33,7 @@ public class FormTable implements WorkFlowNodeElement {
     @Column(columnDefinition = "BLOB")
     private String context;// the origin context
     @Lob
-    @Column( columnDefinition = "BLOB")
+    @Column(columnDefinition = "BLOB")
     private String context_parse; // the pared context
 
     private int fields_count; // the columnAttributes count
@@ -61,10 +61,11 @@ public class FormTable implements WorkFlowNodeElement {
     }
 
     @JsonIgnore
-    @OneToMany(mappedBy = "formTable") // --->
-    @Cascade({CascadeType.ALL})
+    @OneToMany(mappedBy = "formTable",cascade ={ CascadeType.ALL},orphanRemoval=true) // --->
+    @Cascade({org.hibernate.annotations.CascadeType.REMOVE})
     @LazyCollection(LazyCollectionOption.FALSE) // --->
-    private List<ColumnAttribute> columnAttributes = new ArrayList<ColumnAttribute>();
+
+    private List<ColumnAttribute> columnAttributes = new ArrayList<>();
 
 
     public List<ColumnAttribute> getColumnAttributes() {
@@ -154,6 +155,23 @@ public class FormTable implements WorkFlowNodeElement {
 
     public void setTable_name(String table_name) {
         this.table_name = table_name;
+    }
+
+    public void addColumn(ColumnAttribute columnAttribute) {
+//        columnAttribute.setFormTable(this);
+        this.columnAttributes.add(columnAttribute);
+    }
+
+    public void removeColumn(ColumnAttribute columnAttribute) {
+//        columnAttribute.setFormTable(null);
+        this.columnAttributes.remove(columnAttribute);
+    }
+
+    public void clearColumn(){
+//        for(ColumnAttribute columnAttribute:columnAttributes){
+//            columnAttribute.setFormTable(null);
+//        }
+        this.columnAttributes.clear();
     }
 
 }

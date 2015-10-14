@@ -10,6 +10,7 @@ package app.newService;
 
 import app.newDao.IBaseGenericDAO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
@@ -23,34 +24,35 @@ import java.util.List;
 public class BaseGenericServiceImpl<T, PK extends Serializable> implements IBaseGenericService<T, PK> {
 
     @Autowired
-    private IBaseGenericDAO dao;
+    @Qualifier("hibernateBaseGenericDao")
+    private IBaseGenericDAO hibernateBaseGenericDao;
 
     public void delete(T entity) {
-        dao.delete(entity);
+        hibernateBaseGenericDao.delete(entity);
     }
 
     public T get(PK id) {
-        return (T) dao.get(id);
+        return (T) hibernateBaseGenericDao.get(id);
     }
 
     public T load(PK id) {
-        return (T) dao.load(id);
+        return (T) hibernateBaseGenericDao.load(id);
     }
 
     public List<T> loadAll() {
-        return dao.loadAll();
+        return hibernateBaseGenericDao.loadAll();
     }
 
     public void save(T entity) {
-        dao.save(entity);
+        hibernateBaseGenericDao.save(entity);
     }
 
     public void saveOrUpdate(T entity) {
-        dao.saveOrUpdate(entity);
+        hibernateBaseGenericDao.saveOrUpdate(entity);
     }
 
     public void update(T entity) {
-        dao.update(entity);
+        hibernateBaseGenericDao.update(entity);
     }
 
 }
