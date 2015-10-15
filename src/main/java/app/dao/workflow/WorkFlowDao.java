@@ -6,11 +6,14 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package app.model.wordflow;
+package app.dao.workflow;
+
+import app.model.form.FormTable;
+import app.model.wordflow.WorkFlow;
+import app.newDao.IBaseGenericDAO;
 
 /**
- * Created by steve on 10/14/15.
+ * Created by steve on 10/12/15.
  */
-public class Connection {
-
+public interface WorkFlowDao extends IBaseGenericDAO<WorkFlow,String> {
 }

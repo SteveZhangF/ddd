@@ -76,9 +76,17 @@ public class FormTable implements WorkFlowNodeElement {
         this.columnAttributes = columnAttributes;
     }
 
+    @Override
+    public String getNodeType(){
+        return "FormNode";
+    }
+
+    @Override
     public int getId() {
         return id;
     }
+    @Override
+    public String getName(){return this.getForm_name();}
 
     public void setId(int id) {
         this.id = id;

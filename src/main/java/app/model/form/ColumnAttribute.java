@@ -83,6 +83,16 @@ public class ColumnAttribute implements WorkFlowNodeElement{
         return id;
     }
 
+    @Override
+    public String getName() {
+        return this.getTitle();
+    }
+
+    @Override
+    public String getNodeType() {
+        return "ColumnAttributeNode";
+    }
+
     public void setId(int id) {
         this.id = id;
     }

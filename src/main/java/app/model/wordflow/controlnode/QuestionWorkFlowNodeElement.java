@@ -6,14 +6,20 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package app.model.wordflow;
+package app.model.wordflow.controlnode;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
- * Created by steve on 10/10/15.
+ * Created by steve on 10/14/15.
  */
+@Entity
+@Table(name="questionworkflownode")
+public class QuestionWorkFlowNodeElement extends ControllNode {
 
-public interface WorkFlowNodeElement {
-    int getId();
-    String getName();
-    String getNodeType();
+    public QuestionWorkFlowNodeElement(){
+        this.setNodeType(NodeType.QuestionNode.getValue());
+    }
+
 }

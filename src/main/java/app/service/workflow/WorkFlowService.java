@@ -6,14 +6,17 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package app.model.wordflow;
+package app.service.workflow;
+
+import app.model.form.FormTable;
+import app.model.wordflow.WorkFlow;
+import app.newService.IBaseGenericService;
+
+import java.util.Map;
 
 /**
- * Created by steve on 10/10/15.
+ * Created by steve on 10/9/15.
  */
+public interface WorkFlowService extends IBaseGenericService<WorkFlow,String>{
 
-public interface WorkFlowNodeElement {
-    int getId();
-    String getName();
-    String getNodeType();
 }

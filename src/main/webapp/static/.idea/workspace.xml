@@ -2,16 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dfbfe4d9-c416-4264-b1a7-23e9b7b916e1" name="Default" comment="update form parser">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dashboard.html" afterPath="$PROJECT_DIR$/dashboard.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/dashboard.js" afterPath="$PROJECT_DIR$/js/dashboard.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/flowd/dom.html" afterPath="$PROJECT_DIR$/flowd/dom.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/glo/flowDesign.js" afterPath="$PROJECT_DIR$/js/glo/flowDesign.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/glo/flowDesignController.js" afterPath="$PROJECT_DIR$/js/glo/flowDesignController.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dashboard/form_list.html" afterPath="$PROJECT_DIR$/dashboard/form_list.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/flowd/my-dialog-close.html" afterPath="$PROJECT_DIR$/flowd/my-dialog-close.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/dashboardyewu/workflow_controller.js" afterPath="$PROJECT_DIR$/js/dashboardyewu/workflow_controller.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/dashboardyewu/workfolw_service.js" afterPath="$PROJECT_DIR$/js/dashboardyewu/workfolw_service.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../../java/app/dao/workflow/WorkFlowDao.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../../java/app/dao/workflow/WorkFlowDaoImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../../java/app/service/workflow/WorkFlowService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../../java/app/service/workflow/WorkFlowServiceImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../../../test/app/service/workflow/WorkFlowServiceImplTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../../java/app/model/wordflow/Connection.java" afterPath="$PROJECT_DIR$/../../java/app/model/wordflow/WorkFlowConnection.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../java/app/model/form/ColumnAttribute.java" afterPath="$PROJECT_DIR$/../../java/app/model/form/ColumnAttribute.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../java/app/model/form/FormTable.java" afterPath="$PROJECT_DIR$/../../java/app/model/form/FormTable.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../java/app/model/wordflow/WorkFlow.java" afterPath="$PROJECT_DIR$/../../java/app/model/wordflow/WorkFlow.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../java/app/model/wordflow/WorkFlowElement.java" afterPath="$PROJECT_DIR$/../../java/app/model/wordflow/WorkFlowElement.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../java/app/model/wordflow/WorkFlowNode.java" afterPath="$PROJECT_DIR$/../../java/app/model/wordflow/WorkFlowNode.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../java/app/model/wordflow/WorkFlowNodeElement.java" afterPath="$PROJECT_DIR$/../../java/app/model/wordflow/WorkFlowNodeElement.java" />
     </list>
     <ignored path="static.iws" />
     <ignored path=".idea/workspace.xml" />

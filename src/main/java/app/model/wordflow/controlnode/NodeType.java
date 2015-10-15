@@ -6,14 +6,21 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package app.model.wordflow;
+package app.model.wordflow.controlnode;
 
 /**
- * Created by steve on 10/10/15.
+ * Created by steve on 10/14/15.
  */
+public enum  NodeType {
+    FormNode("FormNode"),StartNode("StartNode"),EndNode("EndNode"),QuestionNode("QuestionNode");
 
-public interface WorkFlowNodeElement {
-    int getId();
-    String getName();
-    String getNodeType();
+
+    private String value;
+    private NodeType(String value){
+        this.value = value;
+    }
+
+    public String getValue(){
+        return this.value;
+    }
 }

@@ -9,11 +9,17 @@
 package app.model.wordflow;
 
 /**
- * Created by steve on 10/10/15.
+ * Created by steve on 10/14/15.
  */
+public enum ConnectionType {
 
-public interface WorkFlowNodeElement {
-    int getId();
-    String getName();
-    String getNodeType();
+    QuestionConnection("questionConnection"),
+    DefaultConnection("defaultConnection");
+
+    private String value;
+    ConnectionType(String value){
+        this.value = value;
+    }
+
+    public String getValue(){return this.value;}
 }
