@@ -1,11 +1,14 @@
 package app.model.wordflow;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -23,15 +26,23 @@ public class WorkFlowNode extends WorkFlowElement {
     private String elementName;
     private int elementId;
 
+    @JsonIgnore
+    @OneToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private Map<String,WorkFlowNode> nexts = new HashMap<>();
+
+    @JsonIgnore
     @OneToMany( cascade = {CascadeType.ALL}, orphanRemoval = true)
     @Cascade({org.hibernate.annotations.CascadeType.REMOVE})
     @LazyCollection(LazyCollectionOption.FALSE)
     public Set<WorkFlowConnection> out_connections = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany( cascade = {CascadeType.ALL}, orphanRemoval = true)
     @Cascade({org.hibernate.annotations.CascadeType.REMOVE})
     @LazyCollection(LazyCollectionOption.FALSE)
     public Set<WorkFlowConnection> in_connections = new HashSet<>();
+
 
     public WorkFlow getWorkflow_node() {
         return workflow_node;
@@ -42,6 +53,7 @@ public class WorkFlowNode extends WorkFlowElement {
     }
 
     @ManyToOne
+    @JsonIgnore
 //    @JoinColumn(name = "workflow_node_id")
     private WorkFlow workflow_node;
 
@@ -108,6 +120,13 @@ public class WorkFlowNode extends WorkFlowElement {
         this.out_connections = out_connections;
     }
 
+    public Map<String, WorkFlowNode> getNexts() {
+        return nexts;
+    }
+
+    public void setNexts(Map<String, WorkFlowNode> nexts) {
+        this.nexts = nexts;
+    }
 }
 //        {
 //        "BlockId": "state_question2",

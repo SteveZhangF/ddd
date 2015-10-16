@@ -15,7 +15,9 @@ package app.newDao;
 import app.config.hibernate.HibernateConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
@@ -131,6 +133,22 @@ public class HibernateBaseGenericDAOImpl<T, PK extends Serializable> extends Hib
         } catch (DataAccessException e) {
             logger.error(e.getMessage(), e);
         }
+    }
+
+    public T getbyParam(String param, Object value){
+        Criteria criteria = getSessionFactory().getCurrentSession().createCriteria(entityClass);
+        Object yourObject = criteria.add(Restrictions.eq(param, value))
+                .uniqueResult();
+        return (T)yourObject;
+    }
+
+    @Override
+    public List<T> getListbyParam(String param, Object value) {
+
+        Criteria criteria = getSessionFactory().getCurrentSession().createCriteria(entityClass);
+        List<T> list = criteria.add(Restrictions.eq(param, value))
+                .list();
+        return list;
     }
 }
 

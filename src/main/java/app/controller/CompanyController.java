@@ -28,19 +28,29 @@ public class CompanyController {
 
     @RequestMapping(value = "/company/", method = RequestMethod.GET)
     public ResponseEntity<List<Company>> listAllCompany() {
-        List<Company> companies = companyService.findAllCompany();
+        List<Company> companies = companyService.loadAll();
         if (companies.isEmpty()) {
             return new ResponseEntity<List<Company>>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<List<Company>>(companies, HttpStatus.OK);
     }
 
+    @RequestMapping(value="/company/getbyuserid/{id}",method=RequestMethod.GET)
+    public ResponseEntity<Company> getCompanybyUserId(@PathVariable("id") int id){
+        Company company = companyService.getCompanybyUser(id);
+        if (company == null){
+            return new ResponseEntity<Company>(HttpStatus.NOT_FOUND);
+        }else{
+            return new ResponseEntity<Company>(company,HttpStatus.OK);
+        }
+
+    }
 
     //-------------------Retrieve Single Company--------------------------------------------------------
 
     @RequestMapping(value = "/company/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Company> getUser(@PathVariable("id") String id) {
-        Company company = companyService.findById(id);
+    public ResponseEntity<Company> getCompany(@PathVariable("id") String id) {
+        Company company = companyService.get(id);
         System.out.println(company);
         if (company == null) {
             return new ResponseEntity<Company>(HttpStatus.NOT_FOUND);
@@ -57,13 +67,13 @@ public class CompanyController {
         System.out.println(company);
         company.setCompany_id("1");
 
-        companyService.saveCompany(company);
+        companyService.save(company);
         int user_id = company.getUser_id();
         User user = userService.findById(user_id);
         user.setCompanyId(company.getUuid());
         userService.update(user);
         company.setCompany_id(company.getUuid());
-        companyService.updateCompany(company);
+        companyService.update(company);
         HttpHeaders headers = new HttpHeaders();
         return new ResponseEntity<Company>(company, HttpStatus.CREATED);
     }
@@ -75,7 +85,7 @@ public class CompanyController {
     public ResponseEntity<Company> updateCompany(@PathVariable("id") String id, @RequestBody Company company) {
         System.out.println("Updating User " + id);
 
-        Company currentCompany = companyService.findById(id);
+        Company currentCompany = companyService.get(id);
 
         if (currentCompany == null) {
             return new ResponseEntity<Company>(HttpStatus.NOT_FOUND);
@@ -90,7 +100,7 @@ public class CompanyController {
 //        currentCompany.setRecords(company.getRecords());
         currentCompany.setUser_id(company.getUser_id());
 
-        companyService.updateCompany(currentCompany);
+        companyService.update(currentCompany);
         return new ResponseEntity<Company>(currentCompany, HttpStatus.OK);
     }
 
@@ -101,14 +111,14 @@ public class CompanyController {
     public ResponseEntity<Company> deleteUser(@PathVariable("id") String id) {
         System.out.println("Fetching & Deleting User with id " + id);
 
-        Company company = companyService.findById(id);
+        Company company = companyService.get(id);
 
         if (company == null) {
             System.out.println("Unable to delete. Company with id " + id + " not found");
             return new ResponseEntity<Company>(HttpStatus.NOT_FOUND);
         }
 
-        companyService.deleteCompanyById(id);
+        companyService.delete(companyService.get(id));
         return new ResponseEntity<Company>(HttpStatus.NO_CONTENT);
     }
 }

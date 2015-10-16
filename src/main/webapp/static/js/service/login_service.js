@@ -10,7 +10,12 @@ app.service('LoginService', [
     '$window',
     'LogInData',
     function ($http, $q, $window, LoginData) {
-        var userInfo;
+        var userInfo = {
+            accessToken: 0,
+            userName: 0,
+            userId: 0,
+            companyId: 0
+        }
 
         function getUserInfo() {
             return userInfo;

@@ -8,16 +8,26 @@
 
 package app.model.wordflow.workflowUser;
 
+import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by steve on 10/15/15.
  */
+@Table
+@Entity
 public class Node {
+    @Id
+    @GeneratedValue
+    private int id;
+
+    @ManyToOne
     private Node prev;
+    @Transient
     private List<Integer> nextIndex = new ArrayList<>();
-    private List<Node> nextList = new ArrayList<>();
 
     private String elementName;
     private int elementId;
@@ -45,14 +55,6 @@ public class Node {
 
     public void setNextIndex(List<Integer> nextIndex) {
         this.nextIndex = nextIndex;
-    }
-
-    public List<Node> getNextList() {
-        return nextList;
-    }
-
-    public void setNextList(List<Node> nextList) {
-        this.nextList = nextList;
     }
 
     public String getElementName() {

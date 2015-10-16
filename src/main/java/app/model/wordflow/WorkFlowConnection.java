@@ -8,6 +8,7 @@
 
 package app.model.wordflow;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.Entity;
@@ -56,10 +57,12 @@ import javax.persistence.Table;
     @Table(name = "workflowconnection")
 public class WorkFlowConnection extends WorkFlowElement{
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "source_id")
     @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
     private WorkFlowNode source;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "target_id")
     @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
@@ -67,6 +70,11 @@ public class WorkFlowConnection extends WorkFlowElement{
     private String connectionType;
     private String successValue;
 
+    private String PageSourceId;
+
+    private String PageTargetId;
+
+    @JsonIgnore
     @ManyToOne
     private WorkFlow workflow_connection;
 
@@ -76,6 +84,7 @@ public class WorkFlowConnection extends WorkFlowElement{
 
     public void setSource(WorkFlowNode source) {
         this.source = source;
+        this.setPageSourceId(source.getDiagramId());
     }
 
     public WorkFlowNode getTarget() {
@@ -84,6 +93,7 @@ public class WorkFlowConnection extends WorkFlowElement{
 
     public void setTarget(WorkFlowNode target) {
         this.target = target;
+        this.setPageTargetId(target.getDiagramId());
     }
 
     public String getConnectionType() {
@@ -108,6 +118,22 @@ public class WorkFlowConnection extends WorkFlowElement{
 
     public void setWorkflow_connection(WorkFlow workflow_connection) {
         this.workflow_connection = workflow_connection;
+    }
+
+    public String getPageTargetId() {
+        return PageTargetId;
+    }
+
+    public void setPageTargetId(String pageTargetId) {
+        PageTargetId = pageTargetId;
+    }
+
+    public String getPageSourceId() {
+        return PageSourceId;
+    }
+
+    public void setPageSourceId(String pageSourceId) {
+        PageSourceId = pageSourceId;
     }
 
 }

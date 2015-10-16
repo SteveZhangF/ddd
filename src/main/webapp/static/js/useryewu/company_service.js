@@ -36,6 +36,19 @@ app.factory('CompanyService', ['$http', '$q', function ($http, $q) {
             );
         },
 
+        getCompanyByUserId: function(user_id){
+            return $http.get('/company/getbyuserid/'+user_id)
+                .then(
+                function(response){
+                    return response.data;
+                },
+                function (errResponse){
+                    console.error("Error while get company by user id");
+                    return $q.reject(errResponse);
+                }
+            )
+        },
+
         createCompany: function (company) {
             console.log(company);
             return $http.post('/company/', company)

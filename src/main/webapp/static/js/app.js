@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('clientApp', ['ngRoute', 'ui.bootstrap', 'ui.bootstrap.contextMenu', 'angularBootstrapNavTree', 'dndLists']);
+var app = angular.module('clientApp', ['ngRoute', 'ui.bootstrap', 'ui.bootstrap.contextMenu', 'angularBootstrapNavTree', 'dndLists','ui.tree']);
 
 app.factory('LogInData', function () {
     return {
@@ -16,14 +16,15 @@ app.config(['$httpProvider', function ($httpProvider) {
         return {
             'request': function (config) {
                 config.headers = config.headers || {};
-                if ($window.sessionStorage["userInfo"]) {
-                    var token = JSON.parse($window.sessionStorage["userInfo"]);
-                    if (token) {
-                        config.headers['X-AUTH-TOKEN'] = token.accessToken;
-                    }
-                } else {
-                    $location.path('/');
-                }
+                //TODO for development
+                //if ($window.sessionStorage["userInfo"]) {
+                //    var token = JSON.parse($window.sessionStorage["userInfo"]);
+                //    if (token) {
+                //        config.headers['X-AUTH-TOKEN'] = token.accessToken;
+                //    }
+                //} else {
+                //    $location.path('/');
+                //}
                 return config;
             },
             'responseError': function (response) {
@@ -48,6 +49,7 @@ app.run([
                                                       previous, eventObj) {
             if (eventObj.authenticated === false) {
                 // $location.path("/login");
+                console.log("no authenticated");
             }
         });
     }]);
@@ -78,26 +80,6 @@ app.config(['$routeProvider', function ($routeProvider) {
     }).when("/test", {templateUrl: "user/company_menu.html"})
 }]);
 
-app.controller("SimpleDemoController", function ($scope) {
-
-    $scope.models = {
-        selected: null,
-        lists: {"A": [], "B": []}
-    };
-
-    // Generate initial model
-    for (var i = 1; i <= 3; ++i) {
-        console.log(i);
-        $scope.models.lists.A.push({label: "Item A" + i, children: [{label: "a.children"}]});
-        $scope.models.lists.B.push({label: "Item B" + i});
-    }
-
-    // Model to JSON for demo purpose
-    $scope.$watch('models', function (model) {
-        $scope.modelAsJson = angular.toJson(model, true);
-    }, true);
-
-});
 app.filter('checkmark', function () {
     return function (input) {
         return input ? '\u2713' : '\u2718';

@@ -20,6 +20,8 @@ import javax.persistence.Table;
 @Table(name="endworkflownode")
 public class EndWorkFlowNodeElement extends ControllNode implements WorkFlowNodeElement {
     public EndWorkFlowNodeElement(){
+
+        this.setName("End");
         this.setNodeType(NodeType.EndNode.getValue());
     }
 }

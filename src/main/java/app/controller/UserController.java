@@ -128,20 +128,9 @@ public class UserController {
 
         UserInfo(UserDetails user, String accessToken) {
             User user2 = userService.findBySso(user.getUsername());
-            String companyid = null;
-            if(user2.getCompanyId()==null || user2.getCompanyId().equals("")){
-                Company company = companyService.findCompanybyUserID(user2.getId());
-                companyid = company == null ? "null" : company.getUuid();
-                user2.setCompanyId(companyid);
-                userService.update(user2);
-            }else{
-                companyid = user2.getCompanyId();
-            }
-
             this.setUserName(user2.getSsoId());
             this.setUserId(user2.getId());
             this.setAccessToken(accessToken);
-            this.setCompanyId(companyid);
         }
 
         public String getAccessToken() {

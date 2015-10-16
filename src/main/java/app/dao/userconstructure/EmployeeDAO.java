@@ -1,11 +1,10 @@
 package app.dao.userconstructure;
 
 import app.model.userconstructure.Employee;
+import app.newDao.IBaseGenericDAO;
 
-public interface EmployeeDAO {
-    public void save(Employee p);
+import java.util.List;
 
-    public Employee getEmployeebyID(String uuid);
-
-    public void delete(String id);
+public interface EmployeeDAO extends IBaseGenericDAO<Employee,String>{
+    public List<Employee> getEmployeeByDepartmentId(String department_id);
 }

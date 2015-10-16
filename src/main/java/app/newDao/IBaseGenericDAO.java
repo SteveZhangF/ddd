@@ -77,4 +77,13 @@ public abstract interface IBaseGenericDAO<T, PK extends Serializable> {
      */
     public abstract void delete(T entity);
 
+    /**
+     * get object based on param(field)
+     * @param param param name
+     * @param value param value
+     * */
+    public abstract T getbyParam(String param, Object value);
+
+    public abstract List<T> getListbyParam(String param, Object value);
+
 }

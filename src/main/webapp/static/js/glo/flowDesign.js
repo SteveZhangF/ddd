@@ -31,42 +31,36 @@ angular.module('dashboardApp')
                 scope.init = function (workflowDetail) {
                     console.log('initing');
                     jsPlumb.deleteEveryEndpoint();
-                    $("#diagramarea").html('');
+                    $("#diagramarea").html("");
                     var nodes = workflowDetail.nodes;
                     var connections = workflowDetail.connections;
                     $.each(nodes, function (ii, node) {
-                        var node_id = node.BlockId;
-                        var node_name = node.BlockContent;
-                        var top = node.BlockY;
-                        var left = node.BlockX;
-                        var node_type = node.Node_Type;
-                        var node_data = node.Node_Data;
+                        var node_id = node.diagramId;
+                        var node_name = node.displayName;
+                        var top = node.position_top;
+                        var left = node.position_left;
+                        var node_type = node.nodeType;
+                        var node_data = JSON.stringify({
+                            id: node.elementId,
+                            name: node.elementName,
+                            type: node.nodeType
+                        })
                         console.log(node);
                         switch (node_type) {
-                            case 'state_flow':
+                            case 'FormNode':
                                 addOtherNodes(node_id, node_name, node_data, left, top);
                                 break;
-                            case 'state-end':
+                            case 'EndNode':
                                 addEnd(node_id, left, top);
                                 break;
-                            case 'state_start':
+                            case 'StartNode':
                                 addStart(node_id, left, top);
                                 break;
-                            case 'state_question':
+                            case 'QuestionNode':
                                 addQuestion(node_id, node_name, node_data, left, top);
                                 break;
                         }
                     });
-
-                    //{
-                    //    "ConnectionId": "con_34",
-                    //        "PageSourceId": "state_start1",
-                    //        "PageTargetId": "state_flow2",
-                    //        "SourceText": "Start",
-                    //        "TargetText": "Action",
-                    //        "SourceAnchor": "BottomCenter",
-                    //        "TargetAnchor": "TopCenter"
-                    //}
                     $.each(connections, function (iii, conn) {
                         console.log(conn);
                         var PageSourceId = conn.PageSourceId;
@@ -79,10 +73,9 @@ angular.module('dashboardApp')
                             source: PageSourceId, target: PageTargetId, connector: ['Flowchart']
                         });
                     });
-                    //
-
+                    jsPlumb.repaint();
                 };
-                //scope.init();
+
                 scope.options = {}
                 scope.options.selected_question = {
                     question_name: '',
@@ -98,42 +91,64 @@ angular.module('dashboardApp')
                         var cont = connection.getLabel();
                         //var ConnectText = $(cont).html();
                         $source = $(connection.source);
+                        $target = $(connection.target);
                         // 如果源为question，则此connection为  有条件边
                         var contype = "";
-                        if($source.attr('nodetype')=='state_question'){
-                            contype='questionConnection';
-                        }else{
+                        if ($source.attr('nodetype') == 'state_question') {
+                            contype = 'questionConnection';
+                            var sourceNext = $source.attr("next");
+                            if (sourceNext) {
+                                sourceNext = JSON.parse(sourceNext);
+                                sourceNext.push({
+                                    tiaojian: cont,
+                                    next: $target.attr('id')
+                                });
+                            } else {
+                                sourceNext = [];
+                                sourceNext.push({
+                                    tiaojian: cont,
+                                    next: $target.attr('id')
+                                });
+                            }
+                            $source.attr('next', JSON.stringify(sourceNext));
+                        } else {
                             contype = 'defaultConnection';
+                            var sourceNext2 = [];
+                            sourceNext2.push({
+                                tiaojian: "default",
+                                next: $target.attr('id')
+                            });
+                            $source.attr('next', JSON.stringify(sourceNext2));
                         }
                         connects.push({
-                            ConnectionId: connection.id,
+                            id: "",
+                            dispalyName: cont,
+                            connectionType: contype,
+                            diagramId: connection.id,
+                            successValue: cont,
                             PageSourceId: connection.sourceId,
-                            PageTargetId: connection.targetId,
-                            SourceText: connection.source.innerText,
-                            TargetText: connection.target.innerText,
-                            SourceAnchor: connection.endpoints[0].anchor.type,
-                            TargetAnchor: connection.endpoints[1].anchor.type,
-                            ConnectText: cont,
-                            ConnectionType:contype
-                        });
+                            PageTargetId: connection.targetId
+                        })
                     });
-
-                    //<div nodetype="state_flow"
-                    // class="node jsplumb-endpoint-anchor jsplumb-draggable ui-draggable ui-draggable-handle"
-                    // id="state_flow1"
-                    // node_data="{id:1,label:dddd}"
-                    // style="left: 174px; top: 269px;">dddd</div>
                     var blocks = [];
                     $("#diagramarea .node").each(function (idx, elem) {
                         var $elem = $(elem);
+                        console.log($elem.attr('node_data'));
+                        var element_data = {};
+                        var next = {};
+                        if ($elem.attr('next')) next = JSON.parse($elem.attr("next"));
+                        if ($elem.attr('node_data'))element_data = JSON.parse($elem.attr('node_data'));
                         blocks.push({
-                            BlockId: $elem.attr('id'),
-                            BlockContent: $elem.html(),
-                            BlockX: parseInt($elem.css("left"), 10),
-                            BlockY: parseInt($elem.css("top"), 10),
-
-                            Node_Type: $elem.attr('nodetype'),
-                            Node_Data: $elem.attr('node_data')
+                            id: "",
+                            displayName: $elem.html(),
+                            diagramId: $elem.attr('id'),
+                            "position_top": parseInt($elem.css("top"), 10),
+                            "position_left": parseInt($elem.css("left"), 10),
+                            "nodeType": $elem.attr('nodetype'),
+                            Node_Data: {
+                                element_data: element_data,
+                                next: next
+                            }
                         });
                     });
 
@@ -156,7 +171,7 @@ angular.module('dashboardApp')
                 var currentUI = null;
 
                 function addStart(id, left, top) {
-                    $("#diagramarea").append('<div nodetype=\'state_start\' class="node" style="border-radius: 25em"  id="' + id + '" >' + 'Start' + '</div>');
+                    $("#diagramarea").append('<div nodetype=\'StartNode\' class="node" style="border-radius: 25em"  id="' + id + '" >' + 'Start' + '</div>');
                     $("#" + id).css("left", left).css("top", top);
                     jsPlumb.addEndpoint(id, {anchors: "BottomCenter"}, hollowCircle);
                     jsPlumb.draggable(id);
@@ -165,7 +180,7 @@ angular.module('dashboardApp')
                 }
 
                 function addEnd(id, left, top) {
-                    $("#diagramarea").append('<div nodetype=\'state-end\' class="node" style="border-radius: 25em"  id="' + id + '" >' + 'End' + '</div>');
+                    $("#diagramarea").append('<div nodetype=\'EndNode\' class="node" style="border-radius: 25em"  id="' + id + '" >' + 'End' + '</div>');
                     $("#" + id).css("left", left).css("top", top);
                     jsPlumb.addEndpoint(id, {anchors: "TopCenter"}, solidCircle);
                     jsPlumb.draggable(id);
@@ -173,7 +188,7 @@ angular.module('dashboardApp')
                 }
 
                 function addQuestion(id, node_name, node_data, left, top) {
-                    $("#diagramarea").append("<div nodetype=\'state_question\' class='node' id='" + id + "'>" + node_name + "</div>");
+                    $("#diagramarea").append("<div nodetype=\'QuestionNode\' class='node' id='" + id + "'>" + node_name + "</div>");
                     $("#" + id).css("left", left).css("top", top);
                     $("#" + id).attr("node_data", node_data);
                     jsPlumb.addEndpoint(id, {anchors: "TopCenter"}, solidCircle);//入
@@ -183,7 +198,7 @@ angular.module('dashboardApp')
                 }
 
                 function addOtherNodes(id, node_name, node_data, left, top) {
-                    $node_dropped = $("<div nodetype=\'state_flow\' class='node' id='" + id + "'>" + node_name + "</div>");
+                    $node_dropped = $("<div nodetype=\'FormNode\' class='node' id='" + id + "'>" + node_name + "</div>");
                     $node_dropped.attr("node_data", node_data);
                     $node_dropped.css("left", left).css("top", top);
                     $("#diagramarea").append($node_dropped);
@@ -227,9 +242,9 @@ angular.module('dashboardApp')
                             case "node3":
                                 i++;
                                 id = "state_question" + i;
-                                var question_name1 = prompt("please input the question desription",'');
-                                var node_data1 = JSON.stringify({question_name:question_name1});
-                                addQuestion(id,question_name1,node_data1,left, top);
+                                var question_name1 = prompt("please input the question desription", '');
+                                var node_data1 = JSON.stringify({question_name: question_name1});
+                                addQuestion(id, question_name1, node_data1, left, top);
                                 break;
                             //end
                             case "node4":
@@ -271,22 +286,6 @@ angular.module('dashboardApp')
                 });
 
                 var _time = null;
-                //jsPlumb.bind("dblclick", function (conn, originalEvent) {
-                //    clearTimeout(_time);
-                //    var str = conn.getLabel();
-                //    if (str == null) {
-                //        conn.setLabel("<input type='text' value=' ' />");
-                //    } else {
-                //        conn.setLabel("<input type='text' value='" + $(str).text() + "' />");
-                //    }
-                //    $("input[type='text']").mouseleave(function () {
-                //        if ($(this).val().trim() == "") {
-                //            conn.setLabel("");
-                //        } else {
-                //            conn.setLabel("<span style='display:block;padding:10px;opacity: 0.5;height:auto;background-color:white;border:1px solid #346789;text-align:center;font-size:12px;color:black;border-radius:0.5em;'>" + $(this).val() + "</span>");
-                //        }
-                //    });
-                //});
                 /**
                  * when click on a connection
                  * confirm and delete the connection
@@ -305,10 +304,11 @@ angular.module('dashboardApp')
                  *  if not, connect
                  * */
                 jsPlumb.bind("connection", function (connInfo, originalEvent) {
-                    console.log(tiaojian);
                     $source = $(connInfo.source);
-                    console.log($source.attr('nodetype'));
-                    if ($source.attr('nodetype') == 'state_question') {
+                    $target = $(connInfo.target);
+                    var note_type = $source.attr('nodetype');
+
+                    if ($source.attr('nodetype') == 'QuestionNode') {
                         var tiaojian = prompt("Please input tiaojian", "");
                         if (tiaojian == null || tiaojian == '') {
                             jsPlumb.detach(connInfo.connection);
@@ -391,21 +391,7 @@ angular.module('dashboardApp')
                     connectorOverlays: [["Arrow", {width: 10, length: 10, location: 1}]]
                 };
 
-
-                ////连接成功回调函数
-                //function mtAfterDrop(params) {
-                //    //console.log(params)
-                //    defaults.mtAfterDrop({
-                //        sourceId: $("#" + params.sourceId).attr('process_id'),
-                //        targetId: $("#" + params.targetId).attr('process_id')
-                //    });
-                //
-                //}
-
-
             }
         }
     }
-)
-;
-
+);

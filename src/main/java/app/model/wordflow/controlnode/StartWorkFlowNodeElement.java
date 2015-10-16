@@ -22,6 +22,6 @@ public class StartWorkFlowNodeElement extends ControllNode implements WorkFlowNo
 
     public StartWorkFlowNodeElement(){
         this.setName("Start");
-        this.setName(NodeType.StartNode.getValue());
+        this.setNodeType(NodeType.StartNode.getValue());
     }
 }

@@ -9,19 +9,30 @@
 package app.model.wordflow.workflowUser;
 
 import app.model.wordflow.WorkFlow;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by steve on 10/15/15.
  */
-
+@Table
+@Entity
 public class UserWorkFlow {
+    @OneToMany(cascade ={ CascadeType.ALL},orphanRemoval=true)
+    @Cascade({org.hibernate.annotations.CascadeType.REMOVE})
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Node> nodes = new ArrayList<>();
+    @Id
+    @GeneratedValue
     private int id;
     private String name;
 
+    @OneToOne
     private WorkFlow workFlow;
 
     public List<Node> getNodes() {

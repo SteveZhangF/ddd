@@ -4,73 +4,83 @@
     app
         .controller(
         'UserOgnzTreeController',
-        [
-            '$scope',
-            '$timeout',
-            'CompanyService', 'LoginService',
+            ['$scope',
+                '$timeout',
+                'CompanyService', 'LoginService',
             function ($scope, $timeout, CompanyService, LoginService) {
-                var company_tree, tree;
-                $scope.org_selected = function (branch) {
-                    $scope.organzation = branch;
-                    return branch;
+                var user_id = LoginService.getUserInfo().userId;
+                var company = {
+                    id: "1",
+                    title: "company",
+                    type: "CompanyForm",
+                    nodes: [{id: 'd1',type:"DepartmentForm" ,label: 'dapartment1'}]
+                };
+                //$scope.data = [{id: company.id, type:"CompanyForm",title: company.label, nodes: company.departments}];
+                $scope.data = [];
+                $scope.data.push(company);
+                CompanyService.getCompanyByUserId(user_id).then(
+                    function (response) {
+                        company = response;
+                    },
+                    function (errResponse) {
+                        //console.error("Error while get company by user id");
+                        $scope.selected = {type: "CompanyForm", id: "", title: ""};
+                    }
+                );
+                $scope.selected = company;
+
+                $scope.addDepartment = function () {
+                }
+
+                $scope.addEmployee = function () {
+                }
+
+                $scope.removeEmployee = function () {
+                }
+
+                $scope.removeDepartment = function () {
+                }
+                $scope.edit = function (scope) {
+                    console.log($scope.data);
+                    $scope.selected.id = scope.$modelValue.id;
+                    $scope.selected.type = scope.$modelValue.type;
+                    console.log($scope.selected.type);
+                }
+
+                $scope.removez = function (scope) {
+                    console.log("remove");
+                    console.log(scope.data);
+
+                    console.log(scope.$modelValue);
                 };
 
-                $scope.treereFresh = false;
-                $scope.refreshTree = function () {
-                    $scope.treereFresh = true;
-                    $timeout(function () {
-                        $scope.treereFresh = false;
-                        getData();
-                    }, 500);
+                $scope.toggle = function (scope) {
+                    scope.toggle();
+                };
 
-                }
-                // get the json data of the all tree from server
-                // by companyservice
-                // and convert the data to the tree format
-                //
-                var company_id = LoginService.getUserInfo().companyId;
-                console.log(company_id);
-                var getData = function () {
-                    // to show the loading label
-                    $scope.doing_async = true;
+                $scope.moveLastToTheBeginning = function () {
+                    var a = $scope.data.pop();
+                    $scope.data.splice(0, 0, a);
+                };
 
-                    CompanyService
-                        .getCompany(company_id)
-                        .then(
-                        function (d) {
-// {"uuid":"1","address":"ddd","phone":"1111sddddd","name":"asw","formType":"CompanyForm","company_id":"1","children":[],"user_id":1}
-                            var convert = function (json) {
-                                var treenode = {};
-                                treenode.label = json.name;
-                                treenode.type = json.formType;
-                                treenode.uuid = json.uuid;
-                                treenode.classes = [];
-                                treenode.children = [];
-                                treenode.contextmenu = "companyMenu";
-                                var i;
-                                for (i = 0; i < json.children.length; i++) {
-                                    treenode.children[i] = convert(json.children[i]);
-                                }
-                                return treenode;
-                            }
-                            company_tree = [];
-                            company_tree[0] = convert(d);
-                            console.log(company_tree);
-                            $scope.my_data = company_tree;
-                            $scope.org_selected(company_tree[0]);
-                            $scope.doing_async = false;
-                        },
-                        function (errResponse) {
-                            company_tree = [];
-                            company_tree[0] = {label: "company not init, click to init company", type: "CompanyForm"};
-                            $scope.my_data = company_tree;
-                            $scope.org_selected(company_tree[0]);
-                            $scope.doing_async = false;
-                        });
-                }
-                // init data from server
-                getData();
-                $scope.my_tree = tree = {};
-                $scope.my_data = [];
+                $scope.newSubItem = function (scope) {
+                    var nodeData = scope.$modelValue;
+                    nodeData.nodes.push({
+                        id: nodeData.id * 10 + nodeData.nodes.length,
+                        title: nodeData.title + '.' + (nodeData.nodes.length + 1),
+                        nodes: []
+                    });
+                };
+
+                $scope.collapseAll = function () {
+                    $scope.$broadcast('collapseAll');
+                };
+
+                $scope.expandAll = function () {
+                    $scope.$broadcast('expandAll');
+                };
+
+
             }]);
+
 }());

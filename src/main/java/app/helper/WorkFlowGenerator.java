@@ -25,13 +25,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by steve on 10/15/15.
  */
 public class WorkFlowGenerator {
     private WorkFlow workFlow;
+
 
     public WorkFlow createWorkFlow(String json) throws IOException {
         WorkFlow workFlow = new WorkFlow();
@@ -45,43 +45,95 @@ public class WorkFlowGenerator {
 
         JsonNode nodes = rootNode.path("nodes");
         JsonNode conns = rootNode.path("connections");
+
+
+        //{
+//        "id":"",
+//                "displayName":"sdda",
+//                "diagramId":"state_question3",
+//                "position_top":232,
+//                "position_left":395,
+//                "nodeType":"QuestionNode",
+//                "Node_Data":{
+//            "element_data":{
+//                "question_name":"sdda"
+//            },
+//            "next":[
+//            {
+//                "tiaojian":"default",
+//                    "next":"state_end4"
+//            }
+//            ]
+//        }
+
         for (JsonNode node : nodes) {
             WorkFlowNode workFlowNode = new WorkFlowNode();
-            String diagramID = node.get("BlockId").asText();
-            String displayName = node.get("BlockContent").asText();
-            int left = node.get("BlockX").asInt();
-            int top = node.get("BlockY").asInt();
+            String diagramID = node.get("diagramId").asText();
+            String displayName = node.get("displayName").asText();
+            int left = node.get("position_left").asInt();
+            int top = node.get("position_top").asInt();
 
             workFlowNode.setDiagramId(diagramID);
             workFlowNode.setDisplayName(displayName);
             workFlowNode.setPosition_left(left);
             workFlowNode.setPosition_top(top);
-            String node_type = node.get("Node_Type").asText();
+            String node_type = node.get("nodeType").asText();
             if (node_type.equals(NodeType.StartNode.getValue())) {
                 StartWorkFlowNodeElement startWorkFlowNodeElement = new StartWorkFlowNodeElement();
+
                 workFlowNode.setWorkFlowNodeElement(startWorkFlowNodeElement);
             } else if (node_type.equals(NodeType.EndNode.getValue())) {
                 EndWorkFlowNodeElement endWorkFlowNodeElement = new EndWorkFlowNodeElement();
                 workFlowNode.setWorkFlowNodeElement(endWorkFlowNodeElement);
             } else if (node_type.equals(NodeType.QuestionNode.getValue())) {
-                //TODO save question node
                 QuestionWorkFlowNodeElement questionWorkFlowNodeElement = new QuestionWorkFlowNodeElement();
+                JsonNode data = node.get("Node_Data").get("element_data");
+                questionWorkFlowNodeElement.setName(data.get("question_name").asText());
                 workFlowNode.setWorkFlowNodeElement(questionWorkFlowNodeElement);
             } else if (node_type.equals(NodeType.FormNode.getValue())) {
-                JsonNode data = node.get("Node_Data");
+                JsonNode data = node.get("Node_Data").get("element_data");
                 workFlowNode.setElementId(data.get("id").asInt());
                 workFlowNode.setElementName(data.get("name").asText());
                 workFlowNode.setNodeType(NodeType.FormNode.getValue());
             }
             workFlow.addNode(workFlowNode);
         }
+
+        int now = 0;
+        for(JsonNode node:nodes){
+            JsonNode nextsIndiagram = node.get("Node_Data").path("next");
+            for(JsonNode nextIndiagram : nextsIndiagram){
+                String tiaojian = nextIndiagram.get("tiaojian").asText();
+                String next = nextIndiagram.get("next").asText();
+                for(WorkFlowNode workFlowNode:workFlow.getNodes()){
+                    if(workFlowNode.getDiagramId().equals(next)){
+                        workFlow.getNodes().get(now).getNexts().put(tiaojian,workFlowNode);
+                    }
+                }
+            }
+            now++;
+        }
+
+        /**
+         *
+         *
+         * {
+         "id":"",
+         "dispalyName":"ww",
+         "connectionType":"defaultConnection",
+         "diagramId":"con_16",
+         "successValue":"ww",
+         "PageSourceId":"state_question2",
+         "PageTargetId":"state_end3"
+         }
+         * */
         for (JsonNode conn : conns) {
             WorkFlowConnection workFlowConnection = new WorkFlowConnection();
-            String diagramId = conn.get("ConnectionId").asText();
+            String diagramId = conn.get("diagramId").asText();
             String PageSourceId = conn.get("PageSourceId").asText();
             String PageTargetId = conn.get("PageTargetId").asText();
-            String ConnectionTypez = conn.get("ConnectionType").asText();
-            String ConnectText = conn.get("ConnectText").asText();
+            String ConnectionTypez = conn.get("connectionType").asText();
+            String ConnectText = conn.get("dispalyName").asText();
             workFlowConnection.setConnectionType(ConnectionTypez);
             workFlowConnection.setDiagramId(diagramId);
             for (WorkFlowNode workFlowNode : workFlow.getNodes()) {
@@ -100,63 +152,66 @@ public class WorkFlowGenerator {
     }
 
 
-    public UserWorkFlow generatorUserWorkFlow(WorkFlow workFlow) {
-        UserWorkFlow userWorkFlow = new UserWorkFlow();
-
-        Graph<WorkFlowNode> graph = new Graph<>(workFlow.getNodes().size());
-        List<WorkFlowNode> nodelist = new ArrayList<>();
-        for (WorkFlowNode wfn : workFlow.getNodes()) {
-            graph.insertVertex(wfn);
-            nodelist.add(wfn);
-        }
-        for (WorkFlowConnection wfc : workFlow.getConnections()) {
-            int j = 0;
-            int si = 0;
-            int ti = 0;
-            for (WorkFlowNode wfn : nodelist) {
-                if (wfn.getId().equals(wfc.getSource().getId())) {
-                    si = j;
-                }
-                if (wfn.getId().equals(wfc.getTarget().getId())) {
-                    ti = j;
-                }
-                j++;
-            }
-            if(wfc.getConnectionType().equals(ConnectionType.QuestionConnection.getValue())){
-
-            }
-            graph.insertEdge(si, ti, 1);
-        }
-
-        ArrayList<Node> list = new ArrayList<>();
-        for (int j = 0; j < nodelist.size(); j++) {
-            int next_index = -1;
-            Node node = new Node();
-            node.setElementName(nodelist.get(j).getElementName());
-            node.setElementId(nodelist.get(j).getElementId());
-            node.setNodeType(nodelist.get(j).getNodeType());
-            boolean firstnext = true;
-            while (next_index != 0) {
-                if (firstnext) {
-                    next_index = graph.getFirstNeighbor(j);
-                    if (next_index == -1) break;
-                    firstnext = false;
-                } else {
-                    next_index = graph.getNextNeighbor(j, next_index);
-                    if (next_index == -1) break;
-                }
-                node.getNextIndex().add(next_index);
-            }
-            list.add(node);
-        }
-
-        for (Node node : list) {
-            for (Integer next : node.getNextIndex()) {
-                node.getNextList().add(list.get(next));
-                list.get(next).setPrev(node);
-            }
-            userWorkFlow.addNode(node);
-        }
-        return userWorkFlow;
-    }
+//    public UserWorkFlow generatorUserWorkFlow(WorkFlow workFlow) {
+//        UserWorkFlow userWorkFlow = new UserWorkFlow();
+//
+//        Graph<WorkFlowNode> graph = new Graph<>(workFlow.getNodes().size());
+//        List<WorkFlowNode> nodelist = new ArrayList<>();
+//        for (WorkFlowNode wfn : workFlow.getNodes()) {
+//            graph.insertVertex(wfn);
+//            nodelist.add(wfn);
+//        }
+//        for (WorkFlowConnection wfc : workFlow.getConnections()) {
+//            int j = 0;
+//            int si = 0;
+//            int ti = 0;
+//            for (WorkFlowNode wfn : nodelist) {
+//                if (wfn.getId().equals(wfc.getSource().getId())) {
+//                    si = j;
+//                }
+//                if (wfn.getId().equals(wfc.getTarget().getId())) {
+//                    ti = j;
+//                }
+//                j++;
+//            }
+//            if(wfc.getConnectionType().equals(ConnectionType.QuestionConnection.getValue())){
+//                graph.insertEdge(si, ti, wfc.getSuccessValue());
+//            }else{
+//                graph.insertEdge(si,ti,"1");
+//            }
+//        }
+//
+//        ArrayList<Node> list = new ArrayList<>();
+//        for (int j = 0; j < nodelist.size(); j++) {
+//            int next_index = -1;
+//            Node node = new Node();
+//            node.setElementName(nodelist.get(j).getElementName());
+//            node.setElementId(nodelist.get(j).getElementId());
+//            node.setNodeType(nodelist.get(j).getNodeType());
+//            boolean firstnext = true;
+//            while (next_index != 0) {
+//                if (firstnext) {
+//                    next_index = graph.getFirstNeighbor(j);
+//                    if (next_index == -1) break;
+//                    firstnext = false;
+//                } else {
+//                    next_index = graph.getNextNeighbor(j, next_index);
+//                    if (next_index == -1) break;
+//                }
+//                node.getNextIndex().add(next_index);
+//            }
+//            list.add(node);
+//        }
+//        int i=0;
+////        for (Node node : list) {
+////            int j=0;
+////            for (Integer next : node.getNextIndex()) {
+////                node.getNextList().add(list.get(next));
+////                String successValue = graph.getWeight(i,j);
+////                node.getNextMap().put(successValue,node);
+////            }
+////            userWorkFlow.addNode(node);
+////        }
+//        return userWorkFlow;
+//    }
 }

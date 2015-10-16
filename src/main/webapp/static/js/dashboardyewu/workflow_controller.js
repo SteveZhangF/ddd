@@ -9,7 +9,7 @@ app.controller('flowToolBarController', ['$scope', 'FormService', 'WorkFlowServi
             label: "label " + i,
             value: "value " + i,
             id: i,
-            type: "form",
+            type: "FormNode",
             name: "form" + i
         });
     }
@@ -65,7 +65,67 @@ app.controller('flowToolBarController', ['$scope', 'FormService', 'WorkFlowServi
      * work flow ye wu ****************************
      * */
 
-    $scope.workflows = [];
+    $scope.workflows = [{
+        "id":"",
+        "displayName":"d",
+        "diagramId":null,
+        "creator":"",
+        "workFlow_Description":"",
+        "create_time":null,
+        "update_time":null,
+        "connections":[
+            {
+                "id":null,
+                "displayName":null,
+                "diagramId":"con_14",
+                "connectionType":"defaultConnection",
+                "successValue":null,
+                "pageTargetId":"state_question3",
+                "pageSourceId":"state_start1"
+            },
+            {
+                "id":null,
+                "displayName":null,
+                "diagramId":"con_20",
+                "connectionType":"defaultConnection",
+                "successValue":null,
+                "pageTargetId":"state_end4",
+                "pageSourceId":"state_question3"
+            }
+        ],
+        "nodes":[
+            {
+                "id":null,
+                "displayName":"Start",
+                "diagramId":"state_start1",
+                "position_top":125,
+                "position_left":15,
+                "nodeType":"StartNode",
+                "elementName":"Start",
+                "elementId":0
+            },
+            {
+                "id":null,
+                "displayName":"sdda",
+                "diagramId":"state_question3",
+                "position_top":232,
+                "position_left":395,
+                "nodeType":"QuestionNode",
+                "elementName":"sdda",
+                "elementId":0
+            },
+            {
+                "id":null,
+                "displayName":"End",
+                "diagramId":"state_end4",
+                "position_top":374,
+                "position_left":122,
+                "nodeType":"EndNode",
+                "elementName":"End",
+                "elementId":0
+            }
+        ]
+    }];
     $scope.workflowDetail = {
         id: '',
         workflowname: "",

@@ -1,19 +1,11 @@
 package app.service.userconstructure;
 
+import app.model.form.FormTable;
 import app.model.userconstructure.Company;
+import app.newService.IBaseGenericService;
 
 import java.util.List;
 
-public interface CompanyService {
-    Company findById(String id);
-
-    void saveCompany(Company employee);
-
-    void updateCompany(Company employee);
-
-    void deleteCompanyById(String id);
-
-    List<Company> findAllCompany();
-
-    Company findCompanybyUserID(int id);
+public interface CompanyService extends IBaseGenericService<Company, String> {
+    Company getCompanybyUser(int user_id);
 }

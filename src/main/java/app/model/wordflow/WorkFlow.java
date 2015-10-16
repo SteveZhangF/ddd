@@ -1,14 +1,12 @@
 package app.model.wordflow;
 
+import app.model.wordflow.workflowUser.UserWorkFlow;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -42,12 +40,12 @@ public class WorkFlow extends WorkFlowElement {
     @OneToMany(cascade ={ CascadeType.ALL},orphanRemoval=true)
     @Cascade({org.hibernate.annotations.CascadeType.REMOVE})
     @LazyCollection(LazyCollectionOption.FALSE)
-    private Set<WorkFlowConnection> connections = new HashSet<>();
+    private List<WorkFlowConnection> connections = new ArrayList<>();
 
     @OneToMany(cascade = {CascadeType.ALL},orphanRemoval = true)
     @Cascade({org.hibernate.annotations.CascadeType.REMOVE})
     @LazyCollection(LazyCollectionOption.FALSE)
-    private Set<WorkFlowNode> nodes = new HashSet<>();
+    private List<WorkFlowNode> nodes = new ArrayList<>();
 
     public void addNode(WorkFlowNode node){
         this.nodes.add(node);
@@ -74,19 +72,19 @@ public class WorkFlow extends WorkFlowElement {
         this.connections.clear();
     }
 
-    public Set<WorkFlowConnection> getConnections() {
+    public List<WorkFlowConnection> getConnections() {
         return connections;
     }
 
-    public void setConnections(Set<WorkFlowConnection> connections) {
+    public void setConnections(List<WorkFlowConnection> connections) {
         this.connections = connections;
     }
 
-    public Set<WorkFlowNode> getNodes() {
+    public List<WorkFlowNode> getNodes() {
         return nodes;
     }
 
-    public void setNodes(Set<WorkFlowNode> nodes) {
+    public void setNodes(List<WorkFlowNode> nodes) {
         this.nodes = nodes;
     }
 

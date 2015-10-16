@@ -58,7 +58,7 @@ public class HelloWorldController {
             userName = principal.toString();
         }
         User user = userService.findBySso(userName);
-        Company company = companyService.findCompanybyUserID(user.getId());
+        Company company = companyService.getCompanybyUser(user.getId());
         String result = "";
         if (company != null)
             result = "{\"user_id\":\"" + user.getId() + "\",\"company_id\":\"" + company.getUuid() + "\"}";

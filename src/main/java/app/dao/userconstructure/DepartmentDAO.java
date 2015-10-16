@@ -1,12 +1,11 @@
 package app.dao.userconstructure;
 
 import app.model.userconstructure.Department;
+import app.newDao.IBaseGenericDAO;
 
-public interface DepartmentDAO {
-    public void save(Department p);
+import java.util.List;
 
-    public Department getDepartmentbyID(String uuid);
-
-    public void delete(String id);
-
+public interface DepartmentDAO extends IBaseGenericDAO<Department,String> {
+    public List<Department> getDepartmentsByCompanyId(String company_id);
+    public List<Department> getDepartmentsByParentId(String parent_id);
 }

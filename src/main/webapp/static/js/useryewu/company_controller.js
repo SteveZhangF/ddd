@@ -11,14 +11,24 @@ app.controller('UserCompanyController', ['$scope', 'CompanyService', 'LoginServi
     var self = this;
     self.company = {
         "uuid": null,
-        "address": "ddd",
-        "phone": "1111sddddd",
-        "name": "asw",
-        "formType": "CompanyForm",
+        "address": "",
+        "phone": "",
+        "name": "",
+        "formType": "",
         "company_id": "",
         "children": [],
         "user_id": null
     }
+
+    CompanyService.getCompany($scope.selected.id).then(
+        function(response){
+            self.company = response.data;
+        },
+        function (errResponse) {
+
+        }
+    );
+
     var userInfo;
     // userInfo = {
     //       accessToken : result.data.access_token,

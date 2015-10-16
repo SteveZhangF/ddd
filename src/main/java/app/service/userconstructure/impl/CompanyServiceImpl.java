@@ -1,7 +1,8 @@
 package app.service.userconstructure.impl;
 
-import app.dao.userconstructure.CompanyDAO;
+import app.dao.userconstructure.CompanyDao;
 import app.model.userconstructure.Company;
+import app.newService.BaseGenericServiceImpl;
 import app.service.userconstructure.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,49 +12,50 @@ import java.util.List;
 
 @Service("companyService")
 @Transactional
-public class CompanyServiceImpl implements CompanyService {
+public class CompanyServiceImpl extends BaseGenericServiceImpl<Company, String> implements CompanyService {
+
     @Autowired
-    private CompanyDAO dao;
+    CompanyDao companyDao;
 
     @Override
-    public Company findById(String id) {
-        return dao.getCompanybyID(id);
+    public Company getCompanybyUser(int user_id) {
+        return companyDao.getCompanyByUserId(user_id);
     }
 
     @Override
-    public void saveCompany(Company company) {
-        dao.save(company);
+    public void delete(Company entity) {
+        companyDao.delete(entity);
     }
 
     @Override
-    public void updateCompany(Company company) {
-        Company entity = dao.getCompanybyID(company.getUuid());
-        if (entity != null) {
-            entity.setName(company.getName());
-            entity.setAddress(company.getAddress());
-            entity.setCompany_id(company.getCompany_id());
-            entity.setFormType(company.getFormType());
-//			entity.setModules(company.getModules());
-            entity.setPhone(company.getPhone());
-//			entity.setRecords(company.getRecords());
-            entity.setUser_id(company.getUser_id());
-        }
+    public Company get(String id) {
+        return companyDao.get(id);
     }
 
     @Override
-    public void deleteCompanyById(String id) {
-        dao.delete(id);
+    public Company load(String id) {
+        return companyDao.load(id);
     }
 
     @Override
-    public List<Company> findAllCompany() {
-        return dao.getAll();
+    public List<Company> loadAll() {
+        return companyDao.loadAll();
     }
 
     @Override
-    public Company findCompanybyUserID(int id) {
-        // TODO Auto-generated method stub
-        return dao.getCompanybyUserID(id);
+    public void save(Company entity) {
+        companyDao.save(entity);
     }
+
+    @Override
+    public void saveOrUpdate(Company entity) {
+        companyDao.saveOrUpdate(entity);
+    }
+
+    @Override
+    public void update(Company entity) {
+        companyDao.update(entity);
+    }
+
 
 }

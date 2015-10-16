@@ -1,21 +1,15 @@
 package app.dao.userconstructure;
 
 
+import app.model.form.FormTable;
 import app.model.userconstructure.Company;
+import app.newDao.IBaseGenericDAO;
 
 import java.util.List;
 
 
-public interface CompanyDAO {
-    public Company getCompanybyUserID(int userid);
+public interface CompanyDao extends IBaseGenericDAO<Company,String> {
 
-    public void save(Company p);
-
-    public Company getCompanybyID(String uuid);
-
-    public void delete(String id);
-
-    public List<Company> getAll();
-
+    public Company getCompanyByUserId(int id);
 }
 
