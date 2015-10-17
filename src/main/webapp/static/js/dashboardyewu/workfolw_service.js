@@ -18,7 +18,7 @@ app.factory('WorkFlowService', ['$http', '$q', function ($http, $q) {
         },
 
         fetchOneWorkFlow: function (id) {
-            return $http.get('/workflow/id')
+            return $http.get('/workflow/'+id)
                 .then(
                 function (response) {
                     return response.data;

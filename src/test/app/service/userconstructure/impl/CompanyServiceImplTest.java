@@ -11,12 +11,15 @@ package app.service.userconstructure.impl;
 import app.model.userconstructure.Company;
 import app.service.form.UserFormServiceImplTestContextConfiguration;
 import app.service.userconstructure.CompanyService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
+
+import java.io.StringWriter;
 
 import static org.junit.Assert.*;
 
@@ -32,5 +35,15 @@ public class CompanyServiceImplTest {
     @Test
     public void testGetCompanybyUser() throws Exception {
         Company company = companyService.getCompanybyUser(2);
+        ObjectMapper mapper = new ObjectMapper();
+        StringWriter writer = new StringWriter();
+        mapper.writeValue(writer,company);
+        System.out.println(writer.toString());
     }
+
+    @Test
+    public void  testSave() throws  Exception{
+
+    }
+
 }

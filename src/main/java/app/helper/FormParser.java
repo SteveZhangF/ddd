@@ -53,7 +53,7 @@ public class FormParser {
         try {
             JsonNode rootNode = mapper.readTree(formInfo); // 读取Json
             formTable.setFields_count(Integer.valueOf(rootNode.get("fields_count").asInt()));
-            formTable.setCreator(rootNode.get("creator").asText());
+            formTable.setCreator(rootNode.get("creator")==null?"":rootNode.get("creator").asText());
 //            formTable.setId(rootNode.get("id").asInt());
             formTable.setForm_desc(rootNode.get("form_desc").asText());
             formTable.setContext(rootNode.get("context").asText());

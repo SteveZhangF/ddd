@@ -38,8 +38,8 @@ public class WorkFlowGenerator {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(json); // 读取Json
 
-        workFlow.setDisplayName(rootNode.get("workflowname").asText());
-        workFlow.setWorkFlow_Description(rootNode.get("workflow_desc").asText());
+        workFlow.setDisplayName(rootNode.get("displayName").asText());
+        workFlow.setWorkFlow_Description(rootNode.get("workFlow_Description").asText());
         workFlow.setCreator(rootNode.get("creator").asText());
         workFlow.setId(rootNode.get("id").asText());
 

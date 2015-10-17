@@ -65,8 +65,6 @@ public class CompanyController {
     @RequestMapping(value = "/company/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Company> createCompany(@RequestBody Company company, HttpServletResponse response) {
         System.out.println(company);
-        company.setCompany_id("1");
-
         companyService.save(company);
         int user_id = company.getUser_id();
         User user = userService.findById(user_id);
@@ -75,7 +73,7 @@ public class CompanyController {
         company.setCompany_id(company.getUuid());
         companyService.update(company);
         HttpHeaders headers = new HttpHeaders();
-        return new ResponseEntity<Company>(company, HttpStatus.CREATED);
+        return new ResponseEntity<>(company, HttpStatus.CREATED);
     }
 
 

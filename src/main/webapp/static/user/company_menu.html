@@ -12,7 +12,9 @@
                 class="glyphicon glyphicon-edit"></span></a>
         <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="removez(this)"><span
                 class="glyphicon glyphicon-remove"></span></a>
-        <a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="newSubItem(this)" style="margin-right: 8px;"><span
+        <a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="add(this,'DepartmentForm')" style="margin-right: 8px;"><span
+                class="glyphicon glyphicon-plus"></span></a>
+        <a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="add(this,'EmployeeForm')" style="margin-right: 8px;"><span
                 class="glyphicon glyphicon-plus"></span></a>
     </div>
     <ol ui-tree-nodes="" ng-model="node.nodes" ng-class="{hidden: collapsed}">
@@ -20,7 +22,6 @@
         </li>
     </ol>
 </script>
-{{ selected_organzation.data}}
 
 <div>
     <div ui-tree id="tree-root">

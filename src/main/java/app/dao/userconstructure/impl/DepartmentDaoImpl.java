@@ -43,5 +43,41 @@ public class DepartmentDaoImpl  extends HibernateBaseGenericDAOImpl<Department,S
     public List<Department> getDepartmentsByParentId(String parent_id) {
         return super.getListbyParam("parent_id",parent_id);
     }
+
+    @Override
+    public void delete(Department entity) {
+        super.delete(entity);
+    }
+
+    @Override
+    public Department get(String id) {
+        return super.get(id);
+    }
+
+    @Override
+    public Department load(String id) {
+        return super.load(id);
+    }
+
+    @Override
+    public List<Department> loadAll() {
+        return super.loadAll();
+    }
+
+    @Override
+    public void save(Department entity) {
+        super.save(entity);
+    }
+
+    @Override
+    public void saveOrUpdate(Department entity) {
+        super.saveOrUpdate(entity);
+    }
+
+    @Override
+    public void update(Department entity) {
+        super.update(entity);
+    }
+
 }
 

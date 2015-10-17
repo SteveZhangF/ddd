@@ -17,14 +17,14 @@ app.config(['$httpProvider', function ($httpProvider) {
             'request': function (config) {
                 config.headers = config.headers || {};
                 //TODO for development
-                //if ($window.sessionStorage["userInfo"]) {
-                //    var token = JSON.parse($window.sessionStorage["userInfo"]);
-                //    if (token) {
-                //        config.headers['X-AUTH-TOKEN'] = token.accessToken;
-                //    }
-                //} else {
-                //    $location.path('/');
-                //}
+                if ($window.sessionStorage["userInfo"]) {
+                    var token = JSON.parse($window.sessionStorage["userInfo"]);
+                    if (token) {
+                        config.headers['X-AUTH-TOKEN'] = token.accessToken;
+                    }
+                } else {
+                    $location.path('/');
+                }
                 return config;
             },
             'responseError': function (response) {

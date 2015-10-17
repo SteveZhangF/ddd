@@ -7,14 +7,14 @@
             <thead>
             <tr>
                 <th st-sort="id">ID</th>
-                <th st-sort="workflowname">Work Flow Name</th>
+                <th st-sort="displayName">Work Flow Name</th>
                 <th st-sort="creator">creator</th>
                 <th st-sort="createTime">Create Time</th>
                 <th st-sort="updateTime">Update Time</th>
             </tr>
             <tr>
                 <th colspan="1">
-                    <input st-search="workflowname" placeholder="search for Workflow Name" class="input-sm form-control"
+                    <input st-search="displayName" placeholder="search for Workflow Name" class="input-sm form-control"
                            type="search"/>
                 </th>
                 <th colspan="2">
@@ -27,8 +27,7 @@
             {{workflows.length}}
             <tr ng-repeat="x in workflows">
                 <td>{{ $index + 1 }}</td>
-                <td>{{ x.id }}</td>
-                <td>{{x.workflowname}}</td>
+                <td>{{x.displayName}}</td>
                 <td>{{x.creator}}</td>
                 <td>{{x.createTime}}</td>
                 <td>{{x.updateTime}}</td>
@@ -58,7 +57,7 @@
                     </div>
                     <div class="form-group">
                         <label for="FormName">Form Name:</label>
-                        <input ng-model="workflowDetail.workflowname" type="text" class="form-control" id="FormName"
+                        <input ng-model="workflowDetail.displayName" type="text" class="form-control" id="FormName"
                                placeholder="Employee Training">
                     </div>
                     <button class="submit" ng-click="saveWorkFlow()">Save</button>
@@ -67,7 +66,7 @@
                 <form class="form-inline">
                     <div class="form-group">
                         <label for="wf_desc">Description:</label>
-                        <textarea id="wf_desc" ng-model="workflowDetail.workflow_desc" class="form-control"
+                        <textarea id="wf_desc" ng-model="workflowDetail.workFlow_Description" class="form-control"
                                   rows="3"></textarea>
                     </div>
                 </form>
@@ -87,9 +86,12 @@
                     </div>
 
                     <div ng-show="toolbar_forms">
-                        <ui-virtual-list ui-data-provider="controller.dataProvider"
-                                         ui-on-select="controller.onSelect(option)"
-                                         ng-model="controller.selectedOption"></ui-virtual-list>
+                        <ui-virtual-list ui-data-provider="dataProvider"
+                                         ui-on-select="onSelect(option)"
+                                         ng-model="selectedOption"></ui-virtual-list>
+                        <hr>
+                        {{dataProvider}}
+                        <hr>
                         <div class="node" id="previewNode" nodetype="{{selectedNode.nodetype}}"
                              node_data="{{selectedNode.data}}">
                             {{selectedNode.label}}

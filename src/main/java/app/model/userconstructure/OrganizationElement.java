@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.CascadeType.*;
@@ -38,7 +39,7 @@ public abstract class OrganizationElement {
     @OneToMany(mappedBy = "parent") // --->
     @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE) // --->
-    private List<OrganizationElement> children;
+    private List<OrganizationElement> children = new ArrayList<>();
 
     public List<OrganizationElement> getChildren() {
         return children;
@@ -108,7 +109,7 @@ public abstract class OrganizationElement {
 
     @Override
     public String toString() {
-        return "Company [uuid=" + uuid + ", name=" + name + ", address=" + address
+        return "[uuid=" + uuid + ", name=" + name + ", address=" + address
                 + ", phone=" + phone + "]";
     }
 
@@ -117,8 +118,18 @@ public abstract class OrganizationElement {
         return parent;
     }
 
-
     public void setParent(OrganizationElement parent) {
         this.parent = parent;
+    }
+
+    @Transient
+    private String parent_id;
+
+    public String getParent_id() {
+        return parent_id;
+    }
+
+    public void setParent_id(String parent_id) {
+        this.parent_id = parent_id;
     }
 }

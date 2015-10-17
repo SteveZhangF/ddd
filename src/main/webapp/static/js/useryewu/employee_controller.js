@@ -4,7 +4,7 @@
 /**
  user employee controller
  role: user
- function create, update
+ function create, update, delete
 
  */
 app.controller('UserEmployeeController', ['$scope', 'EmployeeService', 'LoginService', function ($scope, EmployeeService, LoginService) {
@@ -14,18 +14,23 @@ app.controller('UserEmployeeController', ['$scope', 'EmployeeService', 'LoginSer
         name: '',
         address: '',
         phone: '',
-        formType: '',
-        employee: '',
-        department: '',
-        employee: ''
+        formType: 'EmployeeForm',
+
     };
-    var userInfo;
-    // userInfo = {
-    //       accessToken : result.data.access_token,
-    //       userName : result.data.userName,
-    //       userId : result.data.userId,
-    //       companyId : result.data.companyId
-    //     };
+
+    self.getEmployee = function (id) {
+        EmployeeService.getEmployee(id).then(
+            function (response) {
+                self.employee = response.data;
+                self.employee.parent_id = $scope.selected.parent_id;
+                delete self.employee.children;
+
+            },
+            function (errResponse) {
+                alert("Error");
+            }
+        );
+    }
 
     self.createEmployee = function (employee) {
         EmployeeService.createEmployee(employee);
@@ -35,7 +40,18 @@ app.controller('UserEmployeeController', ['$scope', 'EmployeeService', 'LoginSer
         EmployeeService.updateEmployee(employee, uuid);
     };
 
+    self.deleteEmployee = function (id) {
+        EmployeeService.deleteEmployee(id).then(
+            function (response) {
+                alert("success");
+            },
+            function (errResponse) {
+                alert("failed");
 
+            }
+        );
+        $scope.selected.operated = true;
+    }
     self.submit = function () {
         if (self.employee.uuid == null) {
             console.log('Saving New Employee', self.employee);
@@ -44,31 +60,40 @@ app.controller('UserEmployeeController', ['$scope', 'EmployeeService', 'LoginSer
             console.log('Employee updated with id ', self.employee.uuid);
             self.updateEmployee(self.employee, self.employee.uuid);
         }
+        $scope.selected.operated = true;
         self.reset();
     };
 
-    self.edit = function () {
-
-        //get the user's information
-        $scope.employee_id = $scope.organzation.id;
-        if ($scope.employee_id) {
-            EmployeeService.getEmployee($scope.employee_id).then(
-                function (d) {
-                    self.employee = d;
-                },
-                function (errResponse) {
-                    console.error('Error while fetching Currencies');
-                }
-            );
-        }
-
-    };
-
     self.reset = function () {
-        self.edit();
         $scope.myForm.$setPristine(); //reset Form
     };
-    // load the employee from server
-    self.edit();
+
+
+    $scope.$watch(function ($scope) {
+        return $scope.selected.id;
+    }, function () {
+        console.log($scope.selected);
+        if ($scope.selected.type == "EmployeeForm") {
+            if ($scope.selected.action == "remove") {
+                self.deleteEmployee($scope.selected.id);
+                $scope.selected.action="";
+            } else if ($scope.selected.action == "add") {
+                self.employee = {
+                    uuid: null,
+                    name: '',
+                    address: '',
+                    phone: '',
+                    formType: 'EmployeeForm',
+                    company_id:$scope.selected.company_id,
+                    parent_id:$scope.selected.parent_id
+                };
+                $scope.selected.action="";
+            } else
+            if ($scope.selected.action="edit"){
+                self.getEmployee($scope.selected.id);
+                $scope.selected.action="";
+            }
+        }
+    });
 
 }]);

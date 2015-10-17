@@ -14,13 +14,13 @@ app.controller('UserDepartmentController', ['$scope', 'DepartmentService', 'Logi
         name: '',
         address: '',
         phone: '',
-        formType: '',
+        formType: 'DepartmentForm',
         company_id: '',
-        subDepartment_id: '',
-        department: '',
-        employee: ''
+        children: [],
     };
-    var userInfo;
+
+
+
     self.createDepartment = function (department) {
         DepartmentService.createDepartment(department);
     };
@@ -38,33 +38,70 @@ app.controller('UserDepartmentController', ['$scope', 'DepartmentService', 'Logi
             console.log('Department updated with id ', self.department.uuid);
             self.updateDepartment(self.department, self.department.uuid);
         }
+        $scope.selected.operated = true;
         self.reset();
     };
 
-    // edit or create a new department under the company
-    self.edit = function (id) {
+    self.getDepartment = function(id){
+        DepartmentService.getDepartment(id).then(
+            function(response){
+                self.department = response;
+                self.department.parent_id = $scope.selected.parent_id;
+                delete self.department.children;
+            },
+            function (errResponse) {
+                console.log(errResponse);
+            }
+        );
+    }
 
-        //get the user's information
-        userInfo = LoginService.getUserInfo();
-        //if the user has a company
-        if (userInfo.companyId) {
-            // get the department
-            DepartmentService.getDepartment(id).then(
-                function (d) {
-                    self.department = d;
-                },
-                function (errResponse) {
-                    console.error('Error while fetching Currencies');
-                    // if failed means id is null or no such department then set the new department's company id
-                    self.department.company_id = userInfo.companyId;
-                }
-            );
-        }
-
-    };
+    self.deleteDepartment = function(id){
+        DepartmentService.deleteDepartment(id).then(
+            function (response) {
+                console.log("delete department success");
+                alert("Success!");
+            },
+            function (errResponse) {
+                console.log("failed");
+                alert("Failed");
+            }
+        );
+        $scope.selected.operated = true;
+    }
 
     self.reset = function () {
-        self.edit();
+        //self.edit();
         $scope.myForm.$setPristine(); //reset Form
     };
+
+    $scope.$watch(function ($scope) {
+        return $scope.selected.id;
+    }, function () {
+        console.log($scope.selected);
+        if($scope.selected.type=="DepartmentForm"){
+            if($scope.selected.action=="remove"){
+                self.deleteDepartment($scope.selected.id);
+                $scope.selected.action = "";
+            }else
+            if($scope.selected.action=="add"){
+                self.department = {
+                    uuid: null,
+                    name: '',
+                    address: '',
+                    phone: '',
+                    formType: 'DepartmentForm',
+                    company_id: $scope.selected.company_id,
+                    children: [],
+                    parent_id:$scope.selected.id
+                };
+                $scope.selected.action = "";
+            }else
+            if($scope.selected.action="edit"){
+                self.getDepartment($scope.selected.id);
+                $scope.selected.action="";
+            }
+        }
+
+
+    });
 }]);

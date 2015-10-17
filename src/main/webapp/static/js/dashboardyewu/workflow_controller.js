@@ -1,48 +1,35 @@
 var app = angular.module('dashboardApp');
 
 app.controller('flowToolBarController', ['$scope', 'FormService', 'WorkFlowService', function ($scope, FormService, WorkFlowService) {
-    $scope.dataProvider = {};
+
     var dp = [];
-    for (var i = 0; i < 1000; i++) {
-        dp.push({
-            index: i,
-            label: "label " + i,
-            value: "value " + i,
-            id: i,
-            type: "FormNode",
-            name: "form" + i
-        });
-    }
-    //var formDetail_ = {
-    //    id: "",
-    //    fields_count: "",
-    //    creator: "",
-    //    createTime: "",
-    //    updateTime: "",
-    //    _del: "",
-    //    context_parse: "",
-    //    context: "",
-    //    form_desc: "",
-    //    form_name: "",
-    //    data:""
-    //};
-    //var forms = FormService.fetchAllForms();
-    //for(var j=0;j<forms.length;j++){
-    //    var form_org = forms[i];
-    //    var form = {
-    //        index:i,
-    //        label: form_org.form_name,
-    //        id: form_org.id,
-    //        type:'form',
-    //        name: form_org.form_name
-    //
-    //    }
-    //    dp.push(form);
-    //}
-    this.dataProvider = dp;
-    this.selectedOption = null;
+    var forms=[];
+    $scope.dataProvider = [];
+    FormService.fetchAllForms().then(
+        function (response) {
+            forms=response;
+            console.log(response);
+            for(var j=0;j<forms.length;j++){
+                var form_org = forms[j];
+                var form = {
+                    index:j,
+                    label: form_org.form_name,
+                    id: form_org.id,
+                    type:'form',
+                    name: form_org.form_name
+                }
+                dp.push(form);
+            }
+            $scope.dataProvider = dp;
+        },
+        function (errResponse) {
+            console.log(errResponse);
+        }
+    );
+
+    $scope.selectedOption = null;
     $scope.selectedNode = {};
-    this.onSelect = function (option) {
+    $scope.onSelect = function (option) {
         $scope.selectedNode.id = "formnode_" + option.id;
         $scope.selectedNode.label = option.label;
         $scope.selectedNode.data = JSON.stringify({id: option.id, type: option.type, name: option.name});
@@ -65,76 +52,16 @@ app.controller('flowToolBarController', ['$scope', 'FormService', 'WorkFlowServi
      * work flow ye wu ****************************
      * */
 
-    $scope.workflows = [{
-        "id":"",
-        "displayName":"d",
-        "diagramId":null,
-        "creator":"",
-        "workFlow_Description":"",
-        "create_time":null,
-        "update_time":null,
-        "connections":[
-            {
-                "id":null,
-                "displayName":null,
-                "diagramId":"con_14",
-                "connectionType":"defaultConnection",
-                "successValue":null,
-                "pageTargetId":"state_question3",
-                "pageSourceId":"state_start1"
-            },
-            {
-                "id":null,
-                "displayName":null,
-                "diagramId":"con_20",
-                "connectionType":"defaultConnection",
-                "successValue":null,
-                "pageTargetId":"state_end4",
-                "pageSourceId":"state_question3"
-            }
-        ],
-        "nodes":[
-            {
-                "id":null,
-                "displayName":"Start",
-                "diagramId":"state_start1",
-                "position_top":125,
-                "position_left":15,
-                "nodeType":"StartNode",
-                "elementName":"Start",
-                "elementId":0
-            },
-            {
-                "id":null,
-                "displayName":"sdda",
-                "diagramId":"state_question3",
-                "position_top":232,
-                "position_left":395,
-                "nodeType":"QuestionNode",
-                "elementName":"sdda",
-                "elementId":0
-            },
-            {
-                "id":null,
-                "displayName":"End",
-                "diagramId":"state_end4",
-                "position_top":374,
-                "position_left":122,
-                "nodeType":"EndNode",
-                "elementName":"End",
-                "elementId":0
-            }
-        ]
-    }];
+
     $scope.workflowDetail = {
         id: '',
-        workflowname: "",
+        displayName: "",
         connections: [],
         nodes: [],
         creator: "",
         update_time: "",
         create_time: "",
-        workflow_desc: ""
+        workFlow_Description: ""
 
     }
     /**
@@ -151,11 +78,12 @@ app.controller('flowToolBarController', ['$scope', 'FormService', 'WorkFlowServi
             }
         );
     };
+    self.fetchAllWorkFlow();
     /**
      * get one workflow detail
      * */
-    self.fetchOneForm = function (workflow) {
-        WorkFlowService.fetchOneForm(workflow.id).then(
+    self.fetchOneWorkFlow = function (workflow) {
+        WorkFlowService.fetchOneWorkFlow(workflow.id).then(
             function (d) {
                 $scope.workflowDetail = d;
             },
@@ -171,9 +99,9 @@ app.controller('flowToolBarController', ['$scope', 'FormService', 'WorkFlowServi
     $scope.editWorkFlow = function (workflow) {
         $scope.editing = true;
         $scope.isNew = false;
-        //TODO self.fetchOneForm(form);
-        $scope.workflowDetail = workflow;
-        console.log("editing.." + workflow.id);
+        self.fetchOneWorkFlow(workflow);
+        //$scope.workflowDetail = workflow;
+        console.log("editing.." + $scope.workflowDetail.id);
         $scope.init($scope.workflowDetail);// init the diagram
     };
     /**
@@ -185,57 +113,52 @@ app.controller('flowToolBarController', ['$scope', 'FormService', 'WorkFlowServi
         console.log("adding..");
         $scope.init($scope.workflowDetail);// init the diagram
     };
-    $scope.deleteWorkflow = function (workflow) {
+    $scope.deleteWorkFlow = function (workflow) {
         //TODO
-        WorkFlowService.deleteWorkFlow(workflow.id);
-
-        // test
-        var index = $scope.forms.indexOf(workflow);
-        $scope.workflows.splice(index, 1);
-        console.log("delete.." + workflow.id);
+        WorkFlowService.deleteWorkFlow(workflow.id).then(function (response) {
+            alert("Success!");
+        }, function (errResponse) {
+            alert("Failed, Try later!");
+        });
     };
     /**
      * save one workflow
      * */
     $scope.saveWorkFlow = function () {
-        //console.log("saving.." + $scope.workflowDetail.id);
-        //console.log($scope.save());
-        //{"connections":[],"nodes":[{"BlockId":"state_start1","BlockContent":"Start","BlockX":198,"BlockY":91,"Node_Type":"state_start"}]}
-        //$scope.workflowDetail
-        //console.log($scope.workflowDetail);
-        //WorkFlowService.createWorkFlow( $scope.workflowDetail).then(
-        //    function (d) {
-        //        console.log("success");
-        //    },
-        //    function (e) {
-        //        console.log(e);
-        //    }
-        //);
+        console.log("saving.." + $scope.workflowDetail.id);
+        console.log($scope.save());
+      //  {"connections":[],"nodes":[{"BlockId":"state_start1","BlockContent":"Start","BlockX":198,"BlockY":91,"Node_Type":"state_start"}]}
+      //  $scope.workflowDetail
+        console.log($scope.workflowDetail);
+
         var nodesInfo = $scope.save();
         nodesInfo.id = $scope.workflowDetail.id;
-        nodesInfo.workflowname = $scope.workflowDetail.workflowname;
-        nodesInfo.workflow_desc = $scope.workflowDetail.workflow_desc;
+        nodesInfo.displayName = $scope.workflowDetail.displayName;
+        nodesInfo.workFlow_Description = $scope.workflowDetail.workFlow_Description;
         nodesInfo.creator = $scope.workflowDetail.creator;
         nodesInfo.create_time = $scope.workflowDetail.create_time;
         nodesInfo.update_time = $scope.workflowDetail.update_time;
 
-        console.log('============');
-        console.log(JSON.stringify(nodesInfo));
-        //test
-        if($scope.isNew){
-            $scope.workflows.push(nodesInfo);
-        }
+        WorkFlowService.createWorkFlow( nodesInfo).then(
+            function (d) {
+                console.log("success");
+            },
+            function (e) {
+                console.log(e);
+            }
+        );
         $scope.workflowDetail = {
             id: '',
-            workflowname: "",
+            displayName: "",
             connections: [],
             nodes: [],
             creator: "",
             update_time: "",
             create_time: "",
-            workflow_desc: ""
+            workFlow_Description: ""
         }
         $scope.editing = false;
+        self.fetchAllWorkFlow();
     };
     /**
      * update workflow

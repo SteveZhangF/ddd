@@ -9,11 +9,13 @@
 package app.service.userconstructure.impl;
 
 import app.dao.userconstructure.DepartmentDAO;
+import app.model.userconstructure.Company;
 import app.model.userconstructure.Department;
 import app.newService.BaseGenericServiceImpl;
 import app.service.userconstructure.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,6 +23,7 @@ import java.util.List;
  * Created by steve on 10/15/15.
  */
 @Service("departmentService")
+@Transactional
 public class DepartmentServiceImpl extends BaseGenericServiceImpl<Department,String> implements DepartmentService {
     @Autowired
     DepartmentDAO departmentDAO;
@@ -32,5 +35,40 @@ public class DepartmentServiceImpl extends BaseGenericServiceImpl<Department,Str
     @Override
     public List<Department> getbyParentId(String parent_id) {
         return departmentDAO.getDepartmentsByParentId(parent_id);
+    }
+
+    @Override
+    public void delete(Department entity) {
+        departmentDAO.delete(entity);
+    }
+
+    @Override
+    public Department get(String id) {
+        return departmentDAO.get(id);
+    }
+
+    @Override
+    public Department load(String id) {
+        return departmentDAO.load(id);
+    }
+
+    @Override
+    public List<Department> loadAll() {
+        return departmentDAO.loadAll();
+    }
+
+    @Override
+    public void save(Department entity) {
+        departmentDAO.save(entity);
+    }
+
+    @Override
+    public void saveOrUpdate(Department entity) {
+        departmentDAO.saveOrUpdate(entity);
+    }
+
+    @Override
+    public void update(Department entity) {
+        departmentDAO.update(entity);
     }
 }

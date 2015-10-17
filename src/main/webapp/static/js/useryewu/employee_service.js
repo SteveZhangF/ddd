@@ -11,7 +11,7 @@ app.factory('EmployeeService', ['$http', '$q', function ($http, $q) {
     return {
 
         fetchAllEmployee: function () {
-            return $http.get('http://localhost:8080/ddd/Employee/')
+            return $http.get('/employee/')
                 .then(
                 function (response) {
                     return response.data;
@@ -24,7 +24,7 @@ app.factory('EmployeeService', ['$http', '$q', function ($http, $q) {
         },
 
         getEmployee: function (id) {
-            return $http.get('http://localhost:8080/ddd/employee/' + id)
+            return $http.get('/employee/' + id)
                 .then(
                 function (response) {
                     return response.data;
@@ -38,7 +38,7 @@ app.factory('EmployeeService', ['$http', '$q', function ($http, $q) {
 
         createEmployee: function (employee) {
             console.log(employee);
-            return $http.post('http://localhost:8080/ddd/employee/', employee)
+            return $http.post('/employee/', employee)
                 .then(
                 function (response) {
                     return response.data;
@@ -51,7 +51,7 @@ app.factory('EmployeeService', ['$http', '$q', function ($http, $q) {
         },
 
         updateEmployee: function (employee, id) {
-            return $http.put('http://localhost:8080/ddd/employee/' + id, employee)
+            return $http.put('/employee/' + id, employee)
                 .then(
                 function (response) {
                     return response.data;
@@ -64,7 +64,7 @@ app.factory('EmployeeService', ['$http', '$q', function ($http, $q) {
         },
 
         deleteEmployee: function (id) {
-            return $http.delete('http://localhost:8080/ddd/employee/' + id)
+            return $http.delete('/employee/' + id)
                 .then(
                 function (response) {
                     return response.data;

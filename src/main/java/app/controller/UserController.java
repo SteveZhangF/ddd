@@ -50,6 +50,37 @@ public class UserController {
         return false;
     }
 
+    // get one user
+    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> getUser(@PathVariable("id") int id) {
+        User user = userService.findById(id);
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    /**
+     * update a user
+     * */
+    @RequestMapping(value="/user/{id}",method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> updateUser(@PathVariable("id") int id, @RequestBody User user){
+
+        if(userService.findById(id)==null)
+            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+        userService.update(user);
+        return new ResponseEntity<>(user,HttpStatus.OK);
+    }
+    /**
+     * delete a user
+     * */
+    @RequestMapping(value = "/user/{id}",method=RequestMethod.DELETE,produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> deleteUser(@PathVariable("id") int id){
+
+        return new ResponseEntity<User>(HttpStatus.OK);
+    }
+
+    // get all users
     @RequestMapping(value = "/user/",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<User>> listAllUser(){
         List<User> users = userService.list();

@@ -50,13 +50,13 @@ app.controller('formListCtrl', ['$scope', "FormService", function ($scope, FormS
         );
     };
 //TODO
-    //self.fetchAllForms();
+    self.fetchAllForms();
 
     $scope.editForm = function (form) {
         $scope.editing = true;
         $scope.isNew = false;
-        //TODO self.fetchOneForm(form);
-        $scope.formDetail = form;
+
+        //$scope.formDetail = form;
         console.log("editing.." + form.id);
     };
     $scope.addNewForm = function () {
@@ -78,8 +78,8 @@ app.controller('formListCtrl', ['$scope', "FormService", function ($scope, FormS
         console.log("adding..");
     };
     $scope.deleteForm = function (form) {
-        //TODO
-        //FormService.deleteForm(form.id);
+
+        FormService.deleteForm(form.id);
         var index = $scope.forms.indexOf(form);
         $scope.forms.splice(index,1);
         console.log("delete.." + form.id);
@@ -118,11 +118,21 @@ app.controller('formListCtrl', ['$scope', "FormService", function ($scope, FormS
         $scope.formDetail.context_parse = form.context_parse;
         $scope.formDetail.fields_count = form.fields_count;
         $scope.formDetail.data=form.data;
-        //$scope.saveForm(form);
+        $scope.saveForm(form);
         console.log(JSON.stringify($scope.formDetail));
-        $scope.forms.push(form);
+        //$scope.forms.push(form);
+        self.fetchAllForms();
         $scope.editing = false;
     };
+
+    $scope.$watch(function ($scope) {
+        return $scope.editing;
+    }, function () {
+        if($scope.editing == false){
+            self.fetchAllForms();
+        }
+    });
+
     $scope.update = function () {
         var form = FormService.parse_form($scope.formDetail.context,0);
         //form.creator = $scope.formDetail.creator;
@@ -134,8 +144,8 @@ app.controller('formListCtrl', ['$scope', "FormService", function ($scope, FormS
         console.log(form.context);
         $scope.formDetail.context_parse = form.context_parse;
         $scope.formDetail.fields_count = form.fields_count;
-        //TODO
-        //$scope.updateForm(form);
+        $scope.updateForm($scope.formDetail);
+        self.fetchAllForms();
         $scope.editing = false;
     };
     $scope.cancel = function () {

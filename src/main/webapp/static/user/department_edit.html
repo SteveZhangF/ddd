@@ -1,10 +1,65 @@
-<!--
-  ~ Copyright (c) 2015. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
-  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
-  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
-  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
-  -->
-<div class="generic-container" >
-    sss
+<div class="generic-container" ng-controller="UserDepartmentController as ctrl">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <span class="lead">Department Info </span>
+        </div>
+        <div class="formcontainer">
+            <form ng-submit="ctrl.submit()" name="myForm" class="form-horizontal">
+                <input type="hidden" ng-model="ctrl.department.uuid"/>
+                <!-- name -->
+                <div class="form-group col-md-12">
+                    <label class="col-md-2 control-lable" for="name">Name</label>
+
+                    <div class="col-md-7">
+                        <input type="text" ng-model="ctrl.department.name" name="uname"
+                               class="username form-control input-sm" id="name"
+                               placeholder="Enter Company name" required ng-minlength="3"/>
+
+                        <div class="has-error" ng-show="myForm.$dirty">
+								<span ng-show="myForm.uname.$error.required">This is a
+									required field</span> <span ng-show="myForm.uname.$error.minlength">Minimum
+									length required is 3</span> <span ng-show="myForm.uname.$invalid">This
+									field is invalid </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- address -->
+                <div class="form-group col-md-12">
+                    <label class="col-md-2 control-lable" for="address">Address</label>
+
+                    <div class="col-md-7">
+                        <input type="text" ng-model="ctrl.department.address" name='address'
+                               class="form-control input-sm"
+                               placeholder="Enter your Address. "/>
+                    </div>
+                </div>
+
+                <!-- phone -->
+                <div class="form-group col-md-12">
+                    <label class="col-md-2 control-lable" for="phone">Phone</label>
+
+                    <div class="col-md-7">
+                        <input type="tel" id="phone" ng-model="ctrl.department.phone" name="phone"
+                               class="form-control input-sm"
+                               placeholder="Enter your Phone Number" required/>
+
+                        <div class="has-error" ng-show="myForm.$dirty">
+								<span ng-show="myForm.phone.$error.required">This is a
+									required field</span> <span ng-show="myForm.phone.$invalid">This
+									field is invalid </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions floatRight">
+                    <input type="submit" value="{{!ctrl.department.uuid ? 'Create' : 'Update'}}"
+                           class="btn btn-primary btn-sm" ng-disabled="myForm.$invalid">
+                    <button type="button" ng-click="ctrl.reset()"
+                            class="btn btn-warning btn-sm" ng-disabled="myForm.$pristine">Reset
+                        Form
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
