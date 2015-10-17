@@ -16,9 +16,18 @@ app.factory('UserService', ['$http', '$q', function ($http, $q) {
                 }
             );
         },
-
+        updateUserWorkflow : function (id,workflows) {
+            return $http.post('/user/'+id,workflows).then(
+                function (response) {
+                    alert("success");
+                },
+                function (errResponse) {
+                    alert("failed, please try later");
+                }
+            );
+        },
         createUser: function (user) {
-            return $http.post('http://localhost:8080/Spring4MVCAngularJSExample/user/', user)
+            return $http.post('/user/', user)
                 .then(
                 function (response) {
                     return response.data;
@@ -31,7 +40,7 @@ app.factory('UserService', ['$http', '$q', function ($http, $q) {
         },
 
         updateUser: function (user, id) {
-            return $http.put('http://localhost:8080/Spring4MVCAngularJSExample/user/' + id, user)
+            return $http.put('/user/' + id, user)
                 .then(
                 function (response) {
                     return response.data;
@@ -44,7 +53,7 @@ app.factory('UserService', ['$http', '$q', function ($http, $q) {
         },
 
         deleteUser: function (id) {
-            return $http.delete('http://localhost:8080/Spring4MVCAngularJSExample/user/' + id)
+            return $http.delete('/user/' + id)
                 .then(
                 function (response) {
                     return response.data;

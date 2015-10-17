@@ -1,7 +1,9 @@
 package app.model.user;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,6 +19,17 @@ public class User {
 
     @Column(name = "PASSWORD", nullable = false)
     private String password;
+
+    public String getWorkflows() {
+        return workflows;
+    }
+
+    public void setWorkflows(String workflows) {
+        this.workflows = workflows;
+    }
+
+    //    @OneToMany
+    private String workflows = "";
 
     private String companyId;
 

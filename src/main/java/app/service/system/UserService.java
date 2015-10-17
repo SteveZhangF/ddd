@@ -1,10 +1,11 @@
 package app.service.system;
 
 import app.model.user.User;
+import app.newService.IBaseGenericService;
 
 import java.util.List;
 
-public interface UserService {
+public interface UserService extends IBaseGenericService<User,Integer> {
 
     User findById(int id);
 

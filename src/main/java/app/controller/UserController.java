@@ -8,10 +8,14 @@ import app.model.user.User;
 import app.model.user.UserProfile;
 import app.model.user.UserProfileType;
 import app.model.userconstructure.Company;
+import app.newDao.HibernateBaseGenericDAOImpl;
+import app.newService.BaseGenericServiceImpl;
 import app.service.system.UserService;
 import app.service.userconstructure.CompanyService;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -146,6 +150,30 @@ public class UserController {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+    @Autowired
+    SessionFactory sessionFactory;
+    @RequestMapping(value="/user/{id}",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
+    public void updateUserWorkflow(@PathVariable("id") int id,@RequestBody String workflows,HttpServletResponse response){
+        User user = userService.findById(id);
+        System.out.println(workflows);
+        user.setWorkflows(workflows);
+        try{
+//            userService.update(user);
+            userService.update(user);
+            response.setStatus(HttpServletResponse.SC_OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_EXPECTATION_FAILED);
+        }
+    }
+
+    @RequestMapping(value = "/user/getworkflow/{id}", method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getUserWorkflow(@PathVariable("id") int id){
+        User user = userService.findById(id);
+        if(user == null)
+            return "no user found";
+        return user.getWorkflows();
     }
 
     class UserInfo {

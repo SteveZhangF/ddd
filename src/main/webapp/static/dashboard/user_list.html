@@ -49,12 +49,34 @@
             </tbody>
         </table>
     </div>
-
 </div>
 <script type="text/ng-template" id="user-editor.html">
     <h1>Editing User</h1>
-
-
+    <div class="well">
+        <form class="form-inline">
+            <div class="form-group">
+                <label for="Creator">User SSOID:</label>
+                <input ng-model="user.ssoId" type="text" class="form-control" id="Creator"
+                       placeholder="Jane Doe" disabled>
+            </div>
+            <div class="form-group">
+                <label class="checkbox inline _hover" data-ng-repeat="p in workflow.all" title="{{p.name}}"
+                       style="width: 100%; margin-left: 10px;">
+                    <input maxlength="30" data-index="{{p.index}}" type="checkbox" value="{{p.id}}"
+                           data-check-list='workflow.checked' data-check-num-list="workflow.checkedname"
+                           req-num="{{p.displayName}}">{{p.displayName}}
+                </label>
+                {{workflow.all}}
+                {{workflow.checkedname}}
+                {{workflow.checked }}
+            </div>
+            <input ng-model="user.id" type="hidden"/>
+        </form>
+        <div class="row">
+            <button type="button" class="btn btn-success" ng-click="ok()">OK</button>
+            <button type="button" class="btn btn-danger" ng-click="cancel()">Cancel</button>
+        </div>
+    </div>
 </script>
 <style>
     .st-sort-ascent:before {
