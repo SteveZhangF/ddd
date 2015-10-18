@@ -23,6 +23,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.List;
@@ -51,12 +52,29 @@ public class WorkFlowServiceImplTest extends TestCase {
     public void testDelete() throws Exception {
 
     }
+    @Test
+    public void testJson() throws Exception{
+        WorkFlow workFlow = workFlowService.get("402880915076f662015076f82cf30000");
+        for(WorkFlowNode workFlowNode:workFlow.getNodes()){
+            
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        StringWriter writer = new StringWriter();
+        try {
+            mapper.writeValue(writer,workFlow);
+//            mapper.
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(writer.toString());
+    }
 
     //@Test
     public void testGet() throws Exception {
-        WorkFlow workFlow = workFlowService.get("40288091506cfc0c01506cfc13410000");
+        WorkFlow workFlow = workFlowService.get("402880915076f662015076f82cf30000");
         System.out.println(workFlow.getConnections().size());
         System.out.println(workFlow.getNodes().size());
+
         for(WorkFlowNode workFlowNode:workFlow.getNodes()){
             System.out.println(workFlowNode.getId());
             System.out.println(workFlowNode.getElementName());
@@ -162,7 +180,7 @@ public class WorkFlowServiceImplTest extends TestCase {
 //                workFlowService.save(wf);
     }
 
-    @Test
+   // @Test
     public void testLoad() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         String s= ("{  \n" +

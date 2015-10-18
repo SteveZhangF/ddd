@@ -2,38 +2,43 @@ var app = angular.module('dashboardApp');
 
 app.controller('flowToolBarController', ['$scope', 'FormService', 'WorkFlowService', function ($scope, FormService, WorkFlowService) {
 
-    var dp = [];
-    var forms=[];
-    $scope.dataProvider = [];
-    FormService.fetchAllForms().then(
-        function (response) {
-            forms=response;
-            console.log(response);
-            for(var j=0;j<forms.length;j++){
-                var form_org = forms[j];
-                var form = {
-                    index:j,
-                    label: form_org.form_name,
-                    id: form_org.id,
-                    type:'form',
-                    name: form_org.form_name
+    $scope.dataProvider={
+        data:[]
+    };
+    var getForms = function () {
+        FormService.fetchAllForms().then(
+            function (forms) {
+                var formsz = [];
+                for(var j=0;j<forms.length;j++){
+                    var form_org = forms[j];
+                    var form = {
+                        index:j,
+                        label: form_org.form_name,
+                        id: form_org.id,
+                        type:'form',
+                        name: form_org.form_name
+                    }
+                    formsz.push(form);
                 }
-                dp.push(form);
+               setForms(formsz);
+            },
+            function (errResponse) {
+                console.log(errResponse);
             }
-            $scope.dataProvider = dp;
-        },
-        function (errResponse) {
-            console.log(errResponse);
-        }
-    );
+        );
+    }
 
-    $scope.selectedOption = null;
-    $scope.selectedNode = {};
-    $scope.onSelect = function (option) {
-        $scope.selectedNode.id = "formnode_" + option.id;
-        $scope.selectedNode.label = option.label;
-        $scope.selectedNode.data = JSON.stringify({id: option.id, type: option.type, name: option.name});
-        $scope.selectedNode.nodetype = "form_node";
+    var setForms = function (forms) {
+        $scope.dataProvider.data = forms;
+    }
+
+    this.selectedOption = null;
+    this.selectedNode = {};
+    this.onSelect = function (option) {
+        this.selectedNode.id = "formnode_" + option.id;
+        this.selectedNode.label = option.label;
+        this.selectedNode.data = JSON.stringify({id: option.id, type: option.type, name: option.name});
+        this.selectedNode.nodetype = "form_node";
     };
 
     $scope.toolbar_forms = false;
@@ -45,6 +50,7 @@ app.controller('flowToolBarController', ['$scope', 'FormService', 'WorkFlowServi
     $scope.showForms = function () {
         $scope.toolbar_nodes = false;
         $scope.toolbar_forms = true;
+        getForms();
     }
 
 

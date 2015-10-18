@@ -9,12 +9,14 @@ app.service('LoginService', [
     '$q',
     '$window',
     'LogInData',
+
     function ($http, $q, $window, LoginData) {
         var userInfo = {
             accessToken: 0,
             userName: 0,
             userId: 0,
-            companyId: 0
+            companyId: 0,
+            workflows:0
         }
 
         function getUserInfo() {
@@ -60,7 +62,8 @@ app.service('LoginService', [
                         accessToken: result.data.accessToken,
                         userName: result.data.userName,
                         userId: result.data.userId,
-                        companyId: result.data.companyId
+                        companyId: result.data.companyId,
+                        workflows:result.data.workflows
                     };
                     $window.sessionStorage["userInfo"] = JSON
                         .stringify(userInfo);

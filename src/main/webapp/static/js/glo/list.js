@@ -33,6 +33,12 @@ angular.module('virtualList',[])
                     scope.updateDisplayList();
                 };
 
+                scope.$watch(function (scope) {
+                    return  scope.uiDataProvider;
+                }, function () {
+                    scope.init();
+                });
+
                 scope.updateDisplayList = function () {
                     var firstCell = Math.max(Math.floor(scope.scrollTop / rowHeight) - scope.cellsPerPage, 0);
                     var cellsToCreate = Math.min(firstCell + scope.numberOfCells, scope.numberOfCells);

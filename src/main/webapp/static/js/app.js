@@ -77,7 +77,7 @@ app.config(['$routeProvider', function ($routeProvider) {
     }).when("/login", {
         template: "<script>console.log(coconfigurationuration)<script>",
         controller: ""
-    }).when("/test", {templateUrl: "user/company_menu.html"})
+    }).when("/workflows", {templateUrl: "user/moduel.html"})
 }]);
 
 app.filter('checkmark', function () {

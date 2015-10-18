@@ -40,8 +40,8 @@
                 <td>{{x.state}}</td>
                 <td>{{x.userProfiles}}</td>
                 <td>
-                    <button type="button" ng-click="editor(x)" class="btn btn-sm btn-danger">
-                        <i class="glyphicon glyphicon-remove-circle">
+                    <button type="button" ng-click="editor(x)" class="btn btn-sm btn-success">
+                        <i class="glyphicon glyphicon-edit">
                         </i>
                     </button>
                 </td>
@@ -60,9 +60,9 @@
                        placeholder="Jane Doe" disabled>
             </div>
             <div class="form-group">
-                <label class="checkbox inline _hover" data-ng-repeat="p in workflow.all" title="{{p.name}}"
+                <label class="checkbox inline _hover" data-ng-repeat="p in workflow.all" title="{{p.displayName}}"
                        style="width: 100%; margin-left: 10px;">
-                    <input maxlength="30" data-index="{{p.index}}" type="checkbox" value="{{p.id}}"
+                    <input maxlength="30" data-index="{{p.index}}" type="checkbox" value="{{'{&quot;id&quot;:&quot;'+p.id+'&quot;,&quot;name&quot;:&quot;'+p.displayName+'&quot;}'}}"
                            data-check-list='workflow.checked' data-check-num-list="workflow.checkedname"
                            req-num="{{p.displayName}}">{{p.displayName}}
                 </label>

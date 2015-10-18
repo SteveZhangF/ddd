@@ -80,22 +80,21 @@
                     <button ng-click="showForms()">Forms</button>
                     <div id="controllernodes" ng-show="toolbar_nodes">
                         <div class="node radius" id="node1">Start</div>
-                        <div class="node" id="node2">Action</div>
                         <div class="node" id="node3">Question</div>
                         <div class="node radius" id="node4">End</div>
                     </div>
 
                     <div ng-show="toolbar_forms">
-                        <ui-virtual-list ui-data-provider="dataProvider"
-                                         ui-on-select="onSelect(option)"
-                                         ng-model="selectedOption"></ui-virtual-list>
                         <hr>
-                        {{dataProvider}}
+                        <ui-virtual-list ui-data-provider="dataProvider.data"
+                                         ui-on-select="controller.onSelect(option)"
+                                         ng-model="controller.selectedOption"></ui-virtual-list>
                         <hr>
-                        <div class="node" id="previewNode" nodetype="{{selectedNode.nodetype}}"
-                             node_data="{{selectedNode.data}}">
-                            {{selectedNode.label}}
+                        <div class="node" id="previewNode" nodetype="{{controller.selectedNode.nodetype}}"
+                             node_data="{{controller.selectedNode.data}}">
+                            {{controller.selectedNode.label}}
                         </div>
+
                     </div>
 
                 </div>
@@ -125,6 +124,7 @@
         max-height: 200px;
         overflow-y: auto;
         display: block;
+        margin-top:10px;
     }
 
     ui-virtual-list .canvas {

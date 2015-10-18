@@ -29,6 +29,8 @@ public class User {
     }
 
     //    @OneToMany
+    @Lob
+    @Column(columnDefinition = "BLOB")
     private String workflows = "";
 
     private String companyId;
