@@ -1,0 +1,33 @@
+ui-virtual-list {
+    max-height: 200px;
+    overflow-y: auto;
+    display: block;
+    margin-top:10px;
+}
+
+ui-virtual-list .canvas {
+    background-color: #eee;
+    position: relative;
+}
+
+ui-virtual-list div.renderer {
+    display: block;
+    width: 100%;
+    cursor: pointer;
+    position: absolute;
+    height: 30px;
+    line-height: 30px;
+}
+
+ui-virtual-list div.renderer span {
+    margin-left: 10px;
+}
+
+ui-virtual-list div.renderer.selected {
+    background-color: #ccc;
+}
+
+ui-virtual-list div.renderer:hover {
+    background-color: #666;
+    color: white;
+}

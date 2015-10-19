@@ -106,7 +106,7 @@ app.controller('QuestionController', ['$scope', 'QuestionService', 'ngDialog', f
             scope: $scope
         })
     };
-
+    // when edit form clicked
     $scope.editor = function (question) {
         $scope.question = question;
         $scope.create = false;

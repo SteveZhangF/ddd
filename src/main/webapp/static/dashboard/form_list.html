@@ -1,6 +1,5 @@
 <div ng-controller="formListCtrl as controller" class="row">
-    <button ng-if="!editing" ng-click="addNewForm()">Add new Form</button>
-    <div ng-if="!editing">
+    <div ng-if="!editFormFormat">
         <table st-table="users" class="table table-striped">
             <thead>
             <tr>
@@ -10,6 +9,13 @@
                 <th st-sort="creator">creator</th>
                 <th st-sort="createTime">Create Time</th>
                 <th st-sort="updateTime">Update Time</th>
+                <th>
+                    <button type="button" ng-click="createNew()" class="btn btn-md">
+                        <i class="glyphicon glyphicon-plus"></i>
+                    </button>
+                    <button type="button" ng-click="editFormFormatAction()"></button>
+                </th>
+
             </tr>
             <tr>
                 <th colspan="1">
@@ -23,7 +29,6 @@
             </tr>
             </thead>
             <tbody>
-            {{forms.length}}
             <tr ng-repeat="x in forms">
                 <td>{{ $index + 1 }}</td>
                 <td>{{ x.id }}</td>
@@ -33,12 +38,15 @@
                 <td>{{x.createTime}}</td>
                 <td>{{x.updateTime}}</td>
                 <td>
-                    <button type="button" ng-click="editForm(x)" class="btn btn-sm">
-                        <i class="glyphicon glyphicon-remove-circle">
+                    <button type="button" ng-click="editFormFormatAction(x)" class="btn btn-md">
+                        Edit Form Format
+                    </button>
+                    <button type="button" ng-click="edit(x)" class="btn btn-md">
+                        <i class="glyphicon glyphicon-edit">
                         </i>
                     </button>
-                    <button type="button" ng-click="deleteForm(x)" class="btn btn-sm btn-danger">
-                        <i class="glyphicon glyphicon-remove-circle">
+                    <button type="button" ng-click="delete(x)" class="btn btn-md btn-danger">
+                        <i class="glyphicon glyphicon-remove">
                         </i>
                     </button>
                 </td>
@@ -46,41 +54,83 @@
             </tbody>
         </table>
     </div>
-    <div ng-if="editing">
-        <div class="well">
-            <div class="alert alert-info">
-                <form class="form-inline">
-                    <div class="form-group">
-                        <label for="Creator">Creator:</label>
-                        <input ng-model="formDetail.creator" type="text" class="form-control" id="Creator" placeholder="Jane Doe" disabled>
-                    </div>
-                    <div class="form-group">
-                        <label for="FormName">Form Name:</label>
-                        <input ng-model="formDetail.form_name" type="text" class="form-control" id="FormName" placeholder="Employee Training">
-                    </div>
-                    <input ng-model="formDetail.id" type="hidden"/>
-                </form>
 
-                <textarea ng-model="formDetail.form_desc" class="form-control" rows="3"></textarea>
+    <div ng-if="editFormFormat">
+        <div class="row">
+            <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="formFormateOk()">Save
+            </button>
+            <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="formFormateCancel()">
+                Cancel
+            </button>
+        </div>
+        <div class="well row">
+            <div class="col-md-3">
+                <label>Select Question to insert:</label>
+                <button type="button" class="btn btn-md btn-success" ng-click="insertQuestion()">Insert</button>
+                <hr>
+                {{questions.all}}
+                <ui-virtual-list ui-data-provider="questions.all"
+                                 ui-on-select="onQuestionSelected(option)"
+                                 ng-model="questions.selectedQuestion"></ui-virtual-list>
             </div>
-            <div class="alert alert-warning">
-                Component List
-                <p>
-                    <button type="button" onclick="showDialog('text')" class="btn btn-info btn-small">Text Field
-                    </button>
-
-                </p>
+            <div class="col-md-9">
+                {{questions.selectedQuestion}}
+                <preview-question data-question="questions.selectedQuestion"></preview-question>
             </div>
         </div>
-        {{formDetail.context}}}
         <div id="formDesigner" froala="froalaOptions" ng-model="formDetail.context"></div>
-        <button ng-if="isNew" ng-click="save()">Save</button>
-        <button ng-if="!isNew" ng-click="update()">update</button>
-        <button ng-click="cancel()">Cancel</button>
+        {{formDetail.context}}
     </div>
-
 </div>
+<script type="text/ng-template" id="form-delete.html">
+    <p>Are you sure you want to delete the form?</p>
+    <div class="ngdialog-buttons">
+        <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="cancel()">No
+        </button>
+        <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="deleteOk()">Yes</button>
+    </div>
+</script>
+<script type="text/ng-template" id="form-information-dialog.html">
+    <h1>Form Information</h1>
+    <div class="well">
+        <form class="form-inline">
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <label for="name">Form Name:</label>
+                </div>
+                <div class="col-md-8">
+                    <input ng-model="formDetail.name" type="text" class="form-control" id="name"
+                           placeholder="please input the form name">
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <label for="type">Type:</label>
+                </div>
+                <div class="col-md-8">
+                    <select class="form-control" id='type' ng-options=" type for  type in types "
+                            ng-change="typeChanged()"
+                            ng-model="formDetail.type"></select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <label for="description">Description</label>
+                </div>
+                <div class="col-md-8">
+                    <textarea ng-model="formDetail.description" class='form-control' id='description'></textarea>
+                </div>
+            </div>
+            <input ng-model="formDetail.id" type="hidden"/>
+        </form>
+        <hr>
 
+        <div class="row">
+            <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="info_ok()">OK</button>
+            <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="cancel()">Cancel</button>
+        </div>
+    </div>
+</script>
 <style>
 
     .st-sort-ascent:before {

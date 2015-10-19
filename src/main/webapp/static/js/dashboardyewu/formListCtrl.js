@@ -1,18 +1,13 @@
-/**
- * Created by steve on 10/11/15.
- */
-var app = angular.module("dashboardApp");
-
-app.controller('formListCtrl', ['$scope', "FormService", function ($scope, FormService) {
+app.controller('formListCtrl', ['$scope', "FormService",'QuestionService','ngDialog' ,function ($scope, FormService,QuestionService,ngDialog) {
     console.log("test form list in");
     $scope.myHtml = {value:"<h1>Do ur Best</h1>"};
     $scope.froalaOptions = {
-      //  toolbarButtons : ["bold", "italic", "underline", "sep", "align", "formDesigner","showFormDesign","formDesignText"]
+        //  toolbarButtons : ["bold", "italic", "underline", "sep", "align", "formDesigner","showFormDesign","formDesignText"]
     };
 
     $scope.forms = [];
 
-    var formDetail_ = {
+    $scope.formDetail = {
         id: "",
         fields_count: "",
         creator: "",
@@ -25,9 +20,9 @@ app.controller('formListCtrl', ['$scope', "FormService", function ($scope, FormS
         form_name: "",
         data:""
     };
-    //backup for null form
-    $scope.formDetail = formDetail_;
-    $scope.editing = false;
+
+    $scope.types = ["CompanyForm","EmployeeForm","DepartmentForm"];
+
     self.fetchAllForms = function () {
         FormService.fetchAllForms()
             .then(
@@ -49,107 +44,127 @@ app.controller('formListCtrl', ['$scope', "FormService", function ($scope, FormS
             }
         );
     };
-//TODO
+
     self.fetchAllForms();
 
-    $scope.editForm = function (form) {
-        $scope.editing = true;
-        $scope.isNew = false;
+    $scope.editing = false;
 
-        //$scope.formDetail = form;
-        console.log("editing.." + form.id);
-    };
-    $scope.addNewForm = function () {
-        $scope.editing = true;
-        $scope.isNew = true;
-        $scope.formDetail = {
-            id: "",
-            fields_count: "",
-            creator: "",
-            createTime: "",
-            updateTime: "",
-            _del: "",
-            context_parse: "",
-            context: "",
-            form_desc: "",
-            form_name: "",
-            data:""
-        };
-        console.log("adding..");
-    };
-    $scope.deleteForm = function (form) {
-
-        FormService.deleteForm(form.id);
-        var index = $scope.forms.indexOf(form);
-        $scope.forms.splice(index,1);
-        console.log("delete.." + form.id);
-    };
-    $scope.saveForm = function (form) {
-        console.log("saving.." + form.id);
-        FormService.createForm(form).then(
-            function (d) {
-                console.log("success");
-            },
-            function (e) {
-                console.log(e);
-            }
-        );
-    };
-    $scope.updateForm = function (form) {
-        FormService.updateForm(form, form.id).then(
-            function (d) {
-                console.log("success");
-            },
-            function (e) {
-                console.log(e);
-            }
-        );
-    };
-    /**
-     * when click save
-     * */
-    $scope.save = function () {
-        //TODO
-        console.log("get from editor");
-        console.log($scope.formDetail.context);
-        console.log('end get from editor');
-        var form = FormService.parse_form($scope.formDetail.context,0);
-        $scope.formDetail.context = form.context;
-        $scope.formDetail.context_parse = form.context_parse;
-        $scope.formDetail.fields_count = form.fields_count;
-        $scope.formDetail.data=form.data;
-        $scope.saveForm(form);
-        console.log(JSON.stringify($scope.formDetail));
-        //$scope.forms.push(form);
-        self.fetchAllForms();
-        $scope.editing = false;
+    var dialog;
+    $scope.edit = function (form) {
+        $scope.formDetail = form;
+        $scope.create = false;
+        dialog = ngDialog.open({
+            template: 'form-information-dialog.html',
+            scope: $scope
+        });
     };
 
-    $scope.$watch(function ($scope) {
-        return $scope.editing;
-    }, function () {
-        if($scope.editing == false){
-            self.fetchAllForms();
+    $scope.create = false;
+    $scope.createNew = function () {
+        $scope.formDetail = {};
+        $scope.create = true;
+        dialog = ngDialog.open({
+            template:'form-information-dialog.html',
+            scope:$scope
+        });
+    };
+
+
+    $scope.info_ok = function () {
+        if ($scope.create) {
+            FormService.createForm($scope.formDetail).then(
+                function (d) {
+                    self.fetchAllForms();
+                },
+                function (e) {
+                    alert("failed, Try later");
+                    self.fetchAllForms();
+                }
+            );
+        } else {
+            FormService.updateForm($scope.formDetail, $scope.formDetail.id).then(
+                function (d) {
+                    console.log("success");
+                    self.fetchAllForms();
+                },
+                function (e) {
+                    alert("failed, Try later");
+                    self.fetchAllForms();
+                }
+            );
         }
-    });
+        if (dialog) {
+            dialog.close("");
+        }
+    };
 
-    $scope.update = function () {
-        var form = FormService.parse_form($scope.formDetail.context,0);
-        //form.creator = $scope.formDetail.creator;
-        //form._del = false;
-        //form.form_desc = $scope.formDetail.form_desc;
-        //form.form_name = $scope.formDetail.form_name;
-        //form.id=$scope.formDetail.id;
-        $scope.formDetail.context = form.context;
-        console.log(form.context);
-        $scope.formDetail.context_parse = form.context_parse;
-        $scope.formDetail.fields_count = form.fields_count;
-        $scope.updateForm($scope.formDetail);
-        self.fetchAllForms();
-        $scope.editing = false;
-    };
     $scope.cancel = function () {
-        $scope.editing = false;
+        if (dialog) {
+            dialog.close("");
+        }
     };
+
+    $scope.delete = function (form) {
+        $scope.formDetail = form;
+        dialog = ngDialog.open({
+            template: "form-delete-dialog.html",
+            scope:$scope
+        });
+    };
+    $scope.deleteOk = function () {
+        QuestionService.deleteQuestion($scope.question.id).then(function (response) {
+            self.fetchAllForms();
+            $scope.cancel();
+        });
+    };
+    $scope.editFormFormat = false;
+
+    $scope.editFormFormatAction = function (form) {
+       // self.fetchOneForm(form);
+        $scope.editFormFormat = true;
+    };
+
+    $scope.formFormateOk = function () {
+        console.log($scope.formDetail.context);
+    };
+
+    $scope.questions={
+        all:[{id:'1',index:'0', label:'question1',type:'text',name:'questions1'}],
+        selectedQuestion:{}
+    } ;
+    //var form = {
+    //    index:j,
+    //    label: form_org.form_name,
+    //    id: form_org.id,
+    //    type:'form',
+    //    name: form_org.form_name
+    //}
+    $scope.getQuestion = function () {
+        QuestionService.fetchAllQuestions().then(function (data) {
+            $scope.questions.all = data;
+            for(var i=0;i<data.length;i++){
+                $scope.questions.all[i].index = i;
+                $scope.questions.all[i].label =$scope.questions.all[i].name;
+            }
+        }, function (errData) {
+            console.log(errData);
+        });
+    };
+    
+    $scope.onQuestionSelected = function (option) {
+        $scope.questions.selectedQuestion = option;
+    };
+    
+    $scope.insertQuestion = function () {
+        console.log($scope.questions.selectedQuestion);
+        var selection = $scope.froalaOptions.froalaEditor('html.set',$scope.questions.selectedQuestion,true);
+        console.log(selection);
+    };
+
 }]);
 
+/**
+ * Created by steve on 10/11/15.
+ */
+
+var app = angular.module("dashboardApp");
