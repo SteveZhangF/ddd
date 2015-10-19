@@ -6,18 +6,37 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package app.model.questions;
+package app.model.report;
+
+import app.model.form.FormType;
+
+import javax.persistence.*;
 
 /**
  * Created by steve on 10/17/15.
  */
+
+@Entity
+@Table(name="question")
 public class Question {
 
+    @Lob
+    @Column(columnDefinition = "BLOB")
     private String name;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String content;
+    private String type;
+
+    @Lob
+    @Column(columnDefinition = "BLOB")
+    private String description;
+
+    @Lob
+    @Column(columnDefinition = "BLOB")
+    private String content;// how to the question looks like
 
     public String getName() {
         return name;
@@ -35,11 +54,28 @@ public class Question {
         this.id = id;
     }
 
+
     public String getContent() {
         return content;
     }
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

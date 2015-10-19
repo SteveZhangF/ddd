@@ -6,23 +6,19 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package app.model.wordflow.controlnode;
+package app.service.workflow;
+
+import org.junit.Test;
 
 /**
- * Created by steve on 10/14/15.
+ * Created by steve on 10/18/15.
  */
-public enum  NodeType {
-
-    FormNode("FormNode"),StartNode("StartNode"),EndNode("EndNode"),QuestionNode("QuestionNode");
-
-    private String value;
-
-    NodeType(String value){
-        this.value = value;
+public class Te {
+    @Test
+    public int test() {
+        long x = 1000000000;
+        long result =  (x - 1) % 9 + 1;
+        System.out.println(result);
+        return (int)result;
     }
-
-    public String getValue(){
-        return this.value;
-    }
-
 }

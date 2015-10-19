@@ -66,7 +66,7 @@ app.controller('UserController', ['$scope', 'UserService', 'WorkFlowService', 'n
     self.createUser = function (user) {
         UserService.createUser(user)
             .then(
-            self.fetchAllUsers,
+            self.fetchAllUsers(),
             function (errResponse) {
                 console.error('Error while creating User.');
             }
@@ -76,7 +76,7 @@ app.controller('UserController', ['$scope', 'UserService', 'WorkFlowService', 'n
     self.updateUser = function (user, id) {
         UserService.updateUser(user, id)
             .then(
-            self.fetchAllUsers,
+            self.fetchAllUsers(),
             function (errResponse) {
                 console.error('Error while updating User.');
             }
@@ -86,7 +86,7 @@ app.controller('UserController', ['$scope', 'UserService', 'WorkFlowService', 'n
     self.deleteUser = function (id) {
         UserService.deleteUser(id)
             .then(
-            self.fetchAllUsers,
+            self.fetchAllUsers(),
             function (errResponse) {
                 console.error('Error while deleting User.');
             }

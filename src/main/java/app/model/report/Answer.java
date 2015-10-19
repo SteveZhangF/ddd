@@ -6,21 +6,24 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package app.model.questions;
+package app.model.report;
 
-import app.model.userconstructure.OrganizationElement;
+import javax.persistence.*;
 
 /**
  * Created by steve on 10/17/15.
  */
 
-
+@Entity
+@Table(name="answer")
 public class Answer {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String value;
 
+    @ManyToOne
     private Question question;
 
     private String organizationElement_id;

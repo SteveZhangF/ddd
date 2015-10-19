@@ -77,7 +77,7 @@ app.config(['$routeProvider', function ($routeProvider) {
         //resolve: resolve
     }).when("/workflows",{
         templateUrl:"dashboard/workflow.html"
-    });
+    }).when("/questions",{templateUrl:"dashboard/question_list.html"})
 
 }]);
 app.filter('checkmark', function () {
