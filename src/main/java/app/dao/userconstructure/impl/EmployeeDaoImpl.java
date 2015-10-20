@@ -9,8 +9,6 @@
 package app.dao.userconstructure.impl;
 
 import app.dao.userconstructure.EmployeeDAO;
-import app.model.userconstructure.Company;
-import app.model.userconstructure.Department;
 import app.model.userconstructure.Employee;
 import app.newDao.HibernateBaseGenericDAOImpl;
 import org.hibernate.SessionFactory;

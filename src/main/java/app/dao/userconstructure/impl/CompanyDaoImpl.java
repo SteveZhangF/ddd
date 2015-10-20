@@ -1,6 +1,6 @@
 package app.dao.userconstructure.impl;
 
-import app.dao.userconstructure.CompanyDao;
+import app.dao.userconstructure.CompanyDAO;
 import app.model.userconstructure.Company;
 import app.newDao.HibernateBaseGenericDAOImpl;
 import org.hibernate.Criteria;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class CompanyDaoImpl extends HibernateBaseGenericDAOImpl<Company,String> implements CompanyDao {
+public class CompanyDaoImpl extends HibernateBaseGenericDAOImpl<Company,String> implements CompanyDAO {
 
     @Autowired
     public CompanyDaoImpl(SessionFactory sessionFactory){
