@@ -8,7 +8,7 @@ import app.newDao.IBaseGenericDAO;
 import java.util.List;
 
 
-public interface CompanyDao extends IBaseGenericDAO<Company,String> {
+public interface CompanyDAO extends IBaseGenericDAO<Company,String> {
 
     public Company getCompanyByUserId(int id);
 }
