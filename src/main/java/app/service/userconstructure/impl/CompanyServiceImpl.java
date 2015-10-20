@@ -1,6 +1,6 @@
 package app.service.userconstructure.impl;
 
-import app.dao.userconstructure.CompanyDao;
+import app.dao.userconstructure.CompanyDAO;
 import app.model.userconstructure.Company;
 import app.newService.BaseGenericServiceImpl;
 import app.service.userconstructure.CompanyService;
@@ -15,7 +15,7 @@ import java.util.List;
 public class CompanyServiceImpl extends BaseGenericServiceImpl<Company, String> implements CompanyService {
 
     @Autowired
-    CompanyDao companyDao;
+    CompanyDAO companyDao;
 
     @Override
     public Company getCompanybyUser(int user_id) {
