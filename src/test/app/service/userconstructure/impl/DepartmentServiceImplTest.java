@@ -8,29 +8,23 @@
 
 package app.service.userconstructure.impl;
 
-import app.model.form.FormType;
+import app.model.forms.FormType;
 import app.model.userconstructure.Company;
 import app.model.userconstructure.Department;
 import app.model.userconstructure.OrganizationElement;
 import app.service.form.UserFormServiceImplTestContextConfiguration;
 import app.service.userconstructure.CompanyService;
 import app.service.userconstructure.DepartmentService;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
-import sun.jvm.hotspot.runtime.ObjectMonitor;
 
 import java.io.IOException;
 import java.io.StringReader;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by steve on 10/16/15.

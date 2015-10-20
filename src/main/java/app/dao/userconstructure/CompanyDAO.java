@@ -1,7 +1,6 @@
 package app.dao.userconstructure;
 
 
-import app.model.form.FormTable;
 import app.model.userconstructure.Company;
 import app.newDao.IBaseGenericDAO;
 

@@ -1,17 +1,14 @@
 package app.model.userconstructure;
 
-import app.model.form.FormType;
+import app.model.forms.FormType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.*;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
-
-import static javax.persistence.CascadeType.*;
 
 
 @Entity

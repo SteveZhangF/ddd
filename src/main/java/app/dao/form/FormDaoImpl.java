@@ -8,7 +8,7 @@
 
 package app.dao.form;
 
-import app.model.form.FormTable;
+import app.model.forms.Form;
 import app.newDao.HibernateBaseGenericDAOImpl;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ import java.util.List;
  * Created by steve on 10/12/15.
  */
 @Repository
-public class FormDaoImpl extends HibernateBaseGenericDAOImpl<FormTable,Integer> implements FormDao{
+public class FormDaoImpl extends HibernateBaseGenericDAOImpl<Form,Integer> implements FormDao{
 
    @Autowired
     public FormDaoImpl(SessionFactory sessionFactory){
@@ -28,37 +28,37 @@ public class FormDaoImpl extends HibernateBaseGenericDAOImpl<FormTable,Integer> 
     }
 
     @Override
-    public void delete(FormTable entity) {
+    public void delete(Form entity) {
         super.delete(entity);
     }
 
     @Override
-    public FormTable get(Integer id) {
+    public Form get(Integer id) {
         return super.get(id);
     }
 
     @Override
-    public FormTable load(Integer id) {
+    public Form load(Integer id) {
         return super.load(id);
     }
 
     @Override
-    public List<FormTable> loadAll() {
+    public List<Form> loadAll() {
         return super.loadAll();
     }
 
     @Override
-    public void save(FormTable entity) {
+    public void save(Form entity) {
         super.save(entity);
     }
 
     @Override
-    public void saveOrUpdate(FormTable entity) {
+    public void saveOrUpdate(Form entity) {
         super.saveOrUpdate(entity);
     }
 
     @Override
-    public void update(FormTable entity) {
+    public void update(Form entity) {
         super.update(entity);
     }
 }

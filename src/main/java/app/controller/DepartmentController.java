@@ -8,7 +8,7 @@
 
 package app.controller;
 
-import app.model.form.FormType;
+import app.model.forms.FormType;
 import app.model.userconstructure.Company;
 import app.model.userconstructure.Department;
 import app.model.userconstructure.Employee;

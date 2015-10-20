@@ -8,8 +8,6 @@
 
 package app.model.report;
 
-import app.model.form.FormType;
-
 import javax.persistence.*;
 
 /**

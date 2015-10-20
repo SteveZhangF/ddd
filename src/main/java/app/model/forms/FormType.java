@@ -6,13 +6,11 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package app.dao.form;
-
-import app.model.forms.Form;
-import app.newDao.IBaseGenericDAO;
+package app.model.forms;
 
 /**
- * Created by steve on 10/12/15.
+ * Created by steve on 10/9/15.
  */
-public interface FormDao extends IBaseGenericDAO<Form,Integer> {
+public enum FormType {
+    EmployeeForm, CompanyForm, DepartmentForm
 }

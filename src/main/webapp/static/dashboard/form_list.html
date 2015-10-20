@@ -56,31 +56,28 @@
     </div>
 
     <div ng-if="editFormFormat">
-        <div class="row">
-            <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="formFormateOk()">Save
-            </button>
-            <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="formFormateCancel()">
-                Cancel
-            </button>
-        </div>
-        <div class="well row">
-            <div class="col-md-3">
-                <label>Select Question to insert:</label>
-                <button type="button" class="btn btn-md btn-success" ng-click="insertQuestion()">Insert</button>
-                <hr>
-                {{questions.all}}
-                <ui-virtual-list ui-data-provider="questions.all"
-                                 ui-on-select="onQuestionSelected(option)"
-                                 ng-model="questions.selectedQuestion"></ui-virtual-list>
-            </div>
-            <div class="col-md-9">
-                {{questions.selectedQuestion}}
-                <preview-question data-question="questions.selectedQuestion"></preview-question>
-            </div>
-        </div>
-        <div id="formDesigner" froala="froalaOptions" ng-model="formDetail.context"></div>
-        {{formDetail.context}}
+        <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="formFormateOk()">Save
+        </button>
+        <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="formFormateCancel()">
+            Cancel
+        </button>
+        <input class="btn btn-default" type="button" value="{{isShowQuestions?'Hide Questions':'ShowQuestions'}}" ng-click="showQuestions()">
     </div>
+    <div class="well row" ng-show="isShowQuestions">
+        <div class="col-md-3">
+            <label>Select Question to insert:</label>
+            <button type="button" class="btn btn-md btn-success" ng-click="insertQuestion()">Insert</button>
+            <hr>
+            <ui-virtual-list ui-data-provider="questions.all"
+                             ui-on-select="onQuestionSelected(option)"
+                             ng-model="questions.selectedQuestion"></ui-virtual-list>
+        </div>
+        <div class="col-md-9">
+            <preview-question data-question="questions.selectedQuestion"></preview-question>
+        </div>
+    </div>
+    <div id="formDesigner" froala="froalaOptions" ng-model="formDetail.content"></div>
+</div>
 </div>
 <script type="text/ng-template" id="form-delete.html">
     <p>Are you sure you want to delete the form?</p>

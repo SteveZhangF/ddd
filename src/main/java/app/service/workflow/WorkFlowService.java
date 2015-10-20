@@ -8,7 +8,6 @@
 
 package app.service.workflow;
 
-import app.model.form.FormTable;
 import app.model.wordflow.WorkFlow;
 import app.newService.IBaseGenericService;
 

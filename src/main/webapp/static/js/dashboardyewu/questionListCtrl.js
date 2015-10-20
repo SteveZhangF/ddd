@@ -16,14 +16,15 @@ app.directive('previewQuestion', function () {
         template: "<div class=\"panel panel-default\"><div class=\"panel-heading\">{{question.name}}</div><div class=\"panel-body\" id=\"question_content\"></div></div>",
         replace: true,
         link: function (scope, elem) {
-            var question = scope.question;
+
 
             var showQuestion = function () {
-                console.log(question.content);
+                var question = scope.question;
                 var content = question.content;
                 var obj =  angular.element(content);
+                elem.find('#question_content').html("");
                 elem.find('#question_content').append(obj);
-            }
+            };
 
             scope.$watch(function (scope) {
                 return scope.question.type;
@@ -80,7 +81,7 @@ app.controller('QuestionController', ['$scope', 'QuestionService', 'ngDialog', f
         var content = "";
         switch (type) {
             case "text":
-                content = "<input type=\"text\" id = '{#ID}' class=\"form-control\">";
+                content = '<plugin><input class="form-control" type=\"text\"></plugin>';
                 break;
             case 'select':
                 //TODO

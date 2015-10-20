@@ -9,8 +9,6 @@
 package app.service.question;
 
 import app.dao.question.QuestionDao;
-import app.model.form.FormTable;
-import app.model.form.FormType;
 import app.model.report.Question;
 import app.newService.BaseGenericServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;

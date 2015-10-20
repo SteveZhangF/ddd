@@ -1,6 +1,6 @@
 package app.model.userconstructure;
 
-import app.model.form.FormType;
+import app.model.forms.FormType;
 
 import javax.persistence.Entity;
 

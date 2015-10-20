@@ -8,11 +8,9 @@
 
 package app.service.userconstructure.impl;
 
-import app.model.form.FormType;
 import app.model.userconstructure.Company;
 import app.model.userconstructure.Department;
 import app.model.userconstructure.Employee;
-import app.model.userconstructure.OrganizationElement;
 import app.service.form.UserFormServiceImplTestContextConfiguration;
 import app.service.userconstructure.CompanyService;
 import app.service.userconstructure.DepartmentService;
