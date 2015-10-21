@@ -11,11 +11,12 @@ package app.service.workflow;
 import app.model.wordflow.WorkFlow;
 import app.newService.IBaseGenericService;
 
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by steve on 10/9/15.
  */
 public interface WorkFlowService extends IBaseGenericService<WorkFlow,String>{
-
+    List<WorkFlow> getListForMenu();
 }

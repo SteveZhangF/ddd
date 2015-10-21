@@ -61,4 +61,9 @@ public class FormDaoImpl extends HibernateBaseGenericDAOImpl<Form,Integer> imple
     public void update(Form entity) {
         super.update(entity);
     }
+
+    @Override
+    public List<Form> getListbyField(String[] fields) {
+        return super.getListbyField(fields);
+    }
 }

@@ -18,7 +18,7 @@ app.factory('FormService', ['$http', '$q', function ($http, $q) {
         },
 
         fetchOneForm: function (id) {
-            return $http.get('/formtable/id')
+            return $http.get('/formtable/'+id)
                 .then(
                 function (response) {
                     return response.data;

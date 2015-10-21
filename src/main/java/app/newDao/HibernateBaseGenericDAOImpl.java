@@ -17,8 +17,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Transformer;
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -148,6 +152,19 @@ public class HibernateBaseGenericDAOImpl<T, PK extends Serializable> extends Hib
         Criteria criteria = getSessionFactory().getCurrentSession().createCriteria(entityClass);
         List<T> list = criteria.add(Restrictions.eq(param, value))
                 .list();
+        return list;
+    }
+
+    @Override
+    public List<T> getListbyField(String[] fields) {
+        Criteria cr = getSessionFactory().getCurrentSession().createCriteria(entityClass);
+        ProjectionList projectionList = Projections.projectionList();
+        for(String field:fields){
+            projectionList.add(Projections.property(field),field);
+        }
+        cr.setProjection(projectionList);
+        cr.setResultTransformer(Transformers.aliasToBean(entityClass));
+        List<T> list = cr.list();
         return list;
     }
 }

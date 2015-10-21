@@ -9,6 +9,8 @@
 package app.model.forms;
 
 import app.model.report.Question;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mysql.jdbc.Blob;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -32,14 +34,19 @@ public class Form {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Lob
+    @Column(columnDefinition = "BLOB")
     private String content;
     private Date createTime;
     private Date updateTime;
+    @Lob
+    @Column(columnDefinition = "BLOB")
     private String form_desc;
     private String form_name;
     private FormType formType;
 
     @ManyToMany
+    @JsonIgnore
     private List<Question> questions = new ArrayList<>();
 
     public int getId() {

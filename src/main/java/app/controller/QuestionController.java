@@ -28,12 +28,13 @@ public class QuestionController {
     @RequestMapping(value = "/question/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Question>> getAllQuestion() {
         List<Question> questions = questionService.loadAll();
-        return new ResponseEntity<List<Question>>(questions,HttpStatus.OK);
+        return new ResponseEntity<>(questions,HttpStatus.OK);
     }
     @RequestMapping(value = "/question/",method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Question> saveQuestion(@RequestBody Question question){
         try {
             questionService.save(question);
+            questionService.setPluginId(question);
         }catch (Exception e){
             e.printStackTrace();
             return  new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
@@ -60,6 +61,7 @@ public class QuestionController {
     public ResponseEntity<Question> updateQuestion(@PathVariable("id") int id, @RequestBody Question question){
         try{
             questionService.update(question);
+            questionService.setPluginId(question);
             return new ResponseEntity<>(question,HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);

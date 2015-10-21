@@ -15,4 +15,6 @@ import app.newService.IBaseGenericService;
  * Created by steve on 10/18/15.
  */
 public interface QuestionService extends IBaseGenericService<Question,Integer> {
+
+    void setPluginId(Question question);
 }

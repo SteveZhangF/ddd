@@ -81,7 +81,7 @@ app.controller('QuestionController', ['$scope', 'QuestionService', 'ngDialog', f
         var content = "";
         switch (type) {
             case "text":
-                content = '<plugin><input class="form-control" type=\"text\"></plugin>';
+                content = '<plugin id="{+id+}"><input class="form-control" type=\"text\"></plugin>';
                 break;
             case 'select':
                 //TODO

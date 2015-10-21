@@ -127,33 +127,34 @@ app.controller('formListCtrl', ['$scope', "FormService", 'QuestionService', 'ngD
         });
     };
     $scope.deleteOk = function () {
-        QuestionService.deleteQuestion($scope.question.id).then(function (response) {
+        FormService.deleteForm($scope.formDetail.id).then(function (response) {
             self.fetchAllForms();
             $scope.cancel();
         });
     };
 
     $scope.editFormFormatAction = function (form) {
-        //self.fetchOneForm(form);
+        self.fetchOneForm(form);
+        //$scope.formDetail = form;
         $scope.editFormFormat = true;
         $scope.create = false;
+        $scope.getQuestion();
     };
 
     $scope.formFormateOk = function () {
         var content = $scope.froalaOptions.froalaEditor('html.get', false);
-        $scope.questions.selectedQuestion.content = content;
+        $scope.formDetail.content = content;
         var plugins = angular.element(content).find('plugin');
         var questions = [];
         //for (var i = 0; i < plugins.length; i++) {
         angular.forEach(plugins, function (plugin,i) {
             //var plugin = plugins[i];
-            var question = {id: '', name: ''};
-            question.id = plugin.attr('id');
-            question.name = plugin.attr('name');
+            var question = {id: ''};
+            question.id = plugin.getAttribute('id');
             questions.push(question);
         });
 
-        $scope.questions.selectedQuestion.questions = questions;
+        $scope.formDetail.questions = questions;
         $scope.info_ok();
         $scope.editFormFormat = false;
     };

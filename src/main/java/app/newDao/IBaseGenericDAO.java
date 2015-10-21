@@ -86,4 +86,6 @@ public abstract interface IBaseGenericDAO<T, PK extends Serializable> {
 
     public abstract List<T> getListbyParam(String param, Object value);
 
+    public abstract List<T> getListbyField(String[] field);
+
 }

@@ -35,7 +35,7 @@ public class WorkFlowController {
     WorkFlowService workFlowService;
     @RequestMapping(value = "/workflow/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<WorkFlow>> getAllWorkFlow() {
-        List<WorkFlow> workFlows = workFlowService.loadAll();
+        List<WorkFlow> workFlows = workFlowService.getListForMenu();
         if (workFlows.isEmpty()) {
             return new ResponseEntity<List<WorkFlow>>(HttpStatus.NO_CONTENT);
         }

@@ -60,4 +60,14 @@ public class QuestionServiceImpl extends BaseGenericServiceImpl<Question,Integer
         questionDao.update(entity);
     }
 
+    @Override
+    public void setPluginId(Question question) {
+        String content = question.getContent();
+        if(content.contains("{+id+}")){
+            content = content.replace("{+id+}",""+question.getId());
+            question.setContent(content);
+            this.update(question);
+        }
+
+    }
 }

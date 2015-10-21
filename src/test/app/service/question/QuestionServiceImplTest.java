@@ -31,6 +31,14 @@ public class QuestionServiceImplTest {
     QuestionService questionService;
 
     @Test
+    public void testSetPluginId(){
+        Question question = questionService.get(4);
+        question.setContent("<plugin id=\\\"{+id+}\\\"><input class=\\\"form-control\\\" type=\\\"text\\\"></plugin>");
+        questionService.setPluginId(question);
+        System.out.println(question.getContent());
+    }
+
+    @Test
     public void testDelete() throws Exception {
 
     }

@@ -8,6 +8,7 @@
 
 package app.dao.workflow;
 
+import app.model.forms.Form;
 import app.model.wordflow.WorkFlow;
 import app.newDao.HibernateBaseGenericDAOImpl;
 import org.hibernate.SessionFactory;
@@ -60,5 +61,10 @@ public class WorkFlowDaoImpl extends HibernateBaseGenericDAOImpl<WorkFlow,String
     @Override
     public void update(WorkFlow entity) {
         super.update(entity);
+    }
+
+    @Override
+    public List<WorkFlow> getListbyField(String[] fields) {
+        return super.getListbyField(fields);
     }
 }
