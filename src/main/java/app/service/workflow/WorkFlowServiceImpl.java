@@ -65,13 +65,9 @@ public class WorkFlowServiceImpl extends BaseGenericServiceImpl<WorkFlow, String
         workFlowDao.update(entity);
     }
 
-//    private String creator;
-//    private String workFlow_Description;
-//    private Date create_time;
-//    private Date update_time;
     @Override
     public List<WorkFlow> getListForMenu() {
-        String[] fields = {"id","create_time","update_time","workFlow_Description","displayName"};
+        String[] fields = {"id","name","description"};
         return workFlowDao.getListbyField(fields);
     }
 }

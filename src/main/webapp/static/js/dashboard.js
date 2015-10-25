@@ -86,7 +86,7 @@ app.filter('checkmark', function () {
     };
 });
 
-app.controller('DropdownCtrl', function ($scope, $log) {
+app.controller('DropdownCtrlz', function ($scope, $log) {
     $scope.status = {
         isopen: false
     };
@@ -108,13 +108,4 @@ app.controller('flowDesignerController',function($scope){
     }
 });
 
-app.controller('Ctrl', function($scope, $timeout) {
-    $scope.name = 'Tobias';
-    $scope.hideDialog = function () {
-        $scope.dialogIsHidden = true;
-        $timeout(function () {
-            $scope.dialogIsHidden = false;
-        }, 2000);
-    };
-})
 

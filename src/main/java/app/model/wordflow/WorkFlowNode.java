@@ -1,155 +1,125 @@
+/*
+ * Copyright (c) 2015. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+ * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+ * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+ * Vestibulum commodo. Ut rhoncus gravida arcu.
+ */
+
 package app.model.wordflow;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by steve on 10/9/15.
+ * Created by steve on 10/24/15.
  */
-
+@Table
 @Entity
-@Table(name = "workflownodes")
-public class WorkFlowNode extends WorkFlowElement {
+public class WorkFlowNode {
 
-    private int position_top;
-    private int position_left;
-    private String nodeType;
+    public WorkFlowNode(Data data,List<Next> nexts){
+        this.data = data;
+        this.nexts = nexts;
+    }
 
-    private String elementName;
-    private int elementId;
+    public WorkFlowNode(){}
 
-    @JsonIgnore
-    @OneToMany
+    @Id
+    @GeneratedValue(generator = "idGenerator")
+    @GenericGenerator(name = "idGenerator", strategy = "uuid")
+    private  String id;
+//    function node(id, name, type, data, x, y) {
+//        this.id = id;
+//        this.name = name;
+//        this.type = type;
+//        this.data = data;
+//        this.x = x;
+//        this.y = y;
+//        this.nexts = [];
+//        this.prev = '';
+//    }
+
+    private String name;
+    private String type;
+    private String x;
+    private String y;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Data data = new Data();
+
+    @OneToMany(cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
-    private Map<String,WorkFlowNode> nexts = new HashMap<>();
+    private List<Next> nexts = new ArrayList<>();
 
-    @JsonIgnore
-    @OneToMany( cascade = {CascadeType.ALL}, orphanRemoval = true)
-    @Cascade({org.hibernate.annotations.CascadeType.REMOVE})
-    @LazyCollection(LazyCollectionOption.FALSE)
-    public Set<WorkFlowConnection> out_connections = new HashSet<>();
+    private String prev;
 
-    @JsonIgnore
-    @OneToMany( cascade = {CascadeType.ALL}, orphanRemoval = true)
-    @Cascade({org.hibernate.annotations.CascadeType.REMOVE})
-    @LazyCollection(LazyCollectionOption.FALSE)
-    public Set<WorkFlowConnection> in_connections = new HashSet<>();
-
-
-    public WorkFlow getWorkflow_node() {
-        return workflow_node;
+    public String getPrev() {
+        return prev;
     }
 
-    public void setWorkflow_node(WorkFlow workflow_node) {
-        this.workflow_node = workflow_node;
+    public void setPrev(String prev) {
+        this.prev = prev;
     }
 
-    @ManyToOne
-    @JsonIgnore
-//    @JoinColumn(name = "workflow_node_id")
-    private WorkFlow workflow_node;
-
-    public String getElementName() {
-        return elementName;
-    }
-
-    public void setElementName(String elementName) {
-        this.elementName = elementName;
-    }
-
-    public int getElementId() {
-        return elementId;
-    }
-
-    public void setElementId(int elementId) {
-        this.elementId = elementId;
-    }
-
-
-    public String getNodeType() {
-        return nodeType;
-    }
-
-    public void setNodeType(String nodeType) {
-        this.nodeType = nodeType;
-    }
-
-    public int getPosition_top() {
-        return position_top;
-    }
-
-    public void setPosition_top(int position_top) {
-        this.position_top = position_top;
-    }
-
-    public int getPosition_left() {
-        return position_left;
-    }
-
-    public void setPosition_left(int position_left) {
-        this.position_left = position_left;
-    }
-
-    public void setWorkFlowNodeElement(WorkFlowNodeElement element) {
-        this.setElementId(element.getId());
-        this.setElementName(element.getName());
-        this.setNodeType(element.getNodeType());
-    }
-
-    public Set<WorkFlowConnection> getIn_connections() {
-        return in_connections;
-    }
-
-    public void setIn_connections(Set<WorkFlowConnection> in_connections) {
-        this.in_connections = in_connections;
-    }
-
-    public Set<WorkFlowConnection> getOut_connections() {
-        return out_connections;
-    }
-
-    public void setOut_connections(Set<WorkFlowConnection> out_connections) {
-        this.out_connections = out_connections;
-    }
-
-    public Map<String, WorkFlowNode> getNexts() {
+    public List<Next> getNexts() {
         return nexts;
     }
 
-    public void setNexts(Map<String, WorkFlowNode> nexts) {
+    public void setNexts(List<Next> nexts) {
         this.nexts = nexts;
     }
+
+    public Data getData() {
+        return data;
+    }
+
+    public void setData(Data data) {
+        this.data = data;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getX() {
+        return x;
+    }
+
+    public void setX(String x) {
+        this.x = x;
+    }
+
+    public String getY() {
+        return y;
+    }
+
+    public void setY(String y) {
+        this.y = y;
+    }
 }
-//        {
-//        "BlockId": "state_question2",
-//        "BlockContent": "ddwqa",
-//        "BlockX": 228,
-//        "BlockY": 282,
-//        "Node_Type": "state_question",
-//        "Node_Data": "{\"question_name\":\"ddwqa\"}"
-//        },
-//        {
-//        "BlockId": "state_flow3",
-//        "BlockContent": "
-//        label 2
-//        ",
-//        "BlockX": 483,
-//        "BlockY": 286,
-//        "Node_Type": "state_flow",
-//        "Node_Data": "{\"id\":2,\"type\":\"form\",\"name\":\"form2\"}"
-//        },
-//        {
-//        "BlockId": "state_end4",
-//        "BlockContent": "End",
-//        "BlockX": 642,
-//        "BlockY": 266,
-//        "Node_Type": "state-end"
-//        }

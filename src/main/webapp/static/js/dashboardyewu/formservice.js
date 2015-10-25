@@ -56,6 +56,17 @@ app.factory('FormService', ['$http', '$q', function ($http, $q) {
             );
         },
 
+        updateFormDetail: function (form,id) {
+            return $http.put('/formtable/detail/'+id,form).then(
+                function (response) {
+                    return response.data;
+                },
+                function (errResponse) {
+                    return $q.reject(errResponse);
+                }
+            );
+        },
+
         deleteForm: function (id) {
             return $http.delete('/formtable/' + id)
                 .then(

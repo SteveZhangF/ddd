@@ -55,6 +55,8 @@ app.controller('formListCtrl', ['$scope', "FormService", 'QuestionService', 'ngD
         FormService.fetchOneForm(form.id).then(
             function (d) {
                 $scope.formDetail = d;
+                $scope.froalaOptions.froalaEditor('html.set', "");
+                $scope.froalaOptions.froalaEditor('html.insert', $scope.formDetail.content, true);
             },
             function (err) {
                 console.log(err);
@@ -155,7 +157,16 @@ app.controller('formListCtrl', ['$scope', "FormService", 'QuestionService', 'ngD
         });
 
         $scope.formDetail.questions = questions;
-        $scope.info_ok();
+        FormService.updateFormDetail($scope.formDetail, $scope.formDetail.id).then(
+            function (d) {
+                console.log("success");
+                self.fetchAllForms();
+            },
+            function (e) {
+                alert("failed, Try later");
+                self.fetchAllForms();
+            }
+        );
         $scope.editFormFormat = false;
     };
 

@@ -9,6 +9,10 @@
 package app.service.form;
 
 import app.model.forms.Form;
+import app.model.report.Question;
+import app.service.question.QuestionService;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +20,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
+import java.io.StringReader;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -59,8 +64,23 @@ public class FormServiceImplTest {
 
     }
 
+    @Autowired
+    QuestionService questionService;
     @Test
     public void testSaveOrUpdate() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        Form form = mapper.readValue(new StringReader("{\"id\":1,\"content\":\"<p>{-<plugin id=\\\"1\\\" question_id=\\\"1\\\" name=\\\"fdvfdsv\\\"><input class=\\\"\\\" type=\\\"text\\\" disabled=\\\"disabled\\\" title=\\\"fdvfdsv\\\"></plugin>-}</p>\",\"createTime\":null,\"updateTime\":null,\"form_desc\":null,\"form_name\":\"newform\",\"formType\":\"CompanyForm\",\"questions\":[{\"id\":\"1\"}]}\n"
+                ), Form.class);
+        JsonNode questions = mapper.readTree("[{\"id\":\"1\"}]");
+        for(JsonNode qu:questions){
+            int id = qu.path("id").asInt();
+            Question question = questionService.get(id);
+            form.getQuestions().add(question);
+        }
+        formService.saveOrUpdate(form);
+
+
+        System.out.println(form.getQuestions().size());
 
     }
 

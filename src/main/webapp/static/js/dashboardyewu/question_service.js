@@ -4,6 +4,17 @@ app.factory('QuestionService', ['$http', '$q', function ($http, $q) {
 
     return {
 
+        fetchOneQuestion: function (id) {
+          return $http.get('/question/'+id)
+              .then(
+              function (response) {
+                  return response.data
+              },
+              function (errResponse) {
+                  return $q.reject(errResponse);
+              }
+          );
+        },
         fetchAllQuestions: function () {
             return $http.get('/question/')
                 .then(

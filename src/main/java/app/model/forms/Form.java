@@ -47,6 +47,7 @@ public class Form {
 
     @ManyToMany
     @JsonIgnore
+
     private List<Question> questions = new ArrayList<>();
 
     public int getId() {
