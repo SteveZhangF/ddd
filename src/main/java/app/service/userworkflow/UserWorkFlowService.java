@@ -12,8 +12,11 @@ import app.model.wordflow.WorkFlow;
 import app.model.wordflow.workflowUser.UserWorkFlow;
 import app.newService.IBaseGenericService;
 
+import java.util.List;
+
 /**
  * Created by steve on 10/15/15.
  */
 public interface UserWorkFlowService extends IBaseGenericService<UserWorkFlow,String> {
+    List<UserWorkFlow> findUserWorkFlow(int user_id,String workflow_id);
 }

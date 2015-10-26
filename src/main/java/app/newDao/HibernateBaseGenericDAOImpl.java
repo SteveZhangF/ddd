@@ -31,6 +31,7 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -165,6 +166,16 @@ public class HibernateBaseGenericDAOImpl<T, PK extends Serializable> extends Hib
         cr.setProjection(projectionList);
         cr.setResultTransformer(Transformers.aliasToBean(entityClass));
         List<T> list = cr.list();
+        return list;
+    }
+
+    @Override
+    public List<T> getListbyParams(Map<String, Object> map) {
+        Criteria criteria = getSessionFactory().getCurrentSession().createCriteria(entityClass);
+        for(String key:map.keySet()){
+            criteria.add(Restrictions.eq(key, map.get(key)));
+        }
+        List<T> list = criteria.list();
         return list;
     }
 }

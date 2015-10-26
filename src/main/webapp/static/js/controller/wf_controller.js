@@ -137,16 +137,12 @@ app.controller('PlumbCtrl', ['$scope', 'QuestionService', 'WorkFlowService', 'ng
         show: 'false'
     };
     $scope.showPreviewQuestion = function (event, question) {
-        QuestionService.fetchOneQuestion(question.id).then(
-            function (response) {
-                var x = event.pageX;
-                var y = event.pageY;
-                $scope.hoverCode.x = x;
-                $scope.hoverCode.y = y;
-                $scope.menuNodes.previewNode = question;
-                $scope.hoverCode.show = "true";
-            }
-        );
+        var x = event.pageX;
+        var y = event.pageY;
+        $scope.hoverCode.x = x;
+        $scope.hoverCode.y = y;
+        $scope.menuNodes.previewNode = question;
+        $scope.hoverCode.show = "true";
     };
 
     $scope.hidePreviewQuestion = function () {
@@ -190,7 +186,9 @@ app.controller('PlumbCtrl', ['$scope', 'QuestionService', 'WorkFlowService', 'ng
             for (var i = 0; i < response.length; i++) {
                 var nodez = new node('menu_question_node_' + i, response[i].name, 'Question', {
                     id: response[i].id,
-                    description: response[i].description
+                    description: response[i].description,
+                    name:response[i].name,
+                    content:response[i].content
                 }, 0, 0);
                 $scope.menuNodes.questionNodes.push(nodez);
             }
@@ -229,6 +227,12 @@ app.controller('PlumbCtrl', ['$scope', 'QuestionService', 'WorkFlowService', 'ng
         WorkFlowService.createWorkFlowNode(droppedNode).then(
             function (response) {
                 droppedNode = response;
+                if(droppedNode.type == 'start' && droppedNode.type == "Normal"){
+                    if($scope.workflow.startNode_id&&$scope.workflow.startNode_id!=""){
+                        return;
+                    }
+                    $scope.workflow.startNode_id = droppedNode.id;
+                }
                 $scope.schema.all.push(droppedNode);
             },
             function (errResponse) {

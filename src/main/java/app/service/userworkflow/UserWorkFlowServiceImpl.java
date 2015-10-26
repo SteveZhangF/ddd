@@ -15,12 +15,18 @@ import app.model.wordflow.workflowUser.UserWorkFlow;
 import app.newService.BaseGenericServiceImpl;
 import app.service.workflow.WorkFlowService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by steve on 10/15/15.
  */
+@Service
+@Transactional
 public class UserWorkFlowServiceImpl extends BaseGenericServiceImpl<UserWorkFlow, String> implements UserWorkFlowService {
     @Autowired
     UserWorkFlowDao userWorkFlowDao;
@@ -58,5 +64,13 @@ public class UserWorkFlowServiceImpl extends BaseGenericServiceImpl<UserWorkFlow
     @Override
     public void update(UserWorkFlow entity) {
         userWorkFlowDao.update(entity);
+    }
+
+    @Override
+    public List<UserWorkFlow> findUserWorkFlow(int user_id, String workflow_id) {
+        Map map = new HashMap<>();
+        map.put("user_id",user_id);
+        map.put("workFlowId",workflow_id);
+        return userWorkFlowDao.getListbyParams(map);
     }
 }

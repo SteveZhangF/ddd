@@ -26,14 +26,26 @@ app.factory('UserWorkFlowService', ['$http', '$q','LoginService' ,function ($htt
                 }
             );
         },
-        fetchOneWorkFlow: function (id) {
-            return $http.get('/workflow/'+id)
+        //however, here i have to user put instead of get
+        getCurrentNode: function (userWorkflow) {
+            return $http.put('/user/workflow/',userWorkflow)
                 .then(
                 function (response) {
                     return response.data;
                 },
                 function (errResponse) {
                     console.error('Error while fetching users');
+                    return $q.reject(errResponse);
+                }
+            );
+        },
+        
+        goToNode: function (userWorkflow) {
+            return $http.put('/user/workflow/go/').then(
+                function (response) {
+                    return response.data;
+                },
+                function (errResponse) {
                     return $q.reject(errResponse);
                 }
             );

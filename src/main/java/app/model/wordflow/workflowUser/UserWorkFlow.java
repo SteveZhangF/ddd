@@ -23,24 +23,20 @@ import java.util.List;
 @Table
 @Entity
 public class UserWorkFlow {
-    @OneToMany(cascade ={ CascadeType.ALL},orphanRemoval=true)
-    @Cascade({org.hibernate.annotations.CascadeType.REMOVE})
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Node> nodes = new ArrayList<>();
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String name;
 
-    @OneToOne
-    private WorkFlow workFlow;
+    private String workFlowId;
+    private String currentNode;
+    private int user_id;
 
-    public List<Node> getNodes() {
-        return nodes;
+    public int getUser_id() {
+        return user_id;
     }
 
-    public void setNodes(List<Node> nodes) {
-        this.nodes = nodes;
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
     }
 
     public int getId() {
@@ -51,27 +47,19 @@ public class UserWorkFlow {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getWorkFlowId() {
+        return workFlowId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setWorkFlowId(String workFlowId) {
+        this.workFlowId = workFlowId;
     }
 
-    public WorkFlow getWorkFlow() {
-        return workFlow;
+    public String getCurrentNode() {
+        return currentNode;
     }
 
-    public void setWorkFlow(WorkFlow workFlow) {
-        this.workFlow = workFlow;
-    }
-
-    public void addNode(Node node) {
-        this.nodes.add(node);
-    }
-
-    public void clear() {
-        this.nodes.clear();
+    public void setCurrentNode(String currentNode) {
+        this.currentNode = currentNode;
     }
 }

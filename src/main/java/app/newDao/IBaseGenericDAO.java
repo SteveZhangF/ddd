@@ -14,6 +14,7 @@ package app.newDao;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @param <T>  实体类
@@ -87,5 +88,7 @@ public abstract interface IBaseGenericDAO<T, PK extends Serializable> {
     public abstract List<T> getListbyParam(String param, Object value);
 
     public abstract List<T> getListbyField(String[] field);
+
+    public abstract  List<T> getListbyParams(Map<String,Object> map);
 
 }

@@ -40,6 +40,16 @@ public class WorkFlow {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<WorkFlowNode> nodes = new ArrayList<>();
 
+    private String startNode_id;
+
+    public String getStartNode_id() {
+        return startNode_id;
+    }
+
+    public void setStartNode_id(String startNode_id) {
+        this.startNode_id = startNode_id;
+    }
+
     public String getId() {
         return id;
     }

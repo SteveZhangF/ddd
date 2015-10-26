@@ -5,16 +5,39 @@
   ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
   ~ Vestibulum commodo. Ut rhoncus gravida arcu.
   -->
-<div ng-controller="UserWorkflowController" clas="row">
+<div ng-controller="UserWorkflowController" class="row">
     <div class="sidebar-nav col-md-2">
-        <ul id="workflow-menu" >
+        <ul id="workflow-menu">
             <li ng-repeat="wf in workflows"><a href="" ng-click="workFlowStart(wf)"><span>{{wf.name}}</span></a></li>
         </ul>
     </div>
     <div class="col-md-10">
-        <div>
-
-        </div>
-
+            <div class="well" ng-show="!currentNode.name">
+                Please select module to start!
+            </div>
+            <div class="panel panel-default" ng-if="currentNode.name">
+                <div class="panel-heading">
+                    <h3>{{currentNode.name}}</h3>
+                </div>
+                <div class="panel-body">
+                    <h4>{{currentNode.data.description}}</h4>
+                    <hr>
+                    <div id="node-data-content" ng-if="currentNode.type == 'Question'" ng-init="getNodeData()">
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <nav>
+                        <ul class="pager">
+                            <li class="previous {{currentNode.prev==''?'disabled':''}}"><a ng-click="currentNode.prev==''?'':goPrev()"
+                                                                                           href=""><span
+                                    aria-hidden="true">&larr;</span> Prev</a></li>
+                            <li class="next {{currentNode.nexts.length==0?'disabled':''}}"><a ng-click="currentNode.nexts.length==0?'':goNext()"
+                                                                                              href="">Next <span
+                                    aria-hidden="true">&rarr;</span></a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
     </div>
 </div>
+

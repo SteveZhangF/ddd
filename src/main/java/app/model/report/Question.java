@@ -8,7 +8,14 @@
 
 package app.model.report;
 
+import org.hibernate.annotations.*;
+
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by steve on 10/17/15.
@@ -17,6 +24,12 @@ import javax.persistence.*;
 @Entity
 @Table(name="question")
 public class Question {
+
+    public Question(){}
+
+    public Question(ArrayList<QuestionOption> options){
+        this.options = options;
+    }
 
     @Lob
     @Column(columnDefinition = "BLOB")
@@ -35,6 +48,10 @@ public class Question {
     @Lob
     @Column(columnDefinition = "BLOB")
     private String content;// how to the question looks like
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
+    private List<QuestionOption> options = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -75,5 +92,13 @@ public class Question {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public List<QuestionOption> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<QuestionOption> opitons) {
+        this.options = opitons;
     }
 }

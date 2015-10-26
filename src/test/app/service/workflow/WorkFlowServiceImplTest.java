@@ -50,7 +50,7 @@ public class WorkFlowServiceImplTest extends TestCase {
     public void testDelete() throws Exception {
 
     }
-    @Test
+//    @Test
     public void testJson() throws Exception{
         ObjectMapper mapper = new  ObjectMapper();
         StringReader stringReader = new StringReader("{\"id\":\"40288085509cd72e01509cd7869a0000\",\"description\":\"newwf\",\"name\":\"newwf\",\"nodes\":[{\"id\":\"40288085509cdc2b01509cde7dc80000\",\"name\":\"start\",\"type\":\"Normal\",\"x\":\"58px\",\"y\":\"77px\",\"data\":{\"id\":0,\"description\":\"start node\"},\"nexts\":[{\"_if\":\"\",\"_then\":\"40288085509cdc2b01509cde82650001\"}],\"prev\":\"\"},{\"id\":\"40288085509cdc2b01509cde82650001\",\"name\":\"end\",\"type\":\"Normal\",\"x\":\"393px\",\"y\":\"81px\",\"data\":{\"id\":1,\"description\":\"end node\"},\"nexts\":[],\"prev\":\"40288085509cdc2b01509cde7dc80000\"}]}");
@@ -72,5 +72,20 @@ public class WorkFlowServiceImplTest extends TestCase {
     @Test
     public void testUpdate() throws Exception {
 
+    }
+
+    @Test
+    public void testGet() throws  Exception{
+        String id = "40288085509cd72e01509cd7869a0000";
+        WorkFlow workFlow = workFlowService.get(id);
+
+        for(WorkFlowNode flowNode:workFlow.getNodes()){
+            System.out.print("===========");
+            System.out.println(flowNode.getName());
+            System.out.println(flowNode.getData().getId());
+            System.out.println(flowNode.getType());
+            System.out.println(flowNode.getNexts().size());
+            System.out.println("===========");
+        }
     }
 }

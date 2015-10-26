@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('clientApp', ['ngRoute', 'ui.bootstrap', 'ui.bootstrap.contextMenu', 'angularBootstrapNavTree', 'dndLists','ui.tree']);
+var app = angular.module('clientApp', ['ngRoute', 'ui.bootstrap', 'ui.bootstrap.contextMenu', 'angularBootstrapNavTree', 'dndLists', 'ui.tree']);
 
 app.factory('LogInData', function () {
     return {
@@ -23,7 +23,7 @@ app.config(['$httpProvider', function ($httpProvider) {
                         config.headers['X-AUTH-TOKEN'] = token.accessToken;
                     }
                 } else {
-                    $location.path('/');
+                    //$location.path('/');
                 }
                 return config;
             },
@@ -42,7 +42,6 @@ app.run([
     "$location",
     function ($rootScope, $location) {
         $rootScope.$on("$routeChangeSuccess", function (userInfo) {
-            console.log(userInfo);
         });
 
         $rootScope.$on("$routeChangeError", function (event, current,

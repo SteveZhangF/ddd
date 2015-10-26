@@ -17,17 +17,33 @@ app.directive('previewQuestion', function () {
         replace: true,
         link: function (scope, elem) {
 
-
             var showQuestion = function () {
+                console.log(JSON.stringify(scope.question).length);
                 var question = scope.question;
                 var content = question.content;
-                var obj =  angular.element(content);
+                var obj = angular.element(content);
+                if (question.options) {
+                    for (var i = 0; i < question.options.length; i++) {
+                        var opt;
+                        if (question.type == 'select') {
+                            opt = angular.element("<option></option>");
+                            opt.attr("value", question.options[i].value);
+                            opt.text(question.options[i].name);
+                            obj.find('select').append(opt);
+                        }else
+                        if(question.type=="checkbox"){
+                            //<label class="form-control"><input type="checkbox" value="ddd" > ddd</label>
+                            opt = angular.element("<label class=\"form-control\"><input type=\"checkbox\" value=\""+question.options[i].value+"\">"+question.options[i].name+"</label>");
+                            obj.append(opt);
+                        }
+                    }
+                }
                 elem.find('#question_content').html("");
                 elem.find('#question_content').append(obj);
             };
 
             scope.$watch(function (scope) {
-                return scope.question.type;
+                return JSON.stringify(scope.question).length;
             }, function () {
                 showQuestion();
             });
@@ -37,7 +53,7 @@ app.directive('previewQuestion', function () {
 });
 app.controller('QuestionController', ['$scope', 'QuestionService', 'ngDialog', function ($scope, QuestionService, ngDialog) {
 
-    $scope.question = {id: null, name: '', type: '', content: '', description: ''};
+    $scope.question = {id: null, name: '', type: '', content: '', description: '', options: []};
     //test
     $scope.questions = [
         {id: '1', name: 'questions1', type: 'text', content: '', description: ''},
@@ -62,7 +78,7 @@ app.controller('QuestionController', ['$scope', 'QuestionService', 'ngDialog', f
     $scope.ok = function () {
         $scope.typeChanged();
         if ($scope.create) {
-            QuestionService.createQuestion($scope.question).then(function(response){
+            QuestionService.createQuestion($scope.question).then(function (response) {
                 $scope.refreshAll();
             });
         } else {
@@ -76,6 +92,29 @@ app.controller('QuestionController', ['$scope', 'QuestionService', 'ngDialog', f
         }
     };
 
+// {
+//    id: '2',
+//    index: '1',
+//    label: 'question2',
+//    type: 'select',
+//    name: 'question2',
+//    content: '<plugin><textarea class="form-control"/></plugin>'
+//}, {
+//    id: '3',
+//    index: '2',
+//    label: 'question3',
+//    type: 'checkbox',
+//    name: 'question3',
+//    content: '<plugin><label class="form-control"><input type="checkbox" value="ddd" > ddd</label><label class="form-control"><input type="checkbox"> sss</label></plugin>'
+//}, {
+//
+//    id: '4',
+//    index: '3',
+//    label: 'question4',
+//    type: 'select',
+//    name: 'question4',
+//    content: '<plugin><select name="singleSelect" class="form-control" ng-model="data.singleSelect"><option value="option-1" > Option 1</option><option value="option-2" > Option 2</option></select></plugin>'
+
     $scope.typeChanged = function () {
         var type = $scope.question.type;
         var content = "";
@@ -83,20 +122,41 @@ app.controller('QuestionController', ['$scope', 'QuestionService', 'ngDialog', f
             case "text":
                 content = '<plugin id="{+id+}"><input class="form-control" type=\"text\"></plugin>';
                 break;
-            case 'select':
-                //TODO
+            case 'textarea':
+                content = '<plugin id="{+id+}"><textarea class="form-control"/></plugin>';
                 break;
+            case 'select':
+                content = '<plugin id="{+id+}"><select class="form-control"></select></plugin>';
+                break;
+            case 'checkbox':
+                content = '<plugin id="{+id+}"></plugin>';
+
         }
         $scope.question.content = content;
     };
+
+
+    $scope.newOp = {name: '', value: ''};
+    $scope.addOption = function () {
+        if (!$scope.question.options) {
+            $scope.question.options = [];
+        }
+        $scope.question.options.push({name: $scope.newOp.name, value: $scope.newOp.value});
+        $scope.newOp.name = '';
+        $scope.newOp.value = '';
+    };
+
+    $scope.removeOption = function (i) {
+        $scope.question.options.splice(i, 1);
+    }
 
     $scope.cancel = function () {
         if (dialog) {
             dialog.close("");
         }
     };
-
-    $scope.types = ['textarea', "select", "text"];
+    //<label class="form-control"><input type="checkbox" value="ddd" > ddd</label>
+    $scope.types = ['textarea', "select", "text","checkbox"];
 
     // when add a question button clicked
     $scope.createNew = function () {
@@ -121,10 +181,10 @@ app.controller('QuestionController', ['$scope', 'QuestionService', 'ngDialog', f
         $scope.question = question;
         dialog = ngDialog.open({
             template: "question-delete.html",
-            scope:$scope
+            scope: $scope
         });
     };
-    
+
     $scope.deleteOk = function () {
         QuestionService.deleteQuestion($scope.question.id).then(function (response) {
             $scope.refreshAll();
