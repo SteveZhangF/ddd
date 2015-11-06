@@ -6,14 +6,13 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package app.service.question;
+package app.dao.question;
 
-import app.dao.question.AnswerDao;
-import app.model.report.Answer;
-import app.newService.IBaseGenericService;
+import app.model.report.Record;
+import app.newDao.IBaseGenericDAO;
 
 /**
  * Created by steve on 10/18/15.
  */
-public interface AnswerService  extends IBaseGenericService<Answer,Integer>{
+public interface RecordDao extends IBaseGenericDAO<Record,Integer> {
 }

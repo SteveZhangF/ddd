@@ -67,7 +67,7 @@ public class WorkFlowServiceImpl extends BaseGenericServiceImpl<WorkFlow, String
 
     @Override
     public List<WorkFlow> getListForMenu() {
-        String[] fields = {"id","name","description"};
+        String[] fields = {"id","name","description","type"};
         return workFlowDao.getListbyField(fields);
     }
 }

@@ -223,13 +223,28 @@ app.controller('formListCtrl', ['$scope', "FormService", 'QuestionService', 'ngD
 
     $scope.insertQuestion = function () {
         var plugin = angular.element($scope.questions.selectedQuestion.content);
+
+        if($scope.questions.selectedQuestion.options){
+            var options = $scope.questions.selectedQuestion.options;
+            if($scope.questions.selectedQuestion.type=="select"){
+                for(var i=0;i<options.length;i++){
+                    var opt = angular.element("<option></option>");
+                    opt.text(options[i].name);
+                    opt.attr('value',options[i].value);
+                    plugin.find('select').append(opt);
+                }
+            }
+
+        }
+
+
         plugin.find(".form-control").attr('disabled', 'true').attr('title', $scope.questions.selectedQuestion.name).removeClass("form-control");
         plugin.attr("question_id", $scope.questions.selectedQuestion.id).attr('name', $scope.questions.selectedQuestion.name);
         var el = angular.element("<div></div>");
         el.append(plugin);
         var txt = "{-" + el.html() + "-}";
-        el = null;
         $scope.froalaOptions.froalaEditor('html.insert', txt, true);
+        el = null;
     };
 }]);
 

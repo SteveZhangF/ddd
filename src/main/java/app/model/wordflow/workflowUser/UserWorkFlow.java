@@ -29,7 +29,9 @@ public class UserWorkFlow {
 
     private String workFlowId;
     private String currentNode;
+    private String type;
     private int user_id;
+    private String oe_id;
 
     public int getUser_id() {
         return user_id;
@@ -61,5 +63,21 @@ public class UserWorkFlow {
 
     public void setCurrentNode(String currentNode) {
         this.currentNode = currentNode;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getOe_id() {
+        return oe_id;
+    }
+
+    public void setOe_id(String oe_id) {
+        this.oe_id = oe_id;
     }
 }

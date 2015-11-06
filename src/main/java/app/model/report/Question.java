@@ -50,6 +50,7 @@ public class Question {
     private String content;// how to the question looks like
 
     @OneToMany(cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
     @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
     private List<QuestionOption> options = new ArrayList<>();
 

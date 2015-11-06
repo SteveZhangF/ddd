@@ -6,13 +6,17 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package app.dao.question;
+package app.service.question;
 
-import app.model.report.Answer;
-import app.newDao.IBaseGenericDAO;
+import app.model.report.Record;
+import app.newService.IBaseGenericService;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by steve on 10/18/15.
  */
-public interface AnswerDao extends IBaseGenericDAO<Answer,Integer> {
+public interface RecordService  extends IBaseGenericService<Record,Integer>{
+     List<Record> getListbyParams(Map<String, Object> map);
 }

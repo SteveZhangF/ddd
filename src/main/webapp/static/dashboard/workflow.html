@@ -7,7 +7,9 @@
                 <th st-sort="id">ID</th>
                 <th st-sort="name">name</th>
                 <th st-sort=""></th>
-                <th><button type="button" ng-click="createNew()" class="btn btn-md btn-info">Create Workflow</button></th>
+                <th>
+                    <button type="button" ng-click="createNew()" class="btn btn-md btn-info">Create Workflow</button>
+                </th>
             </tr>
             <tr>
                 <th colspan="3">
@@ -57,6 +59,14 @@
                 <input ng-model="workflow.id" type="hidden"/>
             </form>
             <div class="form-group">
+                <label for="type">Type</label>
+                <select id="type" ng-model="workflow.type">
+                    <option value="Company">Company</option>
+                    <option value="Department">Department</option>
+                    <option value="Employee">Employee</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <label for="description">Description:</label>
                 <textarea ng-model="workflow.description" id="description" class="form-control"></textarea>
             </div>
@@ -64,6 +74,20 @@
                 <button type="button" class="btn btn-success" ng-click="ok()">OK</button>
                 <button type="button" class="btn btn-danger" ng-click="cancel()">Cancel</button>
             </div>
+        </div>
+    </script>
+    <script type="text/ng-template" id="connect-editor.html">
+        {{connectingSourceNode.data.options}}
+        <form>
+            <select class="form-control" ng-model="connectingSourceNode.selectedOption">
+                <option ng-repeat="option in connectingSourceNode.node.data.options" value="{{option.value}}">
+                    {{option.name}}
+                </option>
+            </select>
+        </form>
+        <div class="row">
+            <button type="button" class="btn btn-success" ng-click="closeThisDialog(true)">OK</button>
+            <button type="button" class="btn btn-danger" ng-click="closeThisDialog(false)">Cancel</button>
         </div>
     </script>
     <div ng-if="editing_detail">
@@ -86,8 +110,9 @@
                     <div id="menu-container-normalNodes" ng-switch-when="0" class="menu-container">
                         <ul class="list-group">
                             <li
-                                ng-repeat="normalNode in menuNodes.normalNodes" ng-mousedown="menuNodes.droppedNode = normalNode" title="{{normalNode.name}}"
-                                class="list-group-item menu-item {{'normal-node-'+normalNode.type}}" draggable>
+                                    ng-repeat="normalNode in menuNodes.normalNodes"
+                                    ng-mousedown="menuNodes.droppedNode = normalNode" title="{{normalNode.name}}"
+                                    class="list-group-item menu-item {{'normal-node-'+normalNode.type}}" draggable>
                                 <a title="{{normalNode.name}}">{{normalNode.name}}</a>
                                 {{normalNode}}
                             </li>

@@ -52,7 +52,7 @@ app.controller('PlumbCtrl', ['$scope', 'QuestionService', 'WorkFlowService', 'ng
     };
     // when add a workflow button clicked
     $scope.createNew = function () {
-        $scope.workflow = {id: null, name: '', description: ''};
+        $scope.workflow = {id: null, name: '', description: '',type:""};
         $scope.create = true;
         dialog = ngDialog.open({
             template: 'workflow-editor.html',
@@ -94,15 +94,15 @@ app.controller('PlumbCtrl', ['$scope', 'QuestionService', 'WorkFlowService', 'ng
             $scope.workflow = response;
             $scope.editing_detail = true;
             $scope.schema.all = $scope.workflow.nodes;
-            for(var i=0;i<$scope.schema.all.length;i++){
+            for (var i = 0; i < $scope.schema.all.length; i++) {
                 var node = $scope.schema.all[i];
-                for(var j=0;j<node.nexts.length;j++){
-                    $scope.connect(node.id,node.nexts[j]._then);
+                for (var j = 0; j < node.nexts.length; j++) {
+                    $scope.connect(node.id, node.nexts[j]._then);
                 }
             }
         });
     };
-    
+
     $scope.editDetailSave = function () {
         $scope.workflow.nodes = $scope.schema.all;
         WorkFlowService.updateWorkFlowDetail($scope.workflow, $scope.workflow.id).then(function (response) {
@@ -149,12 +149,12 @@ app.controller('PlumbCtrl', ['$scope', 'QuestionService', 'WorkFlowService', 'ng
         $scope.hoverCode.show = 'false';
     };
 
-    var menu = [{name: 'start', type: 'Normal', data: {id:0,name: 'start', description: 'start node'}}, {
+    var menu = [{name: 'start', type: 'Normal', data: {id: 0, name: 'start', description: 'start node'}}, {
         name: 'end',
         type: 'Normal',
-        data: {id:1,name: 'end', description: 'end node'}
+        data: {id: 1, name: 'end', description: 'end node'}
     }];
-
+// super node
     function node(id, name, type, data, x, y) {
         this.id = id;
         this.name = name;
@@ -166,6 +166,71 @@ app.controller('PlumbCtrl', ['$scope', 'QuestionService', 'WorkFlowService', 'ng
         this.prev = '';
     }
 
+// normal
+    node.prototype.drop = function () {
+        console.log("node is dropping");
+    };
+
+    node.prototype.connect = function (target_node) {
+        var next = {_if: '', _then: target_node.id};
+        this.nexts.push(next);
+        target_node.prev = this.id;
+    };
+
+    function NormalNode(id,name,type,data,x,y) {
+        node.call(this,id,name,type,data,x,y);
+    };
+
+    NormalNode.prototype = new node();
+    NormalNode.prototype.drop = function () {
+        if(this.type == 'Normal' && this.name=='start'){
+            $scope.workflow.startNode_id = this.id;
+        }
+        $scope.schema.all.push(this);
+    };
+    //NormalNode.prototype.connect = function (target_node) {
+    //
+    //};
+    
+    function QuestionNode(id,name,type,data,x,y) {
+        node.call(this,id,name,type,data,x,y);
+    }
+    QuestionNode.prototype = new node();
+    QuestionNode.prototype.drop = function () {
+        $scope.schema.all.push(this);
+    };
+
+    QuestionNode.prototype.connect = function (target_node,success,fail) {
+        if(this.data.options.length==0){
+            this.data.options.push({name:'not null',value:'NOTNULL'});
+        }
+        var self = this;
+        var connectDialog = ngDialog.open({
+            template: 'connect-editor.html',
+            scope:$scope,
+            showClose: false,
+            closeByEscape: false,
+            preCloseCallback: function(value) {
+                if(value) {
+                    var target_node = $scope.connectingSourceNode.targetNode;
+                    var _if = $scope.connectingSourceNode.selectedOption;
+                    var _then = target_node.id;
+                    var next = {_if: _if, _then: _then};
+                    if(!self.nexts){self.nexts=[]}
+                    self.nexts.push(next);
+                    target_node.prev = self.id;
+                    success(_if);
+                }else{
+                    console.log('delete connection');
+                    fail();
+                }
+            }
+        });
+        $scope.connectingSourceNode = {selectedOption:"",node:self,targetNode: target_node}
+    };
+    //QuestionNode.prototype.connectOK = function () {
+    //};
+
 
     $scope.menuNodes = {normalNodes: [], questionNodes: [], droppedNode: new node(), previewNode: new node()};
 
@@ -173,7 +238,7 @@ app.controller('PlumbCtrl', ['$scope', 'QuestionService', 'WorkFlowService', 'ng
         console.log('init menu');
         $scope.menuNodes.normalNodes.length = 0;
         for (var i = 0; i < menu.length; i++) {
-            var nodez = new node('menu_normal_node_' + i, menu[i].name, menu[i].type, {
+            var nodez = new NormalNode('menu_normal_node_' + i, menu[i].name, menu[i].type, {
                 id: menu[i].data.id,
                 description: menu[i].data.description
             }, 0, 0);
@@ -184,11 +249,12 @@ app.controller('PlumbCtrl', ['$scope', 'QuestionService', 'WorkFlowService', 'ng
 
             $scope.menuNodes.questionNodes.length = 0;
             for (var i = 0; i < response.length; i++) {
-                var nodez = new node('menu_question_node_' + i, response[i].name, 'Question', {
+                var nodez = new QuestionNode('menu_question_node_' + i, response[i].name, 'Question', {
                     id: response[i].id,
                     description: response[i].description,
-                    name:response[i].name,
-                    content:response[i].content
+                    name: response[i].name,
+                    content: response[i].content,
+                    options: response[i].options
                 }, 0, 0);
                 $scope.menuNodes.questionNodes.push(nodez);
             }
@@ -200,7 +266,10 @@ app.controller('PlumbCtrl', ['$scope', 'QuestionService', 'WorkFlowService', 'ng
                 {id: '3', name: 'question3', type: 'textarea', content: '', description: 'sda'}];
             $scope.menuNodes.questionNodes.length = 0;
             for (var i = 0; i < errResponse.length; i++) {
-                var nodez = new node('menu_question_node_' + i, errResponse[i].name, 'Question', {id:errResponse[i].id,description:errResponse[i].description});
+                var nodez = new node('menu_question_node_' + i, errResponse[i].name, 'Question', {
+                    id: errResponse[i].id,
+                    description: errResponse[i].description
+                });
                 $scope.menuNodes.questionNodes.push(nodez);
             }
 
@@ -226,14 +295,13 @@ app.controller('PlumbCtrl', ['$scope', 'QuestionService', 'WorkFlowService', 'ng
 
         WorkFlowService.createWorkFlowNode(droppedNode).then(
             function (response) {
-                droppedNode = response;
-                if(droppedNode.type == 'start' && droppedNode.type == "Normal"){
-                    if($scope.workflow.startNode_id&&$scope.workflow.startNode_id!=""){
-                        return;
-                    }
-                    $scope.workflow.startNode_id = droppedNode.id;
-                }
-                $scope.schema.all.push(droppedNode);
+                //droppedNode = response;
+                droppedNode.id = response.id;
+                droppedNode.drop();
+                //if (droppedNode.name == 'start' && droppedNode.type == "Normal") {
+                //    $scope.workflow.startNode_id = droppedNode.id;
+                //}
+                //$scope.schema.all.push(droppedNode);
             },
             function (errResponse) {
                 alert('please try later');
@@ -241,10 +309,9 @@ app.controller('PlumbCtrl', ['$scope', 'QuestionService', 'WorkFlowService', 'ng
         );
 
 
-
     };
     //src=> srcid, target=>targetid
-    $scope.connect = function (src,target) {
+    $scope.connect = function (src, target) {
 //        var src_elem = angular.element('#item-container').find('.item[node-id=' + src + ']');
 //        var target_elem = angular.element('#item-container').find('.item[node-id=' + target + ']');
 //        jsPlumb.connect({
@@ -258,16 +325,16 @@ app.controller('PlumbCtrl', ['$scope', 'QuestionService', 'WorkFlowService', 'ng
     $scope.removeNode = function (node) {
         var schema = $scope.$parent.schema.all;
         for (var i = 0; i < schema.length; i++) {
-            if(node.prev == schema[i].id){
-                for(var j=0;j<schema[i].nexts.length;j++){
-                    if(schema[i].nexts[j]._then == node.id){
-                        schema[i].nexts.splice(j,1);
+            if (node.prev == schema[i].id) {
+                for (var j = 0; j < schema[i].nexts.length; j++) {
+                    if (schema[i].nexts[j]._then == node.id) {
+                        schema[i].nexts.splice(j, 1);
                     }
                 }
             }
-            for(var k=0;k<node.nexts.length;k++){
-                if(node.nexts[k]._then == schema[i].id){
-                    schema[i].prev='';
+            for (var k = 0; k < node.nexts.length; k++) {
+                if (node.nexts[k]._then == schema[i].id) {
+                    schema[i].prev = '';
                 }
             }
             // compare in non-strict manner
@@ -291,19 +358,26 @@ app.controller('PlumbCtrl', ['$scope', 'QuestionService', 'WorkFlowService', 'ng
         jsPlumb.bind("ready", function () {
             console.log("Set up jsPlumb listeners (should be only done once)");
             jsPlumb.unbind();
+            /**
+             * when click on a connection
+             * confirm and delete the connection
+             * */
+            jsPlumb.bind("click", function (conn, originalEvent) {
+                if (confirm("Delete?"))
+                    jsPlumb.detach(conn);
+                //TODO
+            });
             jsPlumb.bind("connection", function (info) {
                 $scope.$apply(function () {
-                    console.log(info);
                     var source = angular.element(info.source[0]);
                     var target = angular.element(info.target[0]);
                     var source_node = $scope.getNodeById(source.attr('node-id'), $scope.schema);
                     var target_node = $scope.getNodeById(target.attr('node-id'), $scope.schema);
-                    console.log(source_node);
-                    if (source_node.type == 'Normal') {
-                        var next = {_if: '', _then: target_node.id};
-                        source_node.nexts.push(next);
-                        target_node.prev = source_node.id;
-                    }
+                    source_node.connect(target_node, function (_if) {
+                        info.connection.setLabel(_if);
+                    }, function () {
+                        jsPlumb.detach(info.connection);
+                    });
                 });
             });
         });
@@ -343,7 +417,7 @@ app.directive('plumbItem', function () {
                 var node_id = element.attr('node-id');
                 var node = scope.getNodeById(node_id, scope.$parent.schema);
                 console.log(node);
-                if (node&&element.css('top')!='auto'){
+                if (node && element.css('top') != 'auto') {
                     node.y = element.css('top');
                     node.x = element.css('left');
                 }

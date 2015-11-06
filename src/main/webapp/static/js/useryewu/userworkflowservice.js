@@ -41,7 +41,29 @@ app.factory('UserWorkFlowService', ['$http', '$q','LoginService' ,function ($htt
         },
         
         goToNode: function (userWorkflow) {
-            return $http.put('/user/workflow/go/').then(
+            return $http.put('/user/workflow/go/',userWorkflow).then(
+                function (response) {
+                    return response.data;
+                },
+                function (errResponse) {
+                    return $q.reject(errResponse);
+                }
+            );
+        },
+
+        submitRecord: function (record) {
+            return $http.post('/user/workflow/submit/',record).then(
+                function (response) {
+                    return response.data;
+                },
+                function (errResponse) {
+                    return $q.reject(errResponse);
+                }
+            );
+        },
+
+        getRecordValue: function (record) {
+            return $http.post("/user/workflow/value/",record).then(
                 function (response) {
                     return response.data;
                 },

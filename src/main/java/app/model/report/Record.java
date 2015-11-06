@@ -15,18 +15,19 @@ import javax.persistence.*;
  */
 
 @Entity
-@Table(name="answer")
-public class Answer {
+@Table(name="record")
+public class Record {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String value;
 
-    @ManyToOne
-    private Question question;
+    private String questionId;
 
-    private String organizationElement_id;
+    private String oeId;
+
+    private int userId;
 
     public int getId() {
         return id;
@@ -44,19 +45,27 @@ public class Answer {
         this.value = value;
     }
 
-    public Question getQuestion() {
-        return question;
+    public String getQuestionId() {
+        return questionId;
     }
 
-    public void setQuestion(Question question) {
-        this.question = question;
+    public void setQuestionId(String questionId) {
+        this.questionId = questionId;
     }
 
-    public String getOrganizationElement_id() {
-        return organizationElement_id;
+    public String getOeId() {
+        return oeId;
     }
 
-    public void setOrganizationElement_id(String organizationElement_id) {
-        this.organizationElement_id = organizationElement_id;
+    public void setOeId(String oeId) {
+        this.oeId = oeId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

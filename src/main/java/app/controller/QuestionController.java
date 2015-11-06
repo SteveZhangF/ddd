@@ -68,4 +68,15 @@ public class QuestionController {
         }
     }
 
+    @RequestMapping(value="/question/{id}",method=RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Question> getOneQuestion(@PathVariable("id") int id){
+        try{
+            Question question = questionService.get(id);
+            return new ResponseEntity<>(question,HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
 }

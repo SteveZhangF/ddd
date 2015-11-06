@@ -8,21 +8,37 @@
 <div ng-controller="UserWorkflowController" class="row">
     <div class="sidebar-nav col-md-2">
         <ul id="workflow-menu">
-            <li ng-repeat="wf in workflows"><a href="" ng-click="workFlowStart(wf)"><span>{{wf.name}}</span></a></li>
+            <li ng-repeat="wf in workflows"><a href="" ng-click="workFlowChooses(wf)"><span>{{wf.name}}</span></a></li>
         </ul>
     </div>
     <div class="col-md-10">
             <div class="well" ng-show="!currentNode.name">
                 Please select module to start!
             </div>
-            <div class="panel panel-default" ng-if="currentNode.name">
+        <div ng-if="currentNode.type=='StartNode'">
+            {{currentWorkFlow}}
+            <select ng-model="currentWorkFlow.oe_id">
+                <option ng-repeat="oe in nodeData.options" value="{{oe.value}}">{{oe.name}}</option>
+            </select>
+            <button type="button" ng-click="workFlowStart()" class="btn btn-md btn-default">Go!</button>
+
+        </div>
+            <div class="panel panel-default" ng-if="currentNode.type!='StartNode'">
                 <div class="panel-heading">
                     <h3>{{currentNode.name}}</h3>
                 </div>
                 <div class="panel-body">
-                    <h4>{{currentNode.data.description}}</h4>
+                    <h4>{{currentNode.data.description}}
+                    {{record}}
+                    </h4>
                     <hr>
-                    <div id="node-data-content" ng-if="currentNode.type == 'Question'" ng-init="getNodeData()">
+                    <div id="node-data-content">
+                        <div ng-switch="nodeData.type">
+                            <select class="form-control"ng-switch-when="select" ng-model="record.value"><option ng-repeat="opt in nodeData.options" value="{{opt.value}}">{{opt.name}}</option></select>
+                            <input class="form-control" ng-switch-when="text" type="text" ng-model="record.value">
+                            <textarea class="form-control" ng-switch-when="textarea" ng-model="record.value"></textarea>
+                            <label class="form-control" ng-switch-when="checkbox" ng-repeat="opt in nodeData.options"><input type="checkbox" ng-change="checkBoxValueChanged(opt.value)" ng-model="record.values[$index]"  value="{{opt.value}}">{{opt.name}}</label>
+                        </div>
                     </div>
                 </div>
                 <div class="panel-footer">

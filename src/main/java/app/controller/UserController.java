@@ -129,6 +129,7 @@ public class UserController {
         String token = tokenAuthenticationService.addAuthentication(response, authentication);
         System.out.println(token);
         UserInfo userInfo = new UserInfo(user, token);
+        userInfo.setCompanyId(userService.findById(userInfo.userId).getCompanyId());
         return new ResponseEntity<UserInfo>(userInfo, HttpStatus.OK);
         // headers.setLocation(ucBuilder.path("/company/{id}").buildAndExpand(company.getUuid()).toUri());
     }

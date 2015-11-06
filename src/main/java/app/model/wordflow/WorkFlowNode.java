@@ -50,6 +50,8 @@ public class WorkFlowNode {
     private String x;
     private String y;
 
+
+
     @OneToOne(cascade = CascadeType.ALL)
     private Data data = new Data();
 

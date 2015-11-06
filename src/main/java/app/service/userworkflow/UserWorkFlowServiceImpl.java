@@ -67,10 +67,19 @@ public class UserWorkFlowServiceImpl extends BaseGenericServiceImpl<UserWorkFlow
     }
 
     @Override
-    public List<UserWorkFlow> findUserWorkFlow(int user_id, String workflow_id) {
+    public List<UserWorkFlow> findUserWorkFlow(int user_id, String workflow_id,String oe_id) {
         Map map = new HashMap<>();
         map.put("user_id",user_id);
         map.put("workFlowId",workflow_id);
+        map.put("oe_id",oe_id);
         return userWorkFlowDao.getListbyParams(map);
+    }
+
+    @Override
+    public void deleteUWFbyWF(String workflow_id) {
+        List<UserWorkFlow> u =userWorkFlowDao.getListbyParam("workFlowId", workflow_id);
+        for(UserWorkFlow uf:u){
+            userWorkFlowDao.delete(uf);
+        }
     }
 }

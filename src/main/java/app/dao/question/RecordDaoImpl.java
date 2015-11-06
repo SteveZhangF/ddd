@@ -8,72 +8,79 @@
 
 package app.dao.question;
 
-import app.model.report.Answer;
+import app.model.report.Record;
 import app.newDao.HibernateBaseGenericDAOImpl;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
+
 
 /**
  * Created by steve on 10/18/15.
  */
 
 @Repository
-public class AnswerDaoImpl extends HibernateBaseGenericDAOImpl<Answer,Integer> implements AnswerDao {
+public class RecordDaoImpl extends HibernateBaseGenericDAOImpl<Record,Integer> implements RecordDao {
     /**
      * 构造方法，根据实例类自动获取实体类类型
      *
      * @param sessionFactory
      */
     @Autowired
-    public AnswerDaoImpl(SessionFactory sessionFactory) {
+    public RecordDaoImpl(SessionFactory sessionFactory) {
         super(sessionFactory);
     }
 
     @Override
-    public void delete(Answer entity) {
+    public void delete(Record entity) {
         super.delete(entity);
     }
 
     @Override
-    public Answer get(Integer id) {
+    public Record get(Integer id) {
         return super.get(id);
     }
 
     @Override
-    public Answer load(Integer id) {
+    public Record load(Integer id) {
         return super.load(id);
     }
 
     @Override
-    public List<Answer> loadAll() {
+    public List<Record> loadAll() {
         return super.loadAll();
     }
 
     @Override
-    public void save(Answer entity) {
+    public void save(Record entity) {
         super.save(entity);
     }
 
     @Override
-    public void saveOrUpdate(Answer entity) {
+    public void saveOrUpdate(Record entity) {
         super.saveOrUpdate(entity);
     }
 
     @Override
-    public void update(Answer entity) {
+    public void update(Record entity) {
         super.update(entity);
     }
 
     @Override
-    public Answer getbyParam(String param, Object value) {
+    public Record getbyParam(String param, Object value) {
         return super.getbyParam(param, value);
     }
 
     @Override
-    public List<Answer> getListbyParam(String param, Object value) {
+    public List<Record> getListbyParam(String param, Object value) {
         return super.getListbyParam(param, value);
+    }
+
+    @Override
+    public List<Record> getListbyParams(Map<String, Object> map) {
+        return super.getListbyParams(map);
     }
 }

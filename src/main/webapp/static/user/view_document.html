@@ -1,0 +1,7 @@
+<div ng-controller="UserDocumentController" class="row">
+    <div class="sidebar-nav col-md-2">
+        <ul id="document-menu">
+            <li ng-repeat="document in documents"><a href="" ng-click="documentChoose(document)"><span>{{document.name}}</span></a></li>
+        </ul>
+    </div>
+</div>

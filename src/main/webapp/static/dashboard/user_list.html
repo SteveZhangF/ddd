@@ -62,7 +62,7 @@
             <div class="form-group">
                 <label class="checkbox inline _hover" data-ng-repeat="p in workflow.all" title="{{p.name}}"
                        style="width: 100%; margin-left: 10px;">
-                    <input maxlength="30" data-index="{{p.index}}" type="checkbox" value="{{'{&quot;id&quot;:&quot;'+p.id+'&quot;,&quot;name&quot;:&quot;'+p.name+'&quot;}'}}"
+                    <input maxlength="30" data-index="{{p.index}}" type="checkbox" value="{{'{&quot;id&quot;:&quot;'+p.id+'&quot;,&quot;type&quot;:&quot;'+p.type+'&quot;,&quot;name&quot;:&quot;'+p.name+'&quot;}'}}"
                            data-check-list='workflow.checked' title="{{p.description}}" data-check-num-list="workflow.checkedname"
                            req-num="{{p.name}}">{{p.name}}
                 </label>

@@ -9,6 +9,7 @@
 package app.controller;
 
 import app.model.wordflow.WorkFlow;
+import app.service.userworkflow.UserWorkFlowService;
 import app.service.workflow.WorkFlowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -63,7 +64,8 @@ public class WorkFlowController {
         WorkFlow flow = workFlowService.get(id);
         if(flow!=null){
             flow.setDescription(workFlow.getDescription());
-            flow.setName(flow.getName());
+            flow.setName(workFlow.getName());
+            flow.setType(workFlow.getType());
             workFlowService.update(flow);
             return new ResponseEntity<>(HttpStatus.OK);
         }else{
@@ -71,10 +73,13 @@ public class WorkFlowController {
         }
     }
 
+    @Autowired
+    UserWorkFlowService userWorkFlowService;
     @RequestMapping(value="/workflow/detail/{id}",method = RequestMethod.PUT,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WorkFlow> updateWorkFlowDetail(@PathVariable("id") String id,@RequestBody WorkFlow worfFlow){
         try{
             workFlowService.update(worfFlow);
+            userWorkFlowService.deleteUWFbyWF(worfFlow.getId());
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();

@@ -8,56 +8,63 @@
 
 package app.service.question;
 
-import app.dao.question.AnswerDao;
-import app.model.report.Answer;
+import app.dao.question.RecordDao;
+import app.model.report.Record;
 import app.newService.BaseGenericServiceImpl;
-import app.newService.IBaseGenericService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by steve on 10/18/15.
  */
 @Service
-public class AnswerServiceImpl extends BaseGenericServiceImpl<Answer,Integer> implements AnswerService {
+@Transactional
+public class RecordServiceImpl extends BaseGenericServiceImpl<Record, Integer> implements RecordService {
 
     @Autowired
-    AnswerDao answerDao;
+    RecordDao answerDao;
 
     @Override
-    public void delete(Answer entity) {
+    public void delete(Record entity) {
         answerDao.delete(entity);
     }
 
     @Override
-    public Answer get(Integer id) {
+    public Record get(Integer id) {
         return answerDao.get(id);
     }
 
     @Override
-    public Answer load(Integer id) {
+    public Record load(Integer id) {
         return answerDao.load(id);
     }
 
     @Override
-    public List<Answer> loadAll() {
+    public List<Record> loadAll() {
         return answerDao.loadAll();
     }
 
     @Override
-    public void save(Answer entity) {
+    public void save(Record entity) {
         answerDao.save(entity);
     }
 
     @Override
-    public void saveOrUpdate(Answer entity) {
+    public void saveOrUpdate(Record entity) {
         answerDao.saveOrUpdate(entity);
     }
 
     @Override
-    public void update(Answer entity) {
+    public void update(Record entity) {
         answerDao.update(entity);
+    }
+
+    @Override
+    public List<Record> getListbyParams(Map<String, Object> map) {
+        return answerDao.getListbyParams(map);
     }
 }

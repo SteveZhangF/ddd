@@ -130,7 +130,13 @@ app.controller('QuestionController', ['$scope', 'QuestionService', 'ngDialog', f
                 break;
             case 'checkbox':
                 content = '<plugin id="{+id+}"></plugin>';
-
+                break;
+            case 'selectEmployee':
+                content = '<plugin id="{+id+}"><select class="form-control"><option>Employee</option></select></plugin>';
+                break;
+            case 'selectDepartment':
+                content = '<plugin id="{+id+}"><select class="form-control"><option>Department</option></select></plugin>';
+                break;
         }
         $scope.question.content = content;
     };
@@ -156,7 +162,7 @@ app.controller('QuestionController', ['$scope', 'QuestionService', 'ngDialog', f
         }
     };
     //<label class="form-control"><input type="checkbox" value="ddd" > ddd</label>
-    $scope.types = ['textarea', "select", "text","checkbox"];
+    $scope.types = ['textarea', "select", "text","checkbox","selectEmployee","selectDepartment"];
 
     // when add a question button clicked
     $scope.createNew = function () {

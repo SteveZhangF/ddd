@@ -34,9 +34,10 @@ public class WorkFlow {
     private String id;
     private String description;
     private String name;
+    private String type;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
+    @OneToMany(cascade = {CascadeType.ALL})
+    @Cascade({org.hibernate.annotations.CascadeType.REMOVE, org.hibernate.annotations.CascadeType.DELETE_ORPHAN})
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<WorkFlowNode> nodes = new ArrayList<>();
 
@@ -80,5 +81,13 @@ public class WorkFlow {
 
     public void setNodes(List<WorkFlowNode> nodes) {
         this.nodes = nodes;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
