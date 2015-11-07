@@ -87,7 +87,7 @@ public class EmployeeController {
     }
 
 
-    //------------------- Update a Department --------------------------------------------------------
+    //------------------- Update a Employee --------------------------------------------------------
 
     @RequestMapping(value = "/employee/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Employee> updateDepartment(@PathVariable("id") String id, @RequestBody Employee employee) {
@@ -97,7 +97,7 @@ public class EmployeeController {
     }
 
 
-    //------------------- Delete a company --------------------------------------------------------
+    //------------------- Delete a Employee --------------------------------------------------------
 
     @RequestMapping(value = "/employee/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Company> deleteUser(@PathVariable("id") String id) {

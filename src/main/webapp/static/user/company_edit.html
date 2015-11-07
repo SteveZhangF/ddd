@@ -1,68 +1,91 @@
 <div class="generic-container" ng-controller="UserCompanyController as ctrl">
-    <div class="panel panel-default">
+    <div class="panel panel-primary">
         <div class="panel-heading">
             <span class="lead">Company Info </span>
         </div>
-        <div class="formcontainer">
-            {{selected_organzation.data}}
-            <form ng-submit="ctrl.submit()" name="myForm" class="form-horizontal">
-                <input type="hidden" ng-model="ctrl.company.uuid"/>
 
+        <div class="panel-body">
+            <form name="companyForm" class="css-form" novalidate>
+                <div class="row">
+                    <div class="col-md-6">
+                        <!-- name -->
+                        <div class="form-group row" ng-class="{ 'has-error' : companyForm.name.$invalid && !companyForm.name.$pristine }">
+                            <label for="name" class="col-md-3 control-label">Organization Name</label>
+                            <div class="col-md-6">
+                                <input type="text" name="name" class="form-control" id="name" placeholder="Organization Name"
+                                       ng-model="company.name" maxlength="256" required>
+                            </div>
+                            <div class="col-md-1"><span ng-show="!companyForm.name.$invalid" style="color: green;" class="glyphicon glyphicon-ok"></span></div>
+                        </div>
+                        <!-- name -->
+                        <div class="form-group row">
+                            <label for="number_of_employee" class="col-md-3 control-label">Number of Employees</label>
+                            <label id="number_of_employee" class="col-md-6">6</label>
+                        </div>
 
-                <!-- name -->
-                <div class="form-group col-md-12">
-                    <label class="col-md-2 control-lable" for="name">Name</label>
+                    </div>
 
-                    <div class="col-md-7">
-                        <input type="text" ng-model="ctrl.company.name" name="uname"
-                               class="username form-control input-sm" id="name"
-                               placeholder="Enter Company name" required ng-minlength="3"/>
-
-                        <div class="has-error" ng-show="myForm.$dirty">
-								<span ng-show="myForm.uname.$error.required">This is a
-									required field</span> <span ng-show="myForm.uname.$error.minlength">Minimum
-									length required is 3</span> <span ng-show="myForm.uname.$invalid">This
-									field is invalid </span>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="tax_id" class="col-md-3 control-label">Tax ID</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" id="tax_id" placeholder="Tax ID">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="regi_num" class="col-md-3 control-label">Registration Number</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" id="regi_num" placeholder="Registration Number">
+                            </div>
                         </div>
                     </div>
                 </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-6">
 
-                <!-- address -->
-                <div class="form-group col-md-12">
-                    <label class="col-md-2 control-lable" for="address">Address</label>
+                        <!-- phone -->
+                        <div class="form-group row" ng-class="{ 'has-error' : companyForm.phone.$invalid && !companyForm.phone.$pristine }">
+                            <label for="phone" class="col-md-3 control-label">Phone</label>
+                            <div class="col-md-6">
+                                <input ng-model="company.phone" type="text" class="form-control" name="phone" id="phone" placeholder="Phone Number" phone required>
+                            </div>
+                            <div class="col-md-1"><span ng-show="!companyForm.phone.$invalid" style="color: green;" class="glyphicon glyphicon-ok"></span></div>
+                        </div>
 
-                    <div class="col-md-7">
-                        <input type="text" ng-model="ctrl.company.address" name='address'
-                               class="form-control input-sm"
-                               placeholder="Enter your Address. "/>
+                        <!-- email -->
+                        <div class="form-group row" ng-class="{ 'has-error' : companyForm.email.$invalid && !companyForm.email.$pristine }">
+                            <label for="email" class="col-md-3 control-label">Email</label>
+                            <div class="col-md-6">
+                                <input name="email" ng-model="company.email" type="email" class="form-control" id="email" placeholder="Email" required>
+                            </div>
+                            <div class="col-md-1"><span ng-show="!companyForm.email.$invalid" style="color: green;" class="glyphicon glyphicon-ok"></span></div>
+                        </div>
+
                     </div>
-                </div>
+                    <div class="col-md-6">
+                        <!-- FAX -->
+                        <div class="form-group row" ng-class="{ 'has-error' : companyForm.fax.$invalid && !companyForm.fax.$pristine }">
+                            <label for="fax" class="col-md-3 control-label">Fax</label>
+                            <div class="col-md-6">
+                                <input ng-model="company.fax" type="text" class="form-control" name="fax" id="fax" placeholder="Fax" phone>
+                            </div>
+                        </div>
+                        <!-- Address -->
+                        <div class="form-group row"  ng-class="{ 'has-error' : companyForm.address.$invalid && !companyForm.address.$pristine }">
+                            <label for="address" class="col-md-3 control-label">Address</label>
 
-                <!-- phone -->
-                <div class="form-group col-md-12">
-                    <label class="col-md-2 control-lable" for="phone">Phone</label>
-
-                    <div class="col-md-7">
-                        <input type="tel" id="phone" ng-model="ctrl.company.phone" name="phone"
-                               class="form-control input-sm"
-                               placeholder="Enter your Phone Number" required/>
-
-                        <div class="has-error" ng-show="myForm.$dirty">
-								<span ng-show="myForm.phone.$error.required">This is a
-									required field</span> <span ng-show="myForm.phone.$invalid">This
-									field is invalid </span>
+                            <div class="col-md-6">
+                                <input type="text" id="address" name="address" class="form-control" ng-autocomplete="result1"
+                                       details="details1" options="options1" ng-model="company.address" required/>
+                            </div>
+                            <div class="col-md-1"><span ng-show="!companyForm.address.$invalid" style="color: green;" class="glyphicon glyphicon-ok"></span></div>
                         </div>
                     </div>
                 </div>
-                <div class="form-actions floatRight">
-                    <input type="submit" value="{{!ctrl.company.uuid ? 'Create' : 'Update'}}"
-                           class="btn btn-primary btn-sm" ng-disabled="myForm.$invalid">
-                    <button type="button" ng-click="ctrl.reset()"
-                            class="btn btn-warning btn-sm" ng-disabled="myForm.$pristine">Reset
-                        Form
-                    </button>
-                </div>
+                <hr>
             </form>
+            <button type="button" class="btn btn-primary pull-right" value="Save" ng-disabled="companyForm.$invalid">Save</button>
         </div>
     </div>
 </div>

@@ -1,0 +1,75 @@
+<div class=" row" ng-controller="RegisterController as ctrl">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <div class="panel panel-primary ">
+            <div class="panel-heading">
+                <span class="lead"> New User</span>
+                <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="registering-spinner"></span>
+            </div>
+            <div class="panel-body" style="padding: 30px;">
+                {{time}}
+                <div class="alert alert-danger" role="alert" ng-show="error"> <button ng-click="error=false" type="button" class="close"  aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Error!</strong> Error while creating user, please try later!</div>
+                <div class="alert alert-success" role="alert" ng-show="success"> <button ng-click="success=false" type="button" class="close"  aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Success!</strong> Register the user successfully! Will direct to home page in {{time}} seconds</div>
+
+                <form name="userForm" class="css-form" novalidate>
+
+                    <div class="form-group row"
+                         ng-class="{ 'has-error' : userForm.user_id.$invalid && !userForm.user_id.$pristine }">
+                        <label for="user_id" class=" control-label col-md-4">Name</label>
+
+                        <div class="col-md-7">
+                            <input minlength="7" type="text" id="user_id" name="user_id" class="form-control" ng-model="user.ssoId" required>
+                            <p ng-show="userForm.user_id.$error.minlength" class="help-block">You
+                                user id is
+                                too short.</p>
+                        </div>
+                        <div class="col-md-1"><span ng-show="!userForm.user_id.$invalid" style="color: green;" class="glyphicon glyphicon-ok"></span></div>
+                    </div>
+
+
+                    <div class="form-group row"
+                         ng-class="{ 'has-error' : userForm.pwd.$invalid && !userForm.pwd.$pristine }">
+                        <label for="pwd" class="col-md-4 control-label">Password</label>
+
+                        <div class="col-md-7">
+                            <input minlength="7" type="password" name="pwd" class="form-control" id="pwd"
+                                   ng-model="user.password" placeholder="password" required>
+                            <p ng-show="userForm.pwd.$error.minlength" class="help-block">Your password is too short.</p>
+                        </div>
+                        <div class="col-md-1"><span ng-show="!userForm.pwd.$invalid" style="color:green;" class="glyphicon glyphicon-ok"></span></div>
+                    </div>
+                    <div class="form-group row" ng-class="{ 'has-error' : userForm.pwd2.$invalid && !userForm.pwd2.$pristine }">
+
+                        <label for="pwd2" class="col-md-4 control-label">Confirm Password</label>
+
+                        <div class="col-md-7">
+                            <input type="password" class="form-control" id="pwd2" name="pwd2" ng-model="user.pwd2" placeholder="password confirmation"
+                                   pwd="user.password" pwd2 required>
+                            <p ng-show="userForm.pwd2.$error.pwd2" class="help-block">Your password is not matched.</p>
+                        </div>
+                        <div class="col-md-1"><span ng-show="!userForm.pwd2.$invalid" style="color:green;" class="glyphicon glyphicon-ok"></span></div>
+                    </div>
+                    <div class="form-group row"  ng-class="{ 'has-error' : userForm.email.$invalid && !userForm.email.$pristine }">
+                        <label for="email" class="col-md-4 control-label">Email</label>
+                        <div class="col-md-7">
+                            <input type="email" name="email" class="form-control" id="email" placeholder="Email" ng-model="user.email" required>
+                            <p ng-show="userForm.email.$invalid && !userForm.email.$pristine" class="help-block">Enter a valid email.</p>
+                        </div>
+                        <div class="col-md-1"><span ng-show="!userForm.email.$invalid" style="color:green;" class="glyphicon glyphicon-ok"></span></div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-4 control-label"></label>
+                        <div class="col-md-7">
+                            <button type="button" class="btn btn-warning pull-right" value="reset" ng-click="reset(userForm)">Reset</button>
+                            <button type="button" class="btn btn-primary pull-right" ng-disabled="userForm.$invalid" value="Save" ng-click="update(user)">Save</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2"></div>
+</div>
