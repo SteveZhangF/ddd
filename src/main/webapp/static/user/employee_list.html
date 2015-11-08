@@ -1,9 +1,128 @@
 <div class="generic-container" ng-controller="UserEmployeeController as ctrl">
-    <div class="panel panel-primary">
+    <div class="panel panel-primary" ng-if="!isEditingEmployee">
         <div class="panel-heading">
-            <span class="lead">Employee List </span>
+            <span class="lead" >Employee List </span>
         </div>
+        <div class="panel-body" >
+            <div class="well">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group row">
+                            <label class="col-md-4">First Name</label>
 
-        <div class="panel-body"></div>
+                            <div class="col-md-8">
+                                <input st-table="employees" st-search="firstName" placeholder="search for first name"
+                                       class="input-sm form-control" type="search"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group row">
+                            <label class="col-md-4">Last Name</label>
+
+                            <div class="col-md-8">
+                                <input st-table="employees" st-search="lastName" placeholder="search for last name"
+                                       class="input-sm form-control" type="search"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group row">
+                            <label class="col-md-4">Email</label>
+
+                            <div class="col-md-8">
+                                <input st-table="employees" st-search="email" placeholder="search for email"
+                                       class="input-sm form-control" type="search"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group row">
+                            <label class="col-md-4">Job Title</label>
+
+                            <div class="col-md-8">
+                                <input st-table="employees" st-search="jobTitle" placeholder="search for job title"
+                                       class="input-sm form-control" type="search"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group row">
+                            <label class="col-md-4">Start Time</label>
+
+                            <div class="col-md-8">
+                                <st-date-range predicate="startTime" st-table="employees"
+                                               before="query.startTime.before"
+                                               after="query.startTime.after"></st-date-range>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group row">
+                            <label class="col-md-4">End Time</label>
+
+                            <div class="col-md-8">
+                                <st-date-range predicate="endTime" st-table="employees" before="query.endTime.before"
+                                               after="query.endTime.after"></st-date-range>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="well">
+                <div>
+                    <button class="btn btn-primary" ng-click="addEmployee()">Add</button>
+                    <button class="btn btn-danger" ng-click="deleteSelectedEmployees()">Delete</button>
+                    <form class="form-inline">
+                        <label>Item Number per Page</label>
+                        <select ng-model="itemPerPage" class="form-control">
+                            <option selected>5</option>
+                            <option>10</option>
+                        </select>
+                    </form>
+
+                </div>
+                <hr>
+                <table st-table="employees" class="table  table-striped">
+                    <thead>
+                    <tr>
+                        <th><label>
+                            <input type="checkbox" ng-model="selectedAll" ng-click="selectAll()">
+                        </label></th>
+                        <th st-sort="{{$index}}">Index</th>
+                        <th st-sort="firstName">First Name</th>
+                        <th st-sort="lastName">Last Name</th>
+                        <th st-sort="email">Email</th>
+                        <th st-sort="jobTitle">Job Title</th>
+                        <th st-sort="startTime">Start Time</th>
+                        <th st-sort="endTime">End Time</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="x in employees">
+                        <td><label>
+                            <input type="checkbox" ng-model="x.selected" ng-change="select()">
+                        </label></td>
+                        <td>{{ $index + 1 }}</td>
+                        <td><a href="">{{x.firstName}}</a></td>
+                        <td>{{x.lastName}}</td>
+                        <td>{{x.email}}</td>
+                        <td>{{x.jobTitle}}</td>
+                        <td>{{x.startTime | date}}</td>
+                        <td>{{x.endTime}}</td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="8" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemPerPage" st-displayed-pages="7"></div>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
     </div>
 </div>

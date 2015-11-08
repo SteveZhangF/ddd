@@ -6,7 +6,7 @@ app.controller('UserNavController', ['$scope', function ($scope) {
                 {name:"Home",subMenu:[],href:"#/index"},
                 {name: "My Company",
                 subMenu: [{name: "Company Information", subMenu: [],href:"#/company"},
-                    {name: "Employee List", subMenu: []}
+                    {name: "Employee List", subMenu: [],href:"#/employees"}
                 ]},
                 {name:"My Documents",subMenu:[
                     {name:"Start Document",subMenu:[],href:"#/workflows"},

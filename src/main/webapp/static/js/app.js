@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('clientApp', ['ngRoute', 'ui.bootstrap', 'ui.bootstrap.contextMenu', 'angularBootstrapNavTree', 'dndLists', 'ui.tree', 'ngDialog', 'angularSpinner']);
+var app = angular.module('clientApp', ['ngRoute', 'ui.bootstrap', 'ui.bootstrap.contextMenu', 'angularBootstrapNavTree', 'dndLists','smart-table', 'ui.tree', 'ngDialog', 'angularSpinner']);
 
 app.factory('LogInData', function () {
     return {
@@ -77,7 +77,11 @@ app.config(['$routeProvider', function ($routeProvider) {
         resolve: resolve
     }).when("/register", {
         templateUrl: "user/register.html"
-    });
+    }).when("/employees",{
+            templateUrl:"user/employee_list.html",
+            resolve:resolve
+        }
+    );
 }]);
 
 app.filter('checkmark', function () {
