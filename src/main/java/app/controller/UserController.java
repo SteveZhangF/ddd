@@ -113,25 +113,29 @@ public class UserController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<UserInfo> login(@RequestBody User userinfo, HttpServletResponse response) {
 
-        UserDetails user = null;
-        try {
-            user = userDetailsService.loadUserByUsername(userinfo.getSsoId());
-        } catch (UsernameNotFoundException e) {
-            try {
-                response.getWriter().write("nosuchuser");
-            } catch (IOException e1) {
-                e1.printStackTrace();
+        User user = userService.findBySso(userinfo.getSsoId());
+        if(user == null){
+            return new ResponseEntity<>( HttpStatus.NOT_FOUND);
+        }else{
+            if(user.getPassword().equals(userinfo.getPassword())){
+                UserDetails userDet = null;
+                try {
+                    userDet = userDetailsService.loadUserByUsername(userinfo.getSsoId());
+                } catch (UsernameNotFoundException e) {
+                    return new ResponseEntity<>( HttpStatus.NOT_FOUND);
+                }
+
+                UserAuthentication authentication = new UserAuthentication(userDet);
+                String token = tokenAuthenticationService.addAuthentication(response, authentication);
+                System.out.println(token);
+                UserInfo userInfo = new UserInfo(userDet, token);
+                userInfo.setCompanyId(userService.findById(userInfo.userId).getCompanyId());
+                return new ResponseEntity<>(userInfo, HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
-            UserAuthentication authentication = new UserAuthentication(user);
-            System.out.println(authentication.isAuthenticated());
         }
-        UserAuthentication authentication = new UserAuthentication(user);
-        String token = tokenAuthenticationService.addAuthentication(response, authentication);
-        System.out.println(token);
-        UserInfo userInfo = new UserInfo(user, token);
-        userInfo.setCompanyId(userService.findById(userInfo.userId).getCompanyId());
-        return new ResponseEntity<UserInfo>(userInfo, HttpStatus.OK);
-        // headers.setLocation(ucBuilder.path("/company/{id}").buildAndExpand(company.getUuid()).toUri());
+
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)

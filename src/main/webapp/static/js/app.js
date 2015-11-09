@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('clientApp', ['ngRoute', 'ui.bootstrap', 'ui.bootstrap.contextMenu', 'angularBootstrapNavTree', 'dndLists','smart-table', 'ui.tree', 'ngDialog', 'angularSpinner']);
+var app = angular.module('clientApp', ['ngRoute', 'ui.bootstrap', 'ui.bootstrap.contextMenu','angularFileUpload', 'angularBootstrapNavTree', 'dndLists','smart-table', 'ui.tree', 'ngDialog', 'angularSpinner']);
 
 app.factory('LogInData', function () {
     return {
@@ -49,22 +49,22 @@ app.run([
                                                       previous, eventObj) {
             if (eventObj.authenticated === false) {
                 alert('Please log in');
+                $location.path('/');
             }
         });
     }]);
 app.config(['$routeProvider', function ($routeProvider) {
     var resolve = {
-        // for development
-        //auth: ["$q", "LoginService", function ($q, LoginService) {
-        //    var userInfo = LoginService.getUserInfo();
-        //    if (userInfo.accessToken!=0) {
-        //        return $q.when(userInfo);
-        //    } else {
-        //        return $q.reject({
-        //            authenticated: false
-        //        });
-        //    }
-        //}]
+        auth: ["$q", "LoginService", function ($q, LoginService) {
+            //var userInfo = LoginService.getUserInfo();
+            //if (userInfo!=null && userInfo.accessToken!=0) {
+            //    return $q.when(userInfo);
+            //} else {
+            //    return $q.reject({
+            //        authenticated: false
+            //    });
+            //}
+        }]
     };
 
     $routeProvider.when("/", {
@@ -81,7 +81,10 @@ app.config(['$routeProvider', function ($routeProvider) {
             templateUrl:"user/employee_list.html",
             resolve:resolve
         }
-    );
+    ).when("/view_employee",{
+            templateUrl:"user/employee_edit.html",
+            resolve:resolve
+        });
 }]);
 
 app.filter('checkmark', function () {

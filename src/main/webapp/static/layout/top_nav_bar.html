@@ -8,7 +8,8 @@
             </li>
         </ul>
         <ul class="nav navbar-nav pull-right" ng-controller="LoginController">
-            <li><a href="" ng-click="showLoginDialog()"><span>Login</span></a></li>
+            <li><a href="" ng-click="showLoginDialog()" ng-show="!isLoginedIn()" ><span>Login</span></a></li>
+            <li><a href="" ng-click="logout()" ng-show="isLoginedIn()" ><span>Log out</span></a></li>
         </ul>
     </nav>
     <nav ng-show="subMenu.length!=0" class="navbar navbar-default" style="margin-bottom: 10px">
@@ -24,6 +25,8 @@
     <div class="container-fluid">
         <h1>Log in with your account</h1>
         <hr>
+        <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="login-spinner"></span>
+        <div class="alert alert-danger" ng-show="loginError.hasError" role="alert">{{loginError.msg}}</div>
         <div class="form-group">
             <input type="text" name="email" ng-model="userInfo.userId" id="user_id" class="form-control"
                    placeholder="user id">

@@ -25,8 +25,43 @@ app.directive('phone', function () {
         }
     };
 });
-app.controller('UserCompanyController', ['$scope', 'CompanyService', 'LoginService', function ($scope, CompanyService, LoginService) {
+app.controller('UserCompanyController', ['$scope', 'CompanyService', 'LoginService','usSpinnerService' ,function ($scope, CompanyService, LoginService,usSpinnerService) {
 
+    $scope.spinneractive = false;
+    $scope.startSpin = function () {
+        if (!$scope.spinneractive) {
+            console.log('loading');
+            usSpinnerService.spin('company-edit-spinner');
+            $scope.spinneractive = true;
+        }
+    };
+    $scope.stopSpin = function () {
+        if ($scope.spinneractive) {
+            console.log('stoped');
+            usSpinnerService.stop('company-edit-spinner');
+            $scope.spinneractive = false;
+        }
+    };
+
+    $scope.companyError = {hasError:false,msg:''};
+
+    $scope.loadingCompany = function () {
+        $scope.startSpin();
+        CompanyService.getCompanyByUserId(LoginService.getUserInfo.userId).then(function (response) {
+            $scope.company = response;
+            $scope.stopSpin();
+        }, function (err) {
+            $scope.companyError.hasError = true;
+            $scope.companyError.msg = "Error while reading company, please try it later";
+        });
+    };
+
+    //$scope.loadingCompany();
+
+
+    $scope.save = function () {
+        console.log($scope.company);
+    };
     //
     //
     //

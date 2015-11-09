@@ -4,8 +4,12 @@
             <span class="lead">Company Info </span>
         </div>
 
-        <div class="panel-body">
+        <div class="panel-body" >
+            <button ng-click="loadingCompany()"></button>
+            <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="company-edit-spinner"></span>
+            <div class="alert alert-danger" role="alert" ng-show="companyError.hasError">{{companyError.msg}}</div>
             <form name="companyForm" class="css-form" novalidate>
+
                 <div class="row">
                     <div class="col-md-6">
                         <!-- name -->
@@ -17,7 +21,7 @@
                             </div>
                             <div class="col-md-1"><span ng-show="!companyForm.name.$invalid" style="color: green;" class="glyphicon glyphicon-ok"></span></div>
                         </div>
-                        <!-- name -->
+
                         <div class="form-group row">
                             <label for="number_of_employee" class="col-md-3 control-label">Number of Employees</label>
                             <label id="number_of_employee" class="col-md-6">6</label>
@@ -29,13 +33,13 @@
                         <div class="form-group row">
                             <label for="tax_id" class="col-md-3 control-label">Tax ID</label>
                             <div class="col-md-6">
-                                <input type="text" class="form-control" id="tax_id" placeholder="Tax ID">
+                                <input type="text" class="form-control" id="tax_id" ng-model="company.taxId" placeholder="Tax ID">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="regi_num" class="col-md-3 control-label">Registration Number</label>
                             <div class="col-md-6">
-                                <input type="text" class="form-control" id="regi_num" placeholder="Registration Number">
+                                <input type="text" class="form-control" id="regi_num" ng-model="company.registNum" placeholder="Registration Number">
                             </div>
                         </div>
                     </div>
@@ -85,7 +89,7 @@
                 </div>
                 <hr>
             </form>
-            <button type="button" class="btn btn-primary pull-right" value="Save" ng-disabled="companyForm.$invalid">Save</button>
+            <button type="button" class="btn btn-primary pull-right" value="Save" ng-click="save()" ng-disabled="companyForm.$invalid" >Save</button>
         </div>
     </div>
 </div>

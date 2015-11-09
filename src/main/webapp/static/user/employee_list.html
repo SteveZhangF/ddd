@@ -1,5 +1,5 @@
 <div class="generic-container" ng-controller="UserEmployeeController as ctrl">
-    <div class="panel panel-primary" ng-if="!isEditingEmployee">
+    <div class="panel panel-primary" >
         <div class="panel-heading">
             <span class="lead" >Employee List </span>
         </div>
@@ -73,7 +73,7 @@
             </div>
             <div class="well">
                 <div>
-                    <button class="btn btn-primary" ng-click="addEmployee()">Add</button>
+                    <button class="btn btn-primary" ng-click="editEmployee()">Add</button>
                     <button class="btn btn-danger" ng-click="deleteSelectedEmployees()">Delete</button>
                     <form class="form-inline">
                         <label>Item Number per Page</label>
@@ -106,7 +106,7 @@
                             <input type="checkbox" ng-model="x.selected" ng-change="select()">
                         </label></td>
                         <td>{{ $index + 1 }}</td>
-                        <td><a href="">{{x.firstName}}</a></td>
+                        <td><a href="" ng-click="editEmployee(x)">{{x.firstName}}</a></td>
                         <td>{{x.lastName}}</td>
                         <td>{{x.email}}</td>
                         <td>{{x.jobTitle}}</td>

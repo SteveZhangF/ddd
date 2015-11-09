@@ -72,11 +72,11 @@ app.service('LoginService', [
                     LoginData.isLogedIn = true;
 
                     console.log(LoginData);
-
                     deferred.resolve(userInfo);
                 }, function (error) {
                     deferred.reject(error);
                 });
+            return deferred.promise;
         }
 
         /**
@@ -123,7 +123,7 @@ app.service('LoginService', [
             refreshUserInfo: refreshUserInfo
         };
     }]);
-app.controller('LoginController', ['$scope', 'LoginService', 'ngDialog', function ($scope, LoginService, ngDialog) {
+app.controller('LoginController', ['$scope', 'LoginService', 'ngDialog','LogInData','usSpinnerService', function ($scope, LoginService, ngDialog,LogInData,usSpinnerService) {
 
     $scope.userInfo = {
         userId: '',
@@ -137,9 +137,37 @@ app.controller('LoginController', ['$scope', 'LoginService', 'ngDialog', functio
             scope: $scope
         })
     };
-
+    $scope.spinneractive = false;
+    $scope.startSpin = function () {
+        if (!$scope.spinneractive) {
+            usSpinnerService.spin('login-spinner');
+            $scope.spinneractive = true;
+        }
+    };
+    $scope.stopSpin = function () {
+        if ($scope.spinneractive) {
+            usSpinnerService.stop('login-spinner');
+            $scope.spinneractive = false;
+        }
+    };
+    $scope.loginError={hasError:false,msg:''};
     $scope.login = function () {
-        LoginService.login($scope.userInfo.userId, $scope.userInfo.password);
+        $scope.startSpin();
+        LoginService.login($scope.userInfo.userId, $scope.userInfo.password).then(function (response) {
+            $scope.stopSpin();
+            hideDialog();
+            $scope.loginError.hasError = false;
+        }, function (err) {
+            if(err.status==404){
+                $scope.stopSpin();
+                $scope.loginError.hasError = true;
+                $scope.loginError.msg = "no such user";
+            }else if(err.status==403){
+                $scope.stopSpin();
+                $scope.loginError.hasError = true;
+                $scope.loginError.msg = "wrong username or password";
+            }
+        });
     };
     $scope.logout = function () {
         LoginService.logout();
@@ -157,6 +185,10 @@ app.controller('LoginController', ['$scope', 'LoginService', 'ngDialog', functio
     $scope.newUser = function () {
         hideDialog();
     };
+
+    $scope.isLoginedIn = function () {
+        return LogInData.isLogedIn;
+    }
 
 }]);
 
