@@ -1,55 +1,76 @@
 package app.model.userconstructure;
 
 import app.model.forms.FormType;
+import app.model.userfield.EmploymentStatus;
+import app.model.userfield.JobPosition;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import java.sql.Date;
 
 
 @Entity
 public class Employee extends OrganizationElement {
-
-    private String sex;
-    private String brithday;
-    private String marriage;
-    private String email;
-    private String ssn;
+//    {
+//        "firstName":"dd", "lastName":"dd", "driverLicenseNum":"dd", "ssn":"dd", "driverLicenseExp":
+//        "2015-11-04T06:00:00.000Z", "maritalStatus":"married", "gender":"female", "nationality":"AX", "birthday":
+//        "2015-11-03T06:00:00.000Z", "email":"zhangke3012@gmail.com", "phone":"6827013278", "address":
+//        "Dallas Auto Glass, K Avenue, Plano, TX, United States"
+//    }
 
     public Employee() {
         this.setFormType(FormType.EmployeeForm);
     }
 
+    /**
+     * person detail
+     */
+    private String imagePath;
+    private String firstName;
+    private String lastName;
+    private String driverLicenseNum;
+    private String ssn;
+    private Date driverLicenseExp;
+    private String maritalStatus;
+    private String gender;
+    private String nationality;
+    private String birthday;
 
-    public String getSex() {
-        return sex;
+    /**
+     * job detail
+     */
+    @ManyToOne()
+    private JobPosition jobPosition;
+    @ManyToOne()
+    private EmploymentStatus employmentStatus;
+    private Date joinedDate;
+    private Date startDate;
+    private Date endDate;
+    private String contractDetail;
+
+
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setSex(String sex) {
-        this.sex = sex;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getBrithday() {
-        return brithday;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setBrithday(String brithday) {
-        this.brithday = brithday;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public String getMarriage() {
-        return marriage;
+    public String getDriverLicenseNum() {
+        return driverLicenseNum;
     }
 
-    public void setMarriage(String marriage) {
-        this.marriage = marriage;
-    }
-
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setDriverLicenseNum(String driverLicenseNum) {
+        this.driverLicenseNum = driverLicenseNum;
     }
 
     public String getSsn() {
@@ -60,11 +81,101 @@ public class Employee extends OrganizationElement {
         this.ssn = ssn;
     }
 
-
-    @Override
-    public String show(OrganizationElement oe) {
-        // TODO Auto-generated method stub
-        return null;
+    public Date getDriverLicenseExp() {
+        return driverLicenseExp;
     }
+
+    public void setDriverLicenseExp(Date driverLicenseExp) {
+        this.driverLicenseExp = driverLicenseExp;
+    }
+
+    public String getMaritalStatus() {
+        return maritalStatus;
+    }
+
+    public void setMaritalStatus(String maritalStatus) {
+        this.maritalStatus = maritalStatus;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getNationality() {
+        return nationality;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
+
+    public JobPosition getJobPosition() {
+        return jobPosition;
+    }
+
+    public void setJobPosition(JobPosition jobPosition) {
+        this.jobPosition = jobPosition;
+    }
+
+    public EmploymentStatus getEmploymentStatus() {
+        return employmentStatus;
+    }
+
+    public void setEmploymentStatus(EmploymentStatus employmentStatus) {
+        this.employmentStatus = employmentStatus;
+    }
+
+    public Date getJoinedDate() {
+        return joinedDate;
+    }
+
+    public void setJoinedDate(Date joinedDate) {
+        this.joinedDate = joinedDate;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getContractDetail() {
+        return contractDetail;
+    }
+
+    public void setContractDetail(String contractDetail) {
+        this.contractDetail = contractDetail;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
 
 }

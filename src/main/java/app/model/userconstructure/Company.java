@@ -12,35 +12,31 @@ public class Company extends OrganizationElement {
         this.setFormType(FormType.CompanyForm);
     }
 
-    private int user_id;
+    private String taxId;
+    private String registNum;
+    private String fax;
 
-
-    @Override
-    public String show(OrganizationElement oe) {
-        // TODO Auto-generated method stub
-        return null;
+    public String getTaxId() {
+        return taxId;
     }
 
-
-    public int getUser_id() {
-        return user_id;
+    public void setTaxId(String taxId) {
+        this.taxId = taxId;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public String getRegistNum() {
+        return registNum;
     }
 
-    @Override
-    public String getCompany_id() {
-        return this.getUuid();
+    public void setRegistNum(String registNum) {
+        this.registNum = registNum;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        // TODO Auto-generated method stub
-        if (obj == null || !(obj instanceof Company))
-            return false;
-        Company other = (Company) obj;
-        return other.getUuid().equals(this.getUuid());
+    public String getFax() {
+        return fax;
+    }
+
+    public void setFax(String fax) {
+        this.fax = fax;
     }
 }

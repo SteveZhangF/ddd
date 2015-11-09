@@ -9,12 +9,9 @@
 package app.controller;
 
 import app.model.userconstructure.Company;
-import app.model.userconstructure.Department;
 import app.model.userconstructure.Employee;
 import app.service.userconstructure.CompanyService;
-import app.service.userconstructure.DepartmentService;
 import app.service.userconstructure.EmployeeService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.StringReader;
 import java.util.List;
 
 /**
@@ -33,6 +29,41 @@ public class EmployeeController {
 
     @Autowired
     EmployeeService employeeService;
+
+
+    // get employees of a company by user id
+
+    @RequestMapping(value = "/employee/getbyUser/{userId}", method = RequestMethod.GET)
+    public ResponseEntity<List<Employee>> listEmployeebyUserId(@PathVariable("userId") int userId) {
+        List<Employee> employees = employeeService.getEmployeebyUserId(userId);
+        if (employees.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(employees, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/employee/getPersonDetail/{uuid}", method = RequestMethod.GET)
+    public ResponseEntity<Employee> getEmployeePersonDetailbyId(@PathVariable("uuid") String uuid){
+        Employee employee = employeeService.getEmployeePersonDetailbyId(uuid);
+        if(employee!=null){
+            return new ResponseEntity<>(employee,HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+    @RequestMapping(value = "/employee/getJobDetail/{uuid}", method = RequestMethod.GET)
+    public ResponseEntity<Employee> getEmployeeJobDetailbyId(@PathVariable("uuid") String uuid){
+        Employee employee = employeeService.getEmployeeJobDetailbyId(uuid);
+        if(employee!=null){
+            return new ResponseEntity<>(employee,HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
 
     @RequestMapping(value = "/employee/", method = RequestMethod.GET)
     public ResponseEntity<List<Employee>> listAllDepartment() {
@@ -61,29 +92,10 @@ public class EmployeeController {
 
     @Autowired
     CompanyService companyService;
-    @Autowired
-    DepartmentService departmentService;
     @RequestMapping(value = "/employee/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee, HttpServletResponse response) {
-        String company_id = employee.getCompany_id();
-        System.out.println("company id = " + company_id);
-        String parent_id = employee.getParent_id();
-        System.out.println("parent id = " + parent_id);
-        Company company = companyService.get(parent_id);
-        if (company != null) {
-            company.getChildren().add(employee);
-            employee.setParent(company);
-        } else {
-            Department parent = departmentService.get(parent_id);
-            if (parent != null) {
-                parent.getChildren().add(employee);
-                employee.setParent(parent);
-            } else {
-                employee.setParent(companyService.get(company_id));
-            }
-        }
         employeeService.save(employee);
-        return new ResponseEntity<>(employee, HttpStatus.CREATED);
+        return new ResponseEntity<>(employee, HttpStatus.OK);
     }
 
 
@@ -100,7 +112,7 @@ public class EmployeeController {
     //------------------- Delete a Employee --------------------------------------------------------
 
     @RequestMapping(value = "/employee/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Company> deleteUser(@PathVariable("id") String id) {
+    public ResponseEntity<Employee> deleteEmployee(@PathVariable("id") String id) {
         System.out.println("Fetching & Deleting Employee with id " + id);
         Employee employee = employeeService.get(id);
         if (employee == null) {
@@ -110,5 +122,28 @@ public class EmployeeController {
         employeeService.delete(employee);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    //------------------- Delete Employees --------------------------------------------------------
+
+    @RequestMapping(value = "/employee/deleteMany/", method = RequestMethod.POST)
+    public ResponseEntity<Employee> deleteEmployees(@RequestBody String[] ids) {
+        for(String id:ids){
+            try {
+                System.out.println("Fetching & Deleting Employee with id " + id);
+                Employee employee = employeeService.get(id);
+                if (employee == null) {
+                    System.out.println("Unable to delete. Employee with id " + id + " not found");
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
+                employeeService.delete(employee);
+            }catch (Exception e){
+                return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+            }
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
 
 }

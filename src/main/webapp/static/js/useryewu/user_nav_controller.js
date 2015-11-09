@@ -11,7 +11,9 @@ app.controller('UserNavController', ['$scope', function ($scope) {
                 {name:"My Documents",subMenu:[
                     {name:"Start Document",subMenu:[],href:"#/workflows"},
                     {name:"View Document",subMenu:[],href:""}
-                ]}
+                ]},
+                {name:"Config",subMenu:[],href:"#/config"
+                }
             ]
         ;
     $scope.result1 = '';

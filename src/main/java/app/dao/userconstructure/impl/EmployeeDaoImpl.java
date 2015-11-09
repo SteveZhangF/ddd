@@ -15,7 +15,9 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by steve on 10/15/15.
@@ -34,8 +36,23 @@ public class EmployeeDaoImpl extends HibernateBaseGenericDAOImpl<Employee,String
     }
 
     @Override
-    public List<Employee> getEmployeeByDepartmentId(String department_id) {
-        return super.getListbyParam("department_id",department_id);
+    public Employee getbyParam(String param, Object value) {
+        return super.getbyParam(param, value);
+    }
+
+    @Override
+    public List<Employee> getListbyParam(String param, Object value) {
+        return super.getListbyParam(param, value);
+    }
+
+    @Override
+    public List<Employee> getListbyField(String[] fields) {
+        return super.getListbyField(fields);
+    }
+
+    @Override
+    public List<Employee> getListbyParams(Map<String, Object> map) {
+        return super.getListbyParams(map);
     }
 
     @Override
@@ -72,4 +89,13 @@ public class EmployeeDaoImpl extends HibernateBaseGenericDAOImpl<Employee,String
     public void update(Employee entity) {
         super.update(entity);
     }
+
+    @Override
+    public List<Employee> getListforListByUserId(int userId) {
+        String[] fields = {"uuid","firstName","lastName","email","jobPosition","startDate","endDate"};
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("userId",userId);
+        return super.getListbyFieldAndParams(fields,map);
+    }
+
 }

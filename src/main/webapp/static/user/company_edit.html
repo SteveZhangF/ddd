@@ -5,9 +5,9 @@
         </div>
 
         <div class="panel-body" >
-            <button ng-click="loadingCompany()"></button>
             <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="company-edit-spinner"></span>
-            <div class="alert alert-danger" role="alert" ng-show="companyError.hasError">{{companyError.msg}}</div>
+            <div class="alert alert-danger" role="alert" ng-show="companyError.hasError.error">{{companyError.msg}}</div>
+            <div class="alert alert-success" role="alert" ng-show="companyError.hasError.success">{{companyError.msg}}</div>
             <form name="companyForm" class="css-form" novalidate>
 
                 <div class="row">
@@ -24,7 +24,7 @@
 
                         <div class="form-group row">
                             <label for="number_of_employee" class="col-md-3 control-label">Number of Employees</label>
-                            <label id="number_of_employee" class="col-md-6">6</label>
+                            <label id="number_of_employee" class="col-md-6">{{company.employeeNum}}</label>
                         </div>
 
                     </div>

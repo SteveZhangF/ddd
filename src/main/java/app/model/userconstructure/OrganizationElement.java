@@ -24,41 +24,9 @@ public abstract class OrganizationElement {
     private String address;
     private String phone;
     private String name;
+    private String email;
     private FormType formType;
-
-    protected String company_id;
-
-    @ManyToOne
-    @JoinColumn(name = "parent_id")
-    @JsonIgnore
-    private OrganizationElement parent;
-
-    @OneToMany(mappedBy = "parent") // --->
-    @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
-    @LazyCollection(LazyCollectionOption.FALSE) // --->
-    private List<OrganizationElement> children = new ArrayList<>();
-
-    public List<OrganizationElement> getChildren() {
-        return children;
-    }
-
-
-    public void setChildren(List<OrganizationElement> children) {
-        this.children = children;
-    }
-
-
-    public String getCompany_id() {
-        return company_id;
-    }
-
-
-    public void setCompany_id(String company_id) {
-        this.company_id = company_id;
-    }
-
-
-    public abstract String show(OrganizationElement oe);
+    private int userId;
 
 
     public String getUuid() {
@@ -103,30 +71,25 @@ public abstract class OrganizationElement {
         this.formType = formType;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
     @Override
     public String toString() {
         return "[uuid=" + uuid + ", name=" + name + ", address=" + address
                 + ", phone=" + phone + "]";
-    }
-
-
-    public OrganizationElement getParent() {
-        return parent;
-    }
-
-    public void setParent(OrganizationElement parent) {
-        this.parent = parent;
-    }
-
-    @Transient
-    private String parent_id;
-
-    public String getParent_id() {
-        return parent_id;
-    }
-
-    public void setParent_id(String parent_id) {
-        this.parent_id = parent_id;
     }
 }

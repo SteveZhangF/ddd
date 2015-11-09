@@ -4,18 +4,15 @@ import app.config.configuration.TokenAuthenticationService;
 import app.config.configuration.UserAuthentication;
 import app.dao.system.UserProfileDao;
 import app.message.Message;
+import app.model.user.State;
 import app.model.user.User;
-import app.model.user.UserProfile;
 import app.model.user.UserProfileType;
 import app.model.userconstructure.Company;
-import app.newDao.HibernateBaseGenericDAOImpl;
-import app.newService.BaseGenericServiceImpl;
 import app.service.system.UserService;
 import app.service.userconstructure.CompanyService;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -66,47 +63,68 @@ public class UserController {
 
     /**
      * update a user
-     * */
-    @RequestMapping(value="/user/{id}",method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> updateUser(@PathVariable("id") int id, @RequestBody User user){
+     */
+    @RequestMapping(value = "/user/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> updateUser(@PathVariable("id") int id, @RequestBody User user) {
 
-        if(userService.findById(id)==null)
+        if (userService.findById(id) == null)
             return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
         userService.update(user);
-        return new ResponseEntity<>(user,HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
+
     /**
      * delete a user
-     * */
-    @RequestMapping(value = "/user/{id}",method=RequestMethod.DELETE,produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> deleteUser(@PathVariable("id") int id){
+     */
+    @RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> deleteUser(@PathVariable("id") int id) {
 
         return new ResponseEntity<User>(HttpStatus.OK);
     }
 
     // get all users
-    @RequestMapping(value = "/user/",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<User>> listAllUser(){
+    @RequestMapping(value = "/user/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<User>> listAllUser() {
         List<User> users = userService.list();
-        return new ResponseEntity<List<User>>(users,HttpStatus.OK);
+        return new ResponseEntity<List<User>>(users, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<Message> register(@RequestBody User user, HttpServletResponse response) {
-        System.out.println("registering .." + user + "....");
-        Message msg = new Message();
-        if (userService.findBySso(user.getSsoId()) == null) {
-            UserProfile userProfile = userProfileDao.findbyType(UserProfileType.USER);
-            user.getUserProfiles().add(userProfile);
-            userService.save(user);
 
-            msg.setTitle("success");
-            msg.setContent("Register Success");
-        } else {
-            msg.setTitle("failed");
-            msg.setContent("SSOID(User Name) Existing!");
+        if (userService.findBySso(user.getSsoId()) == null) {
+            user.getUserProfiles().add(userProfileDao.findbyType(UserProfileType.USER));
+            user.setState(State.ACTIVE.getState());
+            try {
+                userService.save(user);
+                Company company = new Company();
+                company.setUserId(user.getId());
+                companyService.save(company);
+                user.setCompanyId(company.getUuid());
+                userService.update(user);
+                return new ResponseEntity<Message>(HttpStatus.OK);
+            } catch (Exception e) {
+                return new ResponseEntity<Message>(HttpStatus.EXPECTATION_FAILED);
+            }
+        }else{
+            return new ResponseEntity<Message>(HttpStatus.CONFLICT);
         }
-        return new ResponseEntity<Message>(msg, HttpStatus.OK);
+
+
+//        System.out.println("registering .." + user + "....");
+//        Message msg = new Message();
+//        if (userService.findBySso(user.getSsoId()) == null) {
+//            UserProfile userProfile = userProfileDao.findbyType(UserProfileType.USER);
+//            user.getUserProfiles().add(userProfile);
+//            userService.save(user);
+//
+//            msg.setTitle("success");
+//            msg.setContent("Register Success");
+//        } else {
+//            msg.setTitle("failed");
+//            msg.setContent("SSOID(User Name) Existing!");
+//        }
+//        return new ResponseEntity<Message>(msg, HttpStatus.OK);
     }
 
 
@@ -114,15 +132,15 @@ public class UserController {
     public ResponseEntity<UserInfo> login(@RequestBody User userinfo, HttpServletResponse response) {
 
         User user = userService.findBySso(userinfo.getSsoId());
-        if(user == null){
-            return new ResponseEntity<>( HttpStatus.NOT_FOUND);
-        }else{
-            if(user.getPassword().equals(userinfo.getPassword())){
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            if (user.getPassword().equals(userinfo.getPassword())) {
                 UserDetails userDet = null;
                 try {
                     userDet = userDetailsService.loadUserByUsername(userinfo.getSsoId());
                 } catch (UsernameNotFoundException e) {
-                    return new ResponseEntity<>( HttpStatus.NOT_FOUND);
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 }
 
                 UserAuthentication authentication = new UserAuthentication(userDet);
@@ -131,7 +149,7 @@ public class UserController {
                 UserInfo userInfo = new UserInfo(userDet, token);
                 userInfo.setCompanyId(userService.findById(userInfo.userId).getCompanyId());
                 return new ResponseEntity<>(userInfo, HttpStatus.OK);
-            }else{
+            } else {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
         }
@@ -156,27 +174,29 @@ public class UserController {
             e.printStackTrace();
         }
     }
+
     @Autowired
     SessionFactory sessionFactory;
-    @RequestMapping(value="/user/{id}",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
-    public void updateUserWorkflow(@PathVariable("id") int id,@RequestBody String workflows,HttpServletResponse response){
+
+    @RequestMapping(value = "/user/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public void updateUserWorkflow(@PathVariable("id") int id, @RequestBody String workflows, HttpServletResponse response) {
         User user = userService.findById(id);
         System.out.println(workflows);
         user.setWorkflows(workflows);
-        try{
+        try {
 //            userService.update(user);
             userService.update(user);
             response.setStatus(HttpServletResponse.SC_OK);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_EXPECTATION_FAILED);
         }
     }
 
-    @RequestMapping(value = "/user/getworkflow/{id}", method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getUserWorkflow(@PathVariable("id") int id){
+    @RequestMapping(value = "/user/getworkflow/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getUserWorkflow(@PathVariable("id") int id) {
         User user = userService.findById(id);
-        if(user == null)
+        if (user == null)
             return "no user found";
         return user.getWorkflows();
     }

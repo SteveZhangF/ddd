@@ -6,7 +6,6 @@ import app.model.userconstructure.Company;
 import app.service.system.UserService;
 import app.service.userconstructure.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,18 +29,18 @@ public class CompanyController {
     public ResponseEntity<List<Company>> listAllCompany() {
         List<Company> companies = companyService.loadAll();
         if (companies.isEmpty()) {
-            return new ResponseEntity<List<Company>>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<List<Company>>(companies, HttpStatus.OK);
+        return new ResponseEntity<>(companies, HttpStatus.OK);
     }
 
-    @RequestMapping(value="/company/getbyuserid/{id}",method=RequestMethod.GET)
-    public ResponseEntity<Company> getCompanybyUserId(@PathVariable("id") int id){
+    @RequestMapping(value = "/company/getbyuserid/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Company> getCompanybyUserId(@PathVariable("id") int id) {
         Company company = companyService.getCompanybyUser(id);
-        if (company == null){
-            return new ResponseEntity<Company>(HttpStatus.NOT_FOUND);
-        }else{
-            return new ResponseEntity<Company>(company,HttpStatus.OK);
+        if (company == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(company, HttpStatus.OK);
         }
 
     }
@@ -53,10 +52,9 @@ public class CompanyController {
         Company company = companyService.get(id);
         System.out.println(company);
         if (company == null) {
-            return new ResponseEntity<Company>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        // System.out.println(new ResponseEntity<Company>(company, HttpStatus.OK).toString()	);
-        return new ResponseEntity<Company>(company, HttpStatus.OK);
+        return new ResponseEntity<>(company, HttpStatus.OK);
     }
 
 
@@ -66,13 +64,10 @@ public class CompanyController {
     public ResponseEntity<Company> createCompany(@RequestBody Company company, HttpServletResponse response) {
         System.out.println(company);
         companyService.save(company);
-        int user_id = company.getUser_id();
+        int user_id = company.getUserId();
         User user = userService.findById(user_id);
         user.setCompanyId(company.getUuid());
         userService.update(user);
-        company.setCompany_id(company.getUuid());
-        companyService.update(company);
-        HttpHeaders headers = new HttpHeaders();
         return new ResponseEntity<>(company, HttpStatus.CREATED);
     }
 
@@ -81,25 +76,15 @@ public class CompanyController {
 
     @RequestMapping(value = "/company/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Company> updateCompany(@PathVariable("id") String id, @RequestBody Company company) {
-        System.out.println("Updating User " + id);
-
-        Company currentCompany = companyService.get(id);
-
-        if (currentCompany == null) {
-            return new ResponseEntity<Company>(HttpStatus.NOT_FOUND);
+        if (companyService.get(id) == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-        currentCompany.setAddress(company.getAddress());
-        currentCompany.setCompany_id(company.getCompany_id());
-        currentCompany.setFormType(company.getFormType());
-//        currentCompany.setModules(company.getModules());
-        currentCompany.setName(company.getName());
-        currentCompany.setPhone(company.getPhone());
-//        currentCompany.setRecords(company.getRecords());
-        currentCompany.setUser_id(company.getUser_id());
-
-        companyService.update(currentCompany);
-        return new ResponseEntity<Company>(currentCompany, HttpStatus.OK);
+        try {
+            companyService.update(company);
+            return new ResponseEntity<>(company, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
     }
 
 
@@ -107,16 +92,11 @@ public class CompanyController {
 
     @RequestMapping(value = "/company/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Company> deleteUser(@PathVariable("id") String id) {
-        System.out.println("Fetching & Deleting User with id " + id);
-
         Company company = companyService.get(id);
-
         if (company == null) {
-            System.out.println("Unable to delete. Company with id " + id + " not found");
-            return new ResponseEntity<Company>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
         companyService.delete(companyService.get(id));
-        return new ResponseEntity<Company>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

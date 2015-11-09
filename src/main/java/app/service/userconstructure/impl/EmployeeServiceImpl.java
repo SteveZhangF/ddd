@@ -9,14 +9,18 @@
 package app.service.userconstructure.impl;
 
 import app.dao.userconstructure.EmployeeDAO;
-import app.model.userconstructure.Department;
 import app.model.userconstructure.Employee;
+import app.model.userfield.EmploymentStatus;
+import app.model.userfield.JobPosition;
 import app.newService.BaseGenericServiceImpl;
 import app.service.userconstructure.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.ManyToOne;
+import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -29,13 +33,8 @@ public class EmployeeServiceImpl extends BaseGenericServiceImpl<Employee, String
     EmployeeDAO employeeDAO;
 
     @Override
-    public List<Employee> getEmployeeByCompanyId(String company_id) {
-        return employeeDAO.getListbyParam("company_id", company_id);
-    }
-
-    @Override
-    public List<Employee> getEmployeeByDepartmentId(String department_id) {
-        return employeeDAO.getEmployeeByDepartmentId(department_id);
+    public List<Employee> getEmployeebyUserId(int userid) {
+        return employeeDAO.getListforListByUserId(userid);
     }
 
     @Override
@@ -71,5 +70,38 @@ public class EmployeeServiceImpl extends BaseGenericServiceImpl<Employee, String
     @Override
     public void update(Employee entity) {
         employeeDAO.update(entity);
+    }
+
+    @Override
+    public Employee getEmployeePersonDetailbyId(String uuid) {
+        String[] fields = {"uuid","firstName", "lastName", "driverLicenseNum", "ssn", "driverLicenseExp", "maritalStatus", "gender", "nationality", "birthday"};
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("uuid", uuid);
+        List<Employee> list = employeeDAO.getListbyFieldAndParams(fields, map);
+        if(list.size() == 0){
+            return null;
+        }else{
+            return list.get(0);
+        }
+    }
+// @ManyToOne()
+//private JobPosition jobPosition;
+//    @ManyToOne()
+//    private EmploymentStatus employmentStatus;
+//    private Date joinedDate;
+//    private Date startDate;
+//    private Date endDate;
+//    private String contractDetail;
+    @Override
+    public Employee getEmployeeJobDetailbyId(String uuid) {
+        String[] fields = {"uuid","jobPosition", "employmentStatus", "joinedDate", "startDate", "endDate", "contractDetail" };
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("uuid", uuid);
+        List<Employee> list = employeeDAO.getListbyFieldAndParams(fields, map);
+        if(list.size() == 0){
+            return null;
+        }else{
+            return list.get(0);
+        }
     }
 }

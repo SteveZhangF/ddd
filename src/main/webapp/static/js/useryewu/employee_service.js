@@ -10,6 +10,39 @@ app.factory('EmployeeService', ['$http', '$q', function ($http, $q) {
 
     return {
 
+        getEmployeeJobDetail: function (uuid) {
+            return $http.get('/employee/getJobDetail/'+uuid).then(
+                function (response) {
+                    return response.data;
+                },
+                function (errResponse) {
+                    return $q.reject(errResponse);
+                }
+            );
+        },
+
+        getEmployeePersonDetail: function (uuid) {
+            return $http.get('/employee/getPersonDetail/'+uuid).then(
+                function (response) {
+                    return response.data;
+                },
+                function (errResponse) {
+                    return $q.reject(errResponse);
+                }
+            );
+        },
+
+        getEmployeeByUserId: function (userId) {
+            return $http.get('/employee/getbyUser/'+userId).then(
+                function (response) {
+                    return response.data;
+                },
+                function (errResponse) {
+                    return $q.reject(errResponse);
+                }
+            );
+        },
+
         fetchAllEmployee: function () {
             return $http.get('/employee/')
                 .then(
@@ -37,7 +70,6 @@ app.factory('EmployeeService', ['$http', '$q', function ($http, $q) {
         },
 
         createEmployee: function (employee) {
-            console.log(employee);
             return $http.post('/employee/', employee)
                 .then(
                 function (response) {
@@ -72,6 +104,18 @@ app.factory('EmployeeService', ['$http', '$q', function ($http, $q) {
                 function (errResponse) {
                     console.error('Error while deleting employee');
                     return $q.reject(errResponse);
+                }
+            );
+        },
+        
+        deleteEmployees: function (ids) {
+            return $http.post('/employee/deleteMany/',ids)
+                .then(
+                function (response) {
+                    return response.data;
+                },
+                function (err) {
+                    return $q.reject(err);
                 }
             );
         }

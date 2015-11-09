@@ -27,6 +27,9 @@ app.directive('phone', function () {
 });
 app.controller('UserCompanyController', ['$scope', 'CompanyService', 'LoginService','usSpinnerService' ,function ($scope, CompanyService, LoginService,usSpinnerService) {
 
+    /**
+     * spinner start
+     * */
     $scope.spinneractive = false;
     $scope.startSpin = function () {
         if (!$scope.spinneractive) {
@@ -43,111 +46,45 @@ app.controller('UserCompanyController', ['$scope', 'CompanyService', 'LoginServi
         }
     };
 
-    $scope.companyError = {hasError:false,msg:''};
+    /**
+     * spanner end
+     * */
+
+    $scope.companyError = {hasError:{success:false,error:false},msg:''};
 
     $scope.loadingCompany = function () {
         $scope.startSpin();
-        CompanyService.getCompanyByUserId(LoginService.getUserInfo.userId).then(function (response) {
+        CompanyService.getCompanyByUserId(LoginService.getUserInfo().userId).then(function (response) {
             $scope.company = response;
             $scope.stopSpin();
+            $scope.companyError.hasError.error = false;
+            $scope.companyError.hasError.success = false;
         }, function (err) {
-            $scope.companyError.hasError = true;
+            $scope.companyError.hasError.error = true;
+            $scope.companyError.hasError.success = false;
             $scope.companyError.msg = "Error while reading company, please try it later";
+            $scope.stopSpin();
         });
     };
 
-    //$scope.loadingCompany();
+    //load company when ready
+    angular.element(document).ready(function () {
+        $scope.loadingCompany();
+    });
 
-
+    //update company information
     $scope.save = function () {
-        console.log($scope.company);
+        $scope.startSpin();
+        CompanyService.updateCompany($scope.company,$scope.company.uuid).then(function (response) {
+            $scope.companyError.hasError.error = false;
+            $scope.companyError.hasError.success = true;
+            $scope.companyError.msg = "Success!";
+            $scope.stopSpin();
+        }, function (err) {
+            $scope.companyError.hasError.error = true;
+            $scope.companyError.hasError.success = false;
+            $scope.companyError.msg = "Error while updating company, please try it later!";
+            $scope.stopSpin();
+        });
     };
-    //
-    //
-    //
-    //
-    //var self = this;
-    //self.company = {
-    //    "uuid": null,
-    //    "address": "",
-    //    "phone": "",
-    //    "name": "",
-    //    "formType": "",
-    //    "company_id": "",
-    //    "children": [],
-    //    "user_id": null
-    //};
-    //
-    //
-    //self.createCompany = function (company) {
-    //    CompanyService.createCompany(company).then(function (response) {
-    //            //LoginService.getUserInfo().companyId = response.uuid;
-    //            LoginService.refreshUserInfo();
-    //            console.log(LoginService.getUserInfo().companyId);
-    //        },
-    //        function (errResponse) {
-    //            console.error('Error while fetching company');
-    //        });
-    //
-    //};
-    //
-    //self.updateCompany = function (company, uuid) {
-    //    CompanyService.updateCompany(company, uuid);
-    //};
-    //
-    //
-    //self.submit = function () {
-    //    var userInfo = LoginService.getUserInfo();
-    //    if (self.company.uuid == null) {
-    //        console.log('Saving New Company', self.company);
-    //        self.company.user_id = userInfo.userId;
-    //        self.createCompany(self.company);
-    //    } else {
-    //        console.log('Company updated with id ', self.company.uuid);
-    //        self.updateCompany(self.company, self.company.uuid);
-    //    }
-    //    $scope.selected.operated = true;
-    //    self.reset();
-    //};
-    //
-    //
-    //self.getCompany = function (id) {
-    //    CompanyService.getCompany(id).then(
-    //        function (d) {
-    //            self.company = d;
-    //            delete self.company.children;
-    //        },
-    //        function (errResponse) {
-    //            console.error('Error while fetching Currencies');
-    //        }
-    //    );
-    //}
-    //
-    //self.reset = function () {
-    //    //self.edit();
-    //    $scope.myForm.$setPristine(); //reset Form
-    //};
-    //
-    //$scope.$watch(function ($scope) {
-    //    return $scope.selected;
-    //}, function () {
-    //    console.log($scope.selected);
-    //    if ($scope.selected.type == "CompanyForm") {
-    //        if ($scope.selected.id == "") {
-    //            self.company = {
-    //                "uuid": null,
-    //                "address": "",
-    //                "phone": "",
-    //                "name": "",
-    //                "formType": "CompanyForm",
-    //                "company_id": "",
-    //                "children": [],
-    //                "user_id": null
-    //            }
-    //        } else {
-    //            self.getCompany($scope.selected.id);
-    //        }
-    //    }
-    //});
-
 }]);

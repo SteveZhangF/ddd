@@ -2,7 +2,6 @@
     <div class="panel-heading"><span class="lead">Person Detail</span></div>
     <div class="panel-body">
         <form name="employeeForm" class="css-form" novalidate>
-
             <!-- name -->
             <div class="row">
                 <div class="form-group">
@@ -39,7 +38,7 @@
 
                 <div class="col-md-3"
                      ng-class="{ 'has-error' : employeeForm.driverLicenseExp.$invalid && !employeeForm.driverLicenseExp.$pristine }">
-                    <input name="driverLicenseExp" type="date" class="form-control input-sm"
+                    <input format-date name="driverLicenseExp" type="date" class="form-control input-sm"
                            ng-model="editedEmployee.driverLicenseExp" required>
                 </div>
             </div>
@@ -342,7 +341,7 @@
 
                 <div class="col-md-3"
                      ng-class="{ 'has-error' : employeeForm.birthday.$invalid && !employeeForm.birthday.$pristine }">
-                    <input name="birthday" type="date" class="form-control input-sm"
+                    <input format-date name="birthday" type="date" class="form-control input-sm"
                            ng-model="editedEmployee.birthday" required>
                 </div>
             </div>
@@ -371,15 +370,14 @@
             <div class="row">
                 <label class="col-md-3">Address
                 </label>
-
                 <div class="col-md-3"
                      ng-class="{'has-error':employeeForm.address.$invalid && !employeeForm.address.$pristine}">
-                    <input type="text" name="address" class="form-control" ng-autocomplete="result1"
+                    <input type="text" name="address" class="form-control" ng-autocomplete="editedEmployee.address"
                            details="details1" options="options1" ng-model="editedEmployee.address"/>
                 </div>
             </div>
             <hr>
-            <button class="btn btn-primary">Save</button>
+            <button class="btn btn-primary" ng-disabled="spinneractive" ng-click="save()">Save</button>
         </form>
     </div>
 </div>

@@ -1,6 +1,7 @@
 <div class="panel panel-default">
     <div class="panel-heading"><span class="lead">Job</span></div>
     <div class="panel-body">
+        {{editedEmployee}}
         <form name="employeeForm" class="css-form" novalidate>
             <!-- job title -->
             <div class="row">
@@ -34,7 +35,7 @@
 
                 <div class="col-md-3"
                      ng-class="{ 'has-error' : employeeForm.joinedDate.$invalid && !employeeForm.joinedDate.$pristine }">
-                    <input name="joinedDate" type="date" class="form-control input-sm"
+                    <input format-date name="joinedDate" type="date" class="form-control input-sm"
                            ng-model="editedEmployee.joinedDate" required>
                 </div>
             </div>
@@ -48,7 +49,7 @@
                 <div class="col-md-3"
                      ng-class="{'has-error':employeeForm.startDate.$invalid && !employeeForm.startDate.$pristine}"
                         >
-                    <input name="startDate" type="date" class="form-control input-sm"
+                    <input format-date name="startDate" type="date" class="form-control input-sm"
                            ng-model="editedEmployee.startDate">
                 </div>
                 <label class="col-md-3">End Date</label>
@@ -56,7 +57,7 @@
                 <div class="col-md-3"
                      ng-class="{'has-error':employeeForm.endDate.$invalid && !employeeForm.endDate.$pristine}"
                         >
-                    <input name="endDate" type="date" class="form-control input-sm" ng-model="editedEmployee.endDate">
+                    <input format-date name="endDate" type="date" class="form-control input-sm" ng-model="editedEmployee.endDate">
                 </div>
             </div>
             <p></p>
@@ -93,10 +94,11 @@
                     </button>
                 </div>
             </div>
+            <div pdf-preview="contractPreview"></div>
 
             <!--SSN-->
             <hr>
-            <button class="btn btn-primary">Save</button>
+            <button class="btn btn-primary" ng-disabled="spinneractive" ng-click="save()">Save</button>
         </form>
 
     </div>

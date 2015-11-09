@@ -1,31 +1,72 @@
 'use strict';
 
 
-app.controller('UserEmployeeController', ['$scope', 'EmployeeService', 'LoginService', '$location', function ($scope, EmployeeService, LoginService, $location) {
+app.controller('UserEmployeeController', ['$scope', 'EmployeeService', 'LoginService', 'usSpinnerService', '$location', function ($scope, EmployeeService, LoginService, usSpinnerService, $location) {
     $scope.employees = [];
     $scope.selectedAll = false;
     $scope.itemPerPage = 5;
     $scope.isEditingEmployee = false;
-    // define for employee
-    var Employee = function (firstName, lastName, email, jobTitle, startTime, endTime) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.jobTitle = jobTitle;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.selected = false;
-        //gender
-        //ssn
-        //driver lsn
-        //driver exp
+    //// define for employee
+    //var Employee = function (firstName, lastName, email, jobTitle, startTime, endTime) {
+    //    this.firstName = firstName;
+    //    this.lastName = lastName;
+    //    this.email = email;
+    //    this.jobTitle = jobTitle;
+    //    this.startTime = startTime;
+    //    this.endTime = endTime;
+    //    this.selected = false;
+    //    //gender
+    //    //ssn
+    //    //driver lsn
+    //    //driver exp
+    //
+    //
+    //};
+    //
+    //for (var i = 0; i < 10; i++) {
+    //    $scope.employees.push(new Employee("steve" + i, "zhang" + i, "zhangke@sss.ccc" + i, "developed" + i, new Date('1987-05-21'), "10.2"));
+    //}
 
-
+    /**
+     * spinner start
+     * */
+    $scope.spinneractive = false;
+    $scope.startSpin = function () {
+        if (!$scope.spinneractive) {
+            console.log('loading');
+            usSpinnerService.spin('employee-list-spinner');
+            $scope.spinneractive = true;
+        }
+    };
+    $scope.stopSpin = function () {
+        if ($scope.spinneractive) {
+            console.log('stoped');
+            usSpinnerService.stop('employee-list-spinner');
+            $scope.spinneractive = false;
+        }
     };
 
-    for (var i = 0; i < 10; i++) {
-        $scope.employees.push(new Employee("steve" + i, "zhang" + i, "zhangke@sss.ccc" + i, "developed" + i, new Date('1987-05-21'), "10.2"));
-    }
+    /**
+     * spanner end
+     * */
+
+    $scope.employeeError = {hasError: false, msg: ''};
+    $scope.loadAll = function () {
+        $scope.startSpin();
+        EmployeeService.getEmployeeByUserId(LoginService.getUserInfo().userId).then(
+            function (data) {
+                $scope.stopSpin();
+                $scope.employees = data;
+                $scope.employees_display = [].concat($scope.employees);
+            }, function (err) {
+                $scope.stopSpin();
+                $scope.employeeError.hasError = true;
+                $scope.employeeError.msg = "Error while loading data, please try later!";
+            }
+        );
+    };
+
+    $scope.loadAll();
 
     $scope.select = function () {
         $scope.selectedAll = $scope.employees.every(function (itm) {
@@ -41,11 +82,25 @@ app.controller('UserEmployeeController', ['$scope', 'EmployeeService', 'LoginSer
     };
 
     $scope.deleteSelectedEmployees = function () {
+        var ids = [];
+        $scope.startSpin();
         angular.forEach($scope.employees, function (itm) {
             if (itm.selected === true) {
-                console.log("delete:" + itm.firstName);
+                ids.push(itm.uuid);
             }
-        })
+        });
+        EmployeeService.deleteEmployees(ids).then(function (response) {
+            $scope.stopSpin();
+            $scope.loadAll();
+            $scope.employeeError.success = true;
+            $scope.employeeError.msg = "Success!";
+            $scope.employeeError.hasError = false;
+        }, function (err) {
+            $scope.stopSpin();
+            $scope.employeeError.hasError = true;
+            $scope.employeeError.success = false;
+            $scope.employeeError.msg = "Error while loading data, please try later!";
+        });
     };
 
     $scope.editEmployee = function (employee) {
@@ -58,9 +113,33 @@ app.controller('UserEmployeeController', ['$scope', 'EmployeeService', 'LoginSer
 }]);
 
 
-app.controller('UserEmployeeEditController', ['$scope', 'EmployeeService', '$location', 'FileUploader', function ($scope, EmployeeService, $location, FileUploader) {
+app.controller('UserEmployeeEditController', ['$scope', 'EmployeeService', '$location', 'FileUploader', 'LoginService', 'usSpinnerService', function ($scope, EmployeeService, $location, FileUploader, LoginService, usSpinnerService) {
     $scope.editedEmployee = {};
     $scope.newEmployee = true;
+
+
+    /**
+     * spinner start
+     * */
+    $scope.spinneractive = false;
+    $scope.startSpin = function () {
+        if (!$scope.spinneractive) {
+            console.log('loading');
+            usSpinnerService.spin('employee-edit-spinner');
+            $scope.spinneractive = true;
+        }
+    };
+    $scope.stopSpin = function () {
+        if ($scope.spinneractive) {
+            console.log('stoped');
+            usSpinnerService.stop('employee-edit-spinner');
+            $scope.spinneractive = false;
+        }
+    };
+
+    /**
+     * spanner end
+     * */
 
     $scope.menus = [{name: 'Person Detail', url: 'user/employee_edit_persondetail.html', selected: true}, {
         name: 'Job',
@@ -68,13 +147,29 @@ app.controller('UserEmployeeEditController', ['$scope', 'EmployeeService', '$loc
         url: 'user/employee_edit_job.html'
     }];
     $scope.selectedMenu = $scope.menus[0];
+
+    $scope.employeeEditError = {hasError: {error: false, success: false}, msg: ""};
     var uuid = $location.search().employeeId;
     if (uuid) {
+        $scope.startSpin();
         EmployeeService.getEmployee(uuid).then(function (response) {
             $scope.editedEmployee = response;
             $scope.newEmployee = false;
-        }, function (err) {
+            $scope.stopSpin();
+            $scope.employeeEditError.hasError.error = false;
+            $scope.thumb.preview = false;
+            $scope.thumb.file = $scope.editedEmployee.imagePath;
+            $scope.thumb.headImageCount = 1;
+            $scope.contractPreview.preview = false;
+            $scope.contractPreview.file = $scope.editedEmployee.contractDetail;
+            $scope.contractPreview.pdfCount = 1;
 
+
+        }, function (err) {
+            $scope.stopSpin();
+            $scope.employeeEditError.hasError.error = true;
+            $scope.employeeEditError.hasError.success = false;
+            $scope.employeeEditError.msg = "Error while loading employee information,Please try later!";
         });
     }
 
@@ -84,227 +179,121 @@ app.controller('UserEmployeeEditController', ['$scope', 'EmployeeService', '$loc
         });
         $scope.selectedMenu = menu;
     };
+
+    $scope.save = function () {
+        if (uuid) {
+            updateEmployee();
+        } else {
+            createEmployee();
+        }
+    };
+
+    var createEmployee = function () {
+        $scope.startSpin();
+        $scope.editedEmployee.userId = LoginService.getUserInfo().userId;
+        EmployeeService.createEmployee($scope.editedEmployee).then(
+            function (data) {
+                $scope.editedEmployee = data;
+                $scope.employeeEditError.hasError.error = false;
+                $scope.employeeEditError.hasError.success = true;
+                $scope.employeeEditError.msg = "Success!";
+
+                if (data.uuid) {
+                    $location.search('employeeId', data.uuid);
+                }
+                $location.path('/view_employee');
+            },
+            function (err) {
+                $scope.stopSpin();
+                $scope.employeeEditError.hasError.error = true;
+                $scope.employeeEditError.hasError.success = false;
+                $scope.employeeEditError.msg = "Error while creating employee, please try later!";
+            }
+        );
+    };
+
+    var updateEmployee = function () {
+        $scope.startSpin();
+        EmployeeService.updateEmployee($scope.editedEmployee, $scope.editedEmployee.uuid).then(
+            function (data) {
+                $scope.stopSpin();
+                $scope.editedEmployee = data;
+                $scope.employeeEditError.hasError.error = false;
+                $scope.employeeEditError.hasError.success = true;
+                $scope.employeeEditError.msg = "Success!";
+            },
+            function (errData) {
+                $scope.stopSpin();
+                $scope.employeeEditError.hasError.error = true;
+                $scope.employeeEditError.hasError.success = false;
+                $scope.employeeEditError.msg = "Error while updating employee information, please try later!";
+            }
+        );
+    };
+
+
     var headImageUploader = $scope.headImageUploader = new FileUploader({
-        url: '/upload',
-        formData:[{type:'employeeHead'}]
+        url: '/upload/',
+        formData: [{type: 'employeeHead'}, {userId: LoginService.getUserInfo().userId}]
     });
+    if (LoginService.getUserInfo().accessToken) {
+        var token = LoginService.getUserInfo();
+        if (token) {
+            headImageUploader.headers['X-AUTH-TOKEN'] = token.accessToken;
+        }
+    } else {
+        headImageUploader.headers['X-AUTH-TOKEN'] = '0';
+    }
+
     headImageUploader.onAfterAddingFile = function (fileItem) {
         headImageUploader.queue.length = 0;
         headImageUploader.queue.push(fileItem);
-        console.log(headImageUploader.queue[0])
+        $scope.thumb.preview = true;
+        $scope.thumb.file = fileItem._file;
+        $scope.thumb.headImageCount = $scope.thumb.headImageCount + 1;
     };
     headImageUploader.onSuccessItem = function (item, response, status, headers) {
-
+        console.log(response);
+        $scope.editedEmployee.imagePath = response;
     };
 
+    $scope.thumb = {
+        preview: false,
+        file: $scope.editedEmployee.imagePath,
+        height: 200,
+        width: 200,
+        headImageCount: -1,
+    };
 
     /**
      *  contract uploader
      * */
     var contractUploader = $scope.contractUploader = new FileUploader({
-        url: 'upload.php'
+        url: '/upload/',
+        formData: [{type: 'employeeContract'}, {userId: LoginService.getUserInfo().userId}]
     });
+
+    if (LoginService.getUserInfo().accessToken) {
+        var token = LoginService.getUserInfo();
+        if (token) {
+            contractUploader.headers['X-AUTH-TOKEN'] = token.accessToken;
+        }
+    } else {
+        contractUploader.headers['X-AUTH-TOKEN'] = '0';
+    }
     contractUploader.onAfterAddingFile = function (fileItem) {
         contractUploader.queue.length = 0;
         contractUploader.queue.push(fileItem);
+        $scope.contractPreview.preview = true;
+        $scope.contractPreview.file = fileItem._file;
+        $scope.contractPreview.pdfCount = $scope.contractPreview.pdfCount + 1;
     };
     contractUploader.onSuccessItem = function (item, response, status, headers) {
-
-    }
-
-}]);
-app.directive('ngThumb', ['$window', function ($window) {
-    var helper = {
-        support: !!($window.FileReader && $window.CanvasRenderingContext2D),
-        isFile: function (item) {
-            console.log(item)
-            return angular.isObject(item) && item instanceof $window.File;
-        },
-        isImage: function (file) {
-            var type = '|' + file.type.slice(file.type.lastIndexOf('/') + 1) + '|';
-            return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
-        }
+        $scope.editedEmployee.contractDetail = response;
     };
 
-    return {
-        restrict: 'A',
-        template: '<canvas/>',
-        link: function (scope, element, attributes) {
-            
-            scope.$watch(function () {
-                var params = scope.$eval(attributes.ngThumb);
-                return params.file;
-            }, function () {
-                if (!helper.support) return;
+    $scope.contractPreview = {preview: false, file: $scope.editedEmployee.contractDetail, pdfCount: -1,height:'100%',width:'100%'}
 
-                var params = scope.$eval(attributes.ngThumb);
 
-                if (!helper.isFile(params.file)) return;
-                if (!helper.isImage(params.file)) return;
-
-                var canvas = element.find('canvas');
-                var reader = new FileReader();
-
-                reader.onload = onLoadFile;
-                reader.readAsDataURL(params.file);
-
-                function onLoadFile(event) {
-                    var img = new Image();
-                    img.onload = onLoadImage;
-                    img.src = event.target.result;
-                }
-
-                function onLoadImage() {
-                    var width = params.width || this.width / this.height * params.height;
-                    var height = params.height || this.height / this.width * params.width;
-                    canvas.attr({width: width, height: height});
-                    canvas[0].getContext('2d').drawImage(this, 0, 0,width,height);
-                }
-            });
-        }
-    }
 }]);
-app.filter('customFilter', ['$filter', function ($filter) {
-    var filterFilter = $filter('filter');
-    var standardComparator = function standardComparator(obj, text) {
-        text = ('' + text).toLowerCase();
-        return ('' + obj).toLowerCase().indexOf(text) > -1;
-    };
 
-    return function customFilter(array, expression) {
-        function customComparator(actual, expected) {
-
-            var isBeforeActivated = expected.before;
-            var isAfterActivated = expected.after;
-            var isLower = expected.lower;
-            var isHigher = expected.higher;
-            var higherLimit;
-            var lowerLimit;
-            var itemDate;
-            var queryDate;
-
-
-            if (angular.isObject(expected)) {
-
-                //date range
-                if (expected.before || expected.after) {
-                    try {
-                        if (isBeforeActivated) {
-                            higherLimit = expected.before;
-
-                            itemDate = new Date(actual);
-                            queryDate = new Date(higherLimit);
-
-                            if (itemDate > queryDate) {
-                                return false;
-                            }
-                        }
-
-                        if (isAfterActivated) {
-                            lowerLimit = expected.after;
-
-
-                            itemDate = new Date(actual);
-                            queryDate = new Date(lowerLimit);
-
-                            if (itemDate < queryDate) {
-                                return false;
-                            }
-                        }
-
-                        return true;
-                    } catch (e) {
-                        return false;
-                    }
-
-                } else if (isLower || isHigher) {
-                    //number range
-                    if (isLower) {
-                        higherLimit = expected.lower;
-
-                        if (actual > higherLimit) {
-                            return false;
-                        }
-                    }
-
-                    if (isHigher) {
-                        lowerLimit = expected.higher;
-                        if (actual < lowerLimit) {
-                            return false;
-                        }
-                    }
-
-                    return true;
-                }
-                //etc
-
-                return true;
-
-            }
-            return standardComparator(actual, expected);
-        }
-
-        var output = filterFilter(array, expression, customComparator);
-        return output;
-    };
-}]);
-app.directive('stDateRange', ['$timeout', function ($timeout) {
-    return {
-        restrict: 'E',
-        require: '^stTable',
-        scope: {
-            before: '=',
-            after: '='
-        },
-        templateUrl: 'view/stDateRange.html',
-
-        link: function (scope, element, attr, table) {
-
-            var inputs = element.find('input');
-            var inputBefore = angular.element(inputs[0]);
-            var inputAfter = angular.element(inputs[1]);
-            var predicateName = attr.predicate;
-
-
-            [inputBefore, inputAfter].forEach(function (input) {
-
-                input.bind('blur', function () {
-
-
-                    var query = {};
-
-                    if (!scope.isBeforeOpen && !scope.isAfterOpen) {
-
-                        if (scope.before) {
-                            query.before = scope.before;
-                        }
-
-                        if (scope.after) {
-                            query.after = scope.after;
-                        }
-
-                        scope.$apply(function () {
-                            table.search(query, predicateName);
-                        })
-                    }
-                });
-            });
-
-            function open(before) {
-                return function ($event) {
-                    $event.preventDefault();
-                    $event.stopPropagation();
-
-                    if (before) {
-                        scope.isBeforeOpen = true;
-                    } else {
-                        scope.isAfterOpen = true;
-                    }
-                }
-            }
-
-            scope.openBefore = open(true);
-            scope.openAfter = open();
-        }
-    }
-}])

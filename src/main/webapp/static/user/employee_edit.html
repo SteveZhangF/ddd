@@ -1,13 +1,13 @@
 <div ng-controller="UserEmployeeEditController">
-    <div class="row">
+    <div class="row">{{editedEmployee}}
         <div class="col-md-2">
             <div class="panel panel-default">
                 <div class="panel-heading"><span class="lead">{{newEmployee?"new employee":editedEmployee.firstName+" "+editedEmployee.lastName}}</span>
                 </div>
                 <div class="panel-body" style="position:relative">
-                    <div ng-show="headImageUploader.isHTML5"  class="img-thumbnail" ng-thumb="{ file: headImageUploader.queue[0]._file,height:200,width:200}"></div>
+                    <div ng-show="headImageUploader.isHTML5"  class="img-thumbnail" ng-thumb="thumb"></div>
                     <div class="input-group">
-                        <input type="file" nv-file-select="" class="form-control input-sm" uploader="headImageUploader"  aria-describedby="img-upload"/>
+                        <input   type="file" nv-file-select="" class="form-control input-sm" uploader="headImageUploader"  aria-describedby="img-upload"/>
                         <span class="input-group-addon" id="img-upload" ng-click="headImageUploader.queue[0].upload()"
                               ng-disabled="!headImageUploader.queue[0]||headImageUploader.queue[0].isReady || headImageUploader.queue[0].isUploading || headImageUploader.queue[0].isSuccess"
                               ng-style="{'cursor':!headImageUploader.queue[0]||headImageUploader.queue[0].isReady || headImageUploader.queue[0].isUploading || headImageUploader.queue[0].isSuccess?'not-allowed':'hand'}">Upload
@@ -20,8 +20,10 @@
             </ul>
         </div>
         <div class="col-md-10">
+            <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="employee-edit-spinner"></span>
+            <div class="alert alert-danger" role="alert" ng-show="employeeEditError.hasError.error">{{employeeEditError.msg}}</div>
+            <div class="alert alert-success" role="alert" ng-show="employeeEditError.hasError.success">{{employeeEditError.msg}}</div>
             <div ng-include="selectedMenu.url"></div>
         </div>
     </div>
-
 </div>

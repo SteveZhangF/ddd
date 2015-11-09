@@ -12,7 +12,6 @@ package app.newDao;
  * Created by steve on 10/12/15.
  */
 
-import app.config.hibernate.HibernateConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
@@ -22,7 +21,6 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Transformer;
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -140,11 +138,11 @@ public class HibernateBaseGenericDAOImpl<T, PK extends Serializable> extends Hib
         }
     }
 
-    public T getbyParam(String param, Object value){
+    public T getbyParam(String param, Object value) {
         Criteria criteria = getSessionFactory().getCurrentSession().createCriteria(entityClass);
         Object yourObject = criteria.add(Restrictions.eq(param, value))
                 .uniqueResult();
-        return (T)yourObject;
+        return (T) yourObject;
     }
 
     @Override
@@ -160,8 +158,8 @@ public class HibernateBaseGenericDAOImpl<T, PK extends Serializable> extends Hib
     public List<T> getListbyField(String[] fields) {
         Criteria cr = getSessionFactory().getCurrentSession().createCriteria(entityClass);
         ProjectionList projectionList = Projections.projectionList();
-        for(String field:fields){
-            projectionList.add(Projections.property(field),field);
+        for (String field : fields) {
+            projectionList.add(Projections.property(field), field);
         }
         cr.setProjection(projectionList);
         cr.setResultTransformer(Transformers.aliasToBean(entityClass));
@@ -172,9 +170,25 @@ public class HibernateBaseGenericDAOImpl<T, PK extends Serializable> extends Hib
     @Override
     public List<T> getListbyParams(Map<String, Object> map) {
         Criteria criteria = getSessionFactory().getCurrentSession().createCriteria(entityClass);
-        for(String key:map.keySet()){
+        for (String key : map.keySet()) {
             criteria.add(Restrictions.eq(key, map.get(key)));
         }
+        List<T> list = criteria.list();
+        return list;
+    }
+
+    @Override
+    public List<T> getListbyFieldAndParams(String[] fields, Map<String, Object> map) {
+        Criteria criteria = getSessionFactory().getCurrentSession().createCriteria(entityClass);
+        for (String key : map.keySet()) {
+            criteria.add(Restrictions.eq(key, map.get(key)));
+        }
+        ProjectionList projectionList = Projections.projectionList();
+        for (String field : fields) {
+            projectionList.add(Projections.property(field), field);
+        }
+        criteria.setProjection(projectionList);
+        criteria.setResultTransformer(Transformers.aliasToBean(entityClass));
         List<T> list = criteria.list();
         return list;
     }

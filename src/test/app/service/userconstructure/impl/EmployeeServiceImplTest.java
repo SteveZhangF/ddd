@@ -9,11 +9,9 @@
 package app.service.userconstructure.impl;
 
 import app.model.userconstructure.Company;
-import app.model.userconstructure.Department;
 import app.model.userconstructure.Employee;
 import app.service.form.UserFormServiceImplTestContextConfiguration;
 import app.service.userconstructure.CompanyService;
-import app.service.userconstructure.DepartmentService;
 import app.service.userconstructure.EmployeeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
