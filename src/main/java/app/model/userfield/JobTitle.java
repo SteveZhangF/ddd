@@ -12,15 +12,15 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.sql.Timestamp;
 
 /**
  * Created by steve on 11/8/15.
  */
-@Table
 @Entity
-public class EmploymentStatus {
+@Table(name = "job_title")
+public class JobTitle {
+
     @Id
     @GeneratedValue(generator = "idGenerator")
     @GenericGenerator(name = "idGenerator", strategy = "uuid")
@@ -28,10 +28,9 @@ public class EmploymentStatus {
     private String uuid;
 
     private String name;
-
     private String description;
-
     private int userId;
+
     private Timestamp createTime;
     private Timestamp updateTime;
 

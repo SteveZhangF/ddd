@@ -5,7 +5,7 @@
  * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
-app.controller('UserWorkflowController', ['$scope', 'UserWorkFlowService', 'LoginService', 'UserQuestionService', function ($scope, UserWorkFlowService, LoginService, UserQuestionService) {
+app.controller('UserWorkflowController', ['$scope', 'UserWorkFlowService', 'LoginService', 'UserQuestionService', 'EmployeeService',function ($scope, UserWorkFlowService, LoginService, UserQuestionService,EmployeeService) {
     $scope.workflows = [];
     $scope.currentNode = {};
     $scope.currentWorkFlow = {name: '', id: '', type: '', oe_id: ''};
@@ -82,6 +82,10 @@ app.controller('UserWorkflowController', ['$scope', 'UserWorkFlowService', 'Logi
         //userWorkFlow.currentNode = $scope.currentNode.nexts[0]._then;
         var value = $scope.record.value;
         for (var i = 0; i < $scope.currentNode.nexts.length; i++) {
+            if($scope.currentNode.nexts[i]._if == "NOTNULL"){
+                userWorkFlow.currentNode = $scope.currentNode.nexts[i]._then;
+                break;
+            }
             if (value == $scope.currentNode.nexts[i]._if) {
                 userWorkFlow.currentNode = $scope.currentNode.nexts[i]._then;
                 break;
@@ -120,6 +124,18 @@ app.controller('UserWorkflowController', ['$scope', 'UserWorkFlowService', 'Logi
                 };
                 break;
             case "Employee":
+
+                EmployeeService.getEmployeeByUserId(LoginService.getUserInfo().userId).then(
+                    function(response){
+                        $scope.nodeData={
+                            type:'select',
+                            options:[]
+                        };
+                        angular.forEach(response, function (employee) {
+                           $scope.nodeData.options.push({value:employee.uuid,name:employee.firstName+" "+employee.lastName});
+                        });
+                    }
+                );
                 break;
             case "Department":
                 break;

@@ -92,7 +92,7 @@ public class EmployeeDaoImpl extends HibernateBaseGenericDAOImpl<Employee,String
 
     @Override
     public List<Employee> getListforListByUserId(int userId) {
-        String[] fields = {"uuid","firstName","lastName","email","jobPosition","startDate","endDate"};
+        String[] fields = {"uuid","firstName","lastName","email","jobTitle","startDate","endDate"};
         HashMap<String,Object> map = new HashMap<>();
         map.put("userId",userId);
         return super.getListbyFieldAndParams(fields,map);

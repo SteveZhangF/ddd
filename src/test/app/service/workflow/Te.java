@@ -9,16 +9,23 @@
 package app.service.workflow;
 
 import org.junit.Test;
+import org.springframework.test.context.TestExecutionListeners;
+
+import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
 
 /**
  * Created by steve on 10/18/15.
  */
 public class Te {
+
     @Test
-    public int test() {
+    public void test() {
         long x = 1000000000;
         long result =  (x - 1) % 9 + 1;
+        Timestamp date = new Timestamp(new java.util.Date().getTime());
+        System.out.println(date);
         System.out.println(result);
-        return (int)result;
     }
 }

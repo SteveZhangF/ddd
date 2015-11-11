@@ -27,6 +27,7 @@ app.controller('UserEmployeeController', ['$scope', 'EmployeeService', 'LoginSer
     //    $scope.employees.push(new Employee("steve" + i, "zhang" + i, "zhangke@sss.ccc" + i, "developed" + i, new Date('1987-05-21'), "10.2"));
     //}
 
+
     /**
      * spinner start
      * */
@@ -113,10 +114,12 @@ app.controller('UserEmployeeController', ['$scope', 'EmployeeService', 'LoginSer
 }]);
 
 
-app.controller('UserEmployeeEditController', ['$scope', 'EmployeeService', '$location', 'FileUploader', 'LoginService', 'usSpinnerService', function ($scope, EmployeeService, $location, FileUploader, LoginService, usSpinnerService) {
+app.controller('UserEmployeeEditController', ['$scope', 'EmployeeService', 'UserEmploymentStatusService', 'UserJobTitleService', '$location', 'FileUploader', 'LoginService', 'usSpinnerService', function ($scope, EmployeeService, UserEmploymentStatusService, UserJobTitleService, $location, FileUploader, LoginService, usSpinnerService) {
     $scope.editedEmployee = {};
     $scope.newEmployee = true;
 
+    $scope.jobTitles = [];
+    $scope.employmentStatuses=[];
 
     /**
      * spinner start
@@ -164,6 +167,22 @@ app.controller('UserEmployeeEditController', ['$scope', 'EmployeeService', '$loc
             $scope.contractPreview.file = $scope.editedEmployee.contractDetail;
             $scope.contractPreview.pdfCount = 1;
 
+            //loading job titles and employment status .etc.
+            var userId = LoginService.getUserInfo().userId;
+            UserEmploymentStatusService.getEmploymentStatusByUserId(userId).then(function (data) {
+                    $scope.employmentStatuses = data;
+                }, function (err) {
+                }
+            );
+
+            UserJobTitleService.getJobTitleByUserId(userId).then(
+                function (data) {
+                    $scope.jobTitles = data;
+                },
+                function (err) {
+
+                }
+            );
 
         }, function (err) {
             $scope.stopSpin();
@@ -292,7 +311,13 @@ app.controller('UserEmployeeEditController', ['$scope', 'EmployeeService', '$loc
         $scope.editedEmployee.contractDetail = response;
     };
 
-    $scope.contractPreview = {preview: false, file: $scope.editedEmployee.contractDetail, pdfCount: -1,height:'100%',width:'100%'}
+    $scope.contractPreview = {
+        preview: false,
+        file: $scope.editedEmployee.contractDetail,
+        pdfCount: -1,
+        height: '100%',
+        width: '100%'
+    }
 
 
 }]);

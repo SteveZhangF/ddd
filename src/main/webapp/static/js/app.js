@@ -84,6 +84,10 @@ app.config(['$routeProvider', function ($routeProvider) {
     ).when("/view_employee",{
             templateUrl:"user/employee_edit.html",
             resolve:resolve
+        })
+        .when("/config",{
+            templateUrl:"user/user_config.html",
+            resolve:resolve
         });
 }]);
 

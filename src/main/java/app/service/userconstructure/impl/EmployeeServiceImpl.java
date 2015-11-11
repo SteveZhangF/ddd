@@ -10,16 +10,12 @@ package app.service.userconstructure.impl;
 
 import app.dao.userconstructure.EmployeeDAO;
 import app.model.userconstructure.Employee;
-import app.model.userfield.EmploymentStatus;
-import app.model.userfield.JobPosition;
 import app.newService.BaseGenericServiceImpl;
 import app.service.userconstructure.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.ManyToOne;
-import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -94,7 +90,7 @@ public class EmployeeServiceImpl extends BaseGenericServiceImpl<Employee, String
 //    private String contractDetail;
     @Override
     public Employee getEmployeeJobDetailbyId(String uuid) {
-        String[] fields = {"uuid","jobPosition", "employmentStatus", "joinedDate", "startDate", "endDate", "contractDetail" };
+        String[] fields = {"uuid","jobTitle", "employmentStatus", "joinedDate", "startDate", "endDate", "contractDetail" };
         HashMap<String, Object> map = new HashMap<>();
         map.put("uuid", uuid);
         List<Employee> list = employeeDAO.getListbyFieldAndParams(fields, map);

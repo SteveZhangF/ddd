@@ -114,13 +114,28 @@ app.service('LoginService', [
             }
         }
 
+        function updateUser(user){
+            var deferred = $q.defer();
+            $http.put("/updateUser", {
+                ssoId: user.ssoId,
+                password: user.password
+            }).then(
+                function (result) {
+                   return result.data;
+                }, function (error) {
+                    deferred.reject(error);
+                });
+            return deferred.promise;
+        }
+
         init();
         return {
             login: login,
             logout: logout,
             getUserInfo: getUserInfo,
             register: register,
-            refreshUserInfo: refreshUserInfo
+            refreshUserInfo: refreshUserInfo,
+            updateUser:updateUser
         };
     }]);
 app.controller('LoginController', ['$scope', 'LoginService', 'ngDialog','LogInData','usSpinnerService', function ($scope, LoginService, ngDialog,LogInData,usSpinnerService) {

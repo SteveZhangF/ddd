@@ -1,0 +1,20 @@
+<div ng-controller="UserConfigController" class="row">
+    <div class="col-md-2">
+        <div class="well">
+            {{selectedMenu}}
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation" class="{{x.selected?'active':''}}" ng-click="menuSelect(x)" ng-repeat="x in menus"><a href="">{{x.name}}</a>
+
+                <ul class="nav nav-pills nav-stacked" ng-show="x.selected">
+                    <li role="presentation" class="{{sub.selected?'active':''}}" ng-click="subMenuSelect(sub)" ng-repeat="sub in x.subMenu"><a href="">{{sub.name}}</a></li>
+                </ul>
+
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-10">
+        <div ng-include="selectedMenu.url"></div>
+    </div>
+
+</div>

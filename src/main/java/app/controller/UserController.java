@@ -73,6 +73,18 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/updateUser", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> updateUserByUser(@RequestBody User user) {
+        User user1 = userService.findBySso(user.getSsoId());
+        if (user1 == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        user1.setPassword(user.getPassword());
+        userService.update(user1);
+        return new ResponseEntity<>(user1, HttpStatus.OK);
+    }
+
+
+
     /**
      * delete a user
      */
@@ -88,6 +100,8 @@ public class UserController {
         List<User> users = userService.list();
         return new ResponseEntity<List<User>>(users, HttpStatus.OK);
     }
+
+
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<Message> register(@RequestBody User user, HttpServletResponse response) {
@@ -110,21 +124,6 @@ public class UserController {
             return new ResponseEntity<Message>(HttpStatus.CONFLICT);
         }
 
-
-//        System.out.println("registering .." + user + "....");
-//        Message msg = new Message();
-//        if (userService.findBySso(user.getSsoId()) == null) {
-//            UserProfile userProfile = userProfileDao.findbyType(UserProfileType.USER);
-//            user.getUserProfiles().add(userProfile);
-//            userService.save(user);
-//
-//            msg.setTitle("success");
-//            msg.setContent("Register Success");
-//        } else {
-//            msg.setTitle("failed");
-//            msg.setContent("SSOID(User Name) Existing!");
-//        }
-//        return new ResponseEntity<Message>(msg, HttpStatus.OK);
     }
 
 

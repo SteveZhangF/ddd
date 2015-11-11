@@ -2,7 +2,7 @@ package app.model.userconstructure;
 
 import app.model.forms.FormType;
 import app.model.userfield.EmploymentStatus;
-import app.model.userfield.JobPosition;
+import app.model.userfield.JobTitle;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -40,7 +40,8 @@ public class Employee extends OrganizationElement {
      * job detail
      */
     @ManyToOne()
-    private JobPosition jobPosition;
+    private JobTitle jobTitle;
+
     @ManyToOne()
     private EmploymentStatus employmentStatus;
     private Date joinedDate;
@@ -121,12 +122,12 @@ public class Employee extends OrganizationElement {
         this.birthday = birthday;
     }
 
-    public JobPosition getJobPosition() {
-        return jobPosition;
+    public JobTitle getJobTitle() {
+        return jobTitle;
     }
 
-    public void setJobPosition(JobPosition jobPosition) {
-        this.jobPosition = jobPosition;
+    public void setJobTitle(JobTitle jobTitle) {
+        this.jobTitle = jobTitle;
     }
 
     public EmploymentStatus getEmploymentStatus() {
