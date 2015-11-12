@@ -56,6 +56,6 @@ public class CompanyDaoImpl extends HibernateBaseGenericDAOImpl<Company,String> 
 
     @Override
     public Company getCompanyByUserId(int id) {
-        return super.getbyParam("user_id",id);
+        return super.getbyParam("userId",id);
     }
 }

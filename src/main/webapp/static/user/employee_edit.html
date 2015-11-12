@@ -1,65 +1,29 @@
-<div class="generic-container" ng-controller="UserEmployeeController as ctrl">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <span class="lead">Employee Info </span>
+<div ng-controller="UserEmployeeEditController">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="panel panel-default">
+                <div class="panel-heading"><span class="lead">{{newEmployee?"new employee":editedEmployee.firstName+" "+editedEmployee.lastName}}</span>
+                </div>
+                <div class="panel-body" style="position:relative">
+                    <div ng-show="headImageUploader.isHTML5" id="thumb_container"  ng-style="{display:block}"  class="img-thumbnail" ng-thumb="thumb"></div>
+                    <div class="input-group">
+                        <input   type="file" nv-file-select="" class="form-control input-sm" uploader="headImageUploader"  aria-describedby="img-upload"/>
+                        <span class="input-group-addon" id="img-upload" ng-click="headImageUploader.queue[0].upload()"
+                              ng-disabled="!headImageUploader.queue[0]||headImageUploader.queue[0].isReady || headImageUploader.queue[0].isUploading || headImageUploader.queue[0].isSuccess"
+                              ng-style="{'cursor':!headImageUploader.queue[0]||headImageUploader.queue[0].isReady || headImageUploader.queue[0].isUploading || headImageUploader.queue[0].isSuccess?'not-allowed':'hand'}">Upload
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation" class="{{x.selected?'active':''}}" ng-click="menuSelect(x)" ng-repeat="x in menus"><a href="">{{x.name}}</a></li>
+            </ul>
         </div>
-        <div class="formcontainer">
-            <form ng-submit="ctrl.submit()" name="myForm" class="form-horizontal">
-                <input type="hidden" ng-model="ctrl.employee.uuid"/>
-                <!-- name -->
-                <div class="form-group col-md-12">
-                    <label class="col-md-2 control-label" for="name">Name</label>
-
-                    <div class="col-md-7">
-                        <input id='name'type="text" ng-model="ctrl.employee.name" name="uname"
-                               class="username form-control input-sm"
-                               placeholder="Enter Employee Name" required ng-minlength="3"/>
-
-                        <div class="has-error" ng-show="myForm.$dirty">
-								<span ng-show="myForm.uname.$error.required">This is a
-									required field</span> <span ng-show="myForm.uname.$error.minlength">Minimum
-									length required is 3</span> <span ng-show="myForm.uname.$invalid">This
-									field is invalid </span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- address -->
-                <div class="form-group col-md-12">
-                    <label class="col-md-2 control-label" for="address">Address</label>
-
-                    <div class="col-md-7">
-                        <input type="text" ng-model="ctrl.employee.address" id="address" name='address'
-                               class="form-control input-sm"
-                               placeholder="Enter employee's Address. "/>
-                    </div>
-                </div>
-
-                <!-- phone -->
-                <div class="form-group col-md-12">
-                    <label class="col-md-2 control-label" for="phone">Phone</label>
-
-                    <div class="col-md-7">
-                        <input type="tel" id="phone" ng-model="ctrl.employee.phone" name="phone"
-                               class="form-control input-sm"
-                               placeholder="Enter employee Phone Number" required/>
-
-                        <div class="has-error" ng-show="myForm.$dirty">
-								<span ng-show="myForm.phone.$error.required">This is a
-									required field</span> <span ng-show="myForm.phone.$invalid">This
-									field is invalid </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-actions floatRight">
-                    <input type="submit" value="{{!ctrl.employee.uuid ? 'Create' : 'Update'}}"
-                           class="btn btn-primary btn-sm" ng-disabled="myForm.$invalid">
-                    <button type="button" ng-click="ctrl.reset()"
-                            class="btn btn-warning btn-sm" ng-disabled="myForm.$pristine">Reset
-                        Form
-                    </button>
-                </div>
-            </form>
+        <div class="col-md-10">
+            <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="employee-edit-spinner"></span>
+            <div class="alert alert-danger" role="alert" ng-show="employeeEditError.hasError.error">{{employeeEditError.msg}}</div>
+            <div class="alert alert-success" role="alert" ng-show="employeeEditError.hasError.success">{{employeeEditError.msg}}</div>
+            <div ng-include="selectedMenu.url"></div>
         </div>
     </div>
 </div>

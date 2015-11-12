@@ -1,0 +1,82 @@
+<div class="panel panel-primary" ng-controller="JobTitleController">
+    <div class="panel-heading">Job Titles</div>
+    <div class="panel-body">
+
+        <div class="alert alert-success" ng-show="hasError.success">Success!</div>
+        <div class="alert alert-danger" ng-show="hasError.error">Error, Please try later!</div>
+        <div class="well" ng-show="newJobTitle.editing">
+            <div>
+                <label>Name:
+                </label>
+                <input ng-model="newJobTitle.name" class="form-control">
+                <label>Description:
+                </label>
+                <textarea ng-model="newJobTitle.description" class="form-control"></textarea>
+                <hr>
+                <button class="btn btn-default" ng-click="saveTitle(newJobTitle)">Save</button>
+                <button class="btn btn-warning" ng-click="newJobTitle.editing=false">Cancel</button>
+            </div>
+        </div>
+        <button class="btn btn-primary" ng-click="editJobTitle(newJobTitle)">Add</button>
+        <button class="btn btn-danger" ng-click="deleteSelectedJobTitles()">Delete</button>
+        <form class="form-inline">
+            <label>Item Number per Page</label>
+            <select ng-model="itemPerPage" class="form-control">
+                <option selected>5</option>
+                <option>10</option>
+            </select>
+        </form>
+        <hr>
+        <table st-table="jobTitlesDisplay" st-safe-src="jobTitles" class=" well table table-striped">
+            <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="job-title-list-spinner"></span>
+            <thead>
+            <tr>
+                <th><label>
+                    <input type="checkbox" ng-model="selectedAll" ng-click="selectAll()">
+                </label></th>
+                <th st-sort="{{$index}}">Index</th>
+                <th st-sort="name">Name</th>
+                <th st-sort="createTime">Create Time</th>
+                <th st-sort="updateTime">Update Time</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat-start="x in jobTitlesDisplay">
+                <td><label>
+                    <input type="checkbox" ng-model="x.selected" ng-change="select()">
+                </label></td>
+                <td>{{ $index + 1 }}</td>
+                <td><a href="" ng-click="editJobTitle(x)">{{x.name}}</a></td>
+                <td>{{x.createTime | date:'EEE yyyy-MM-dd HH:mm:ssa'}}</td>
+                <td>{{x.updateTime | date:'EEE yyyy-MM-dd HH:mm:ssa'}}</td>
+            </tr>
+            <tr ng-repeat-end ng-show="x.editing">
+                <td colspan="5">
+                    <form class="form-horizontal">
+                        <div>
+                            <label>Name:
+                            </label>
+                            <input ng-model="x.name" class="form-control">
+                            <label>Description:
+                            </label>
+                            <textarea ng-model="x.description" class="form-control"></textarea>
+                            <hr>
+                            <button class="btn btn-default" ng-click="saveTitle(x)">Save</button>
+                            <button class="btn btn-warning" ng-click="cancelTitle(x)">Cancel</button>
+                        </div>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="8" class="text-center">
+                    <div st-pagination="" st-items-by-page="itemPerPage" st-displayed-pages="7"></div>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+

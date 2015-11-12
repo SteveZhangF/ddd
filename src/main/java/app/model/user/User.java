@@ -44,7 +44,7 @@ public class User {
     private String email;
 
     @Column(name = "STATE", nullable = false)
-    private String state = State.ACTIVE.getState();
+    private String state;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "APP_USER_USER_PROFILE",

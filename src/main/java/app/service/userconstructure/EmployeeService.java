@@ -17,6 +17,9 @@ import java.util.List;
  * Created by steve on 10/15/15.
  */
 public interface EmployeeService extends IBaseGenericService<Employee,String> {
-    public List<Employee> getEmployeeByCompanyId(String company_id);
-    public List<Employee> getEmployeeByDepartmentId(String department_id);
+    List<Employee> getEmployeebyUserId(int userid);
+
+    Employee getEmployeePersonDetailbyId(String uuid);
+
+    Employee getEmployeeJobDetailbyId(String uuid);
 }

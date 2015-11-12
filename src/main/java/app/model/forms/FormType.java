@@ -12,5 +12,5 @@ package app.model.forms;
  * Created by steve on 10/9/15.
  */
 public enum FormType {
-    EmployeeForm, CompanyForm, DepartmentForm
+    EmployeeForm, CompanyForm
 }

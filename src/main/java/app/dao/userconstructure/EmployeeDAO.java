@@ -6,5 +6,5 @@ import app.newDao.IBaseGenericDAO;
 import java.util.List;
 
 public interface EmployeeDAO extends IBaseGenericDAO<Employee,String>{
-    public List<Employee> getEmployeeByDepartmentId(String department_id);
+    List<Employee> getListforListByUserId(int userId);
 }

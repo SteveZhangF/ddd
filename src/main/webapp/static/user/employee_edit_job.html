@@ -1,0 +1,108 @@
+<div class="panel panel-default">
+    <div class="panel-heading"><span class="lead">Job</span></div>
+    <div class="panel-body">
+        <form name="employeeForm" class="css-form" novalidate>
+            <!-- job title -->
+            <div class="row">
+                <div class="form-group">
+                    <label class="col-md-3">Job Title</label>
+
+                    <div class="col-md-3">
+                        <select class="form-control" ng-options="jt.name for jt in jobTitles"
+                                ng-model="editedEmployee.jobTitle"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-md-3">Job Specification</label>
+                <label class="col-md-3">{{editedEmployee.jobTitle.description}}</label>
+            </div>
+            <hr>
+
+            <div class="row">
+                <label class="col-md-3">Employment Status</label>
+
+                <div class="col-md-3">
+                    <select class="form-control" ng-options="es.name for es in employmentStatuses"
+                            ng-model="editedEmployee.employmentStatus"></select>
+                </div>
+                <label class="col-md-3">Joined Date</label>
+
+                <div class="col-md-3"
+                     ng-class="{ 'has-error' : employeeForm.joinedDate.$invalid && !employeeForm.joinedDate.$pristine }">
+                    <input format-date name="joinedDate" type="date" class="form-control input-sm"
+                           ng-model="editedEmployee.joinedDate" required>
+                </div>
+            </div>
+            <p></p>
+            <hr>
+            <label><em> Employment Contract</em></label>
+
+            <div class="row">
+                <label class="col-md-3">Start Date</label>
+
+                <div class="col-md-3"
+                     ng-class="{'has-error':employeeForm.startDate.$invalid && !employeeForm.startDate.$pristine}"
+                        >
+                    <input format-date name="startDate" type="date" class="form-control input-sm"
+                           ng-model="editedEmployee.startDate">
+                </div>
+                <label class="col-md-3">End Date</label>
+
+                <div class="col-md-3"
+                     ng-class="{'has-error':employeeForm.endDate.$invalid && !employeeForm.endDate.$pristine}"
+                        >
+                    <input format-date name="endDate" type="date" class="form-control input-sm"
+                           ng-model="editedEmployee.endDate">
+                </div>
+            </div>
+            <p></p>
+
+            <p></p>
+
+            <div class="row">
+                <label class="col-md-3">Contract Detail</label>
+
+                <div class="col-md-3">
+                    <input type="file" accept="application/pdf" nv-file-select="" class="form-control input-sm"
+                           uploader="contractUploader"/>
+
+                    <p></p>
+
+                    <div class="progress" style="margin-bottom: 0;height: 10px">
+                        <div class="progress-bar" role="progressbar"
+                             ng-style="{ 'width': contractUploader.queue[0].progress + '%'}"
+                             style="color:black;height: 10px">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <span ng-show="contractUploader.queue[0].isSuccess"><i
+                            class="glyphicon glyphicon-ok">success!</i></span>
+                    <span ng-show="contractUploader.queue[0].isCancel"><i class="glyphicon glyphicon-ban-circle">canceled!</i></span>
+                    <span ng-show="contractUploader.queue[0].isError"><i class="glyphicon glyphicon-remove">failed! try
+                        later</i></span>
+                    <button type="button" class="btn btn-success btn-xs" ng-click="contractUploader.queue[0].upload()"
+                            ng-disabled="!contractUploader.queue[0]||contractUploader.queue[0].isReady || contractUploader.queue[0].isUploading || contractUploader.queue[0].isSuccess">
+                        <span class="glyphicon glyphicon-upload"></span> Upload
+                    </button>
+                    <button type="button" class="btn btn-warning btn-xs" ng-click="contractUploader.queue[0].cancel()"
+                            ng-disabled="!contractUploader.queue[0].isUploading">
+                        <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                    </button>
+                    <button type="button" class="btn btn-danger btn-xs" ng-disabled="!contractUploader.queue[0]"
+                            ng-click="contractUploader.queue.length=0">
+                        <span class="glyphicon glyphicon-trash"></span> Remove
+                    </button>
+                </div>
+            </div>
+            <div pdf-preview="contractPreview"></div>
+
+            <!--SSN-->
+            <hr>
+            <button class="btn btn-primary" ng-disabled="spinneractive" ng-click="save()">Save</button>
+        </form>
+
+    </div>
+</div>

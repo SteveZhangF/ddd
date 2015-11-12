@@ -1,7 +1,36 @@
-<div ng-controller="UserDocumentController" class="row">
-    <div class="sidebar-nav col-md-2">
-        <ul id="document-menu">
-            <li ng-repeat="document in documents"><a href="" ng-click="documentChoose(document)"><span>{{document.name}}</span></a></li>
+<div ng-controller="FormController" class="row">
+    <div class="col-md-2">
+        <ul class="nav nav-pills nav-stacked">
+            <li role="presentation" class="{{x.selected?'active':''}}" ng-click="FormChoose(x)"
+                ng-repeat="x in forms"><a href="">{{x.form_name}}</a></li>
         </ul>
     </div>
+
+    <div class="col-md-10">
+        <div class="panel panel-primary">
+            <div class="panel-heading">{{selectedForm.form_name}}  ----  {{selectedForm.formType}}</div>
+
+            <div class="panel-body" style="height: 100%">
+
+                <div ng-if="selectedForm.formType=='CompanyForm'">
+                    <object style="width:100%;height: 100%" data="{{content}}" type="application/pdf"></object>
+                </div>
+                <div class="row" ng-if="selectedForm.formType=='EmployeeForm'">
+                    <div class="col-md-2">
+                        <ul class="nav nav-pills nav-stacked">
+                            <li role="presentation" class="{{x.selected?'active':''}}" ng-click="showForm(e)"
+                                ng-repeat="e in employees"><a href="">{{e.firstName+" "+e.lastName}}</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-10">
+                        <object style="width:100%;height: 100%" data="{{content}}" type="application/pdf"></object>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<div id="form_container" style="color:white">
 </div>

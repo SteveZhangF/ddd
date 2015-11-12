@@ -52,7 +52,7 @@ app.controller('PlumbCtrl', ['$scope', 'QuestionService', 'WorkFlowService', 'ng
     };
     // when add a workflow button clicked
     $scope.createNew = function () {
-        $scope.workflow = {id: null, name: '', description: '',type:""};
+        $scope.workflow = {id: null, name: '', description: '', type: ""};
         $scope.create = true;
         dialog = ngDialog.open({
             template: 'workflow-editor.html',
@@ -177,13 +177,13 @@ app.controller('PlumbCtrl', ['$scope', 'QuestionService', 'WorkFlowService', 'ng
         target_node.prev = this.id;
     };
 
-    function NormalNode(id,name,type,data,x,y) {
-        node.call(this,id,name,type,data,x,y);
+    function NormalNode(id, name, type, data, x, y) {
+        node.call(this, id, name, type, data, x, y);
     };
 
     NormalNode.prototype = new node();
     NormalNode.prototype.drop = function () {
-        if(this.type == 'Normal' && this.name=='start'){
+        if (this.type == 'Normal' && this.name == 'start') {
             $scope.workflow.startNode_id = this.id;
         }
         $scope.schema.all.push(this);
@@ -191,42 +191,43 @@ app.controller('PlumbCtrl', ['$scope', 'QuestionService', 'WorkFlowService', 'ng
     //NormalNode.prototype.connect = function (target_node) {
     //
     //};
-    
-    function QuestionNode(id,name,type,data,x,y) {
-        node.call(this,id,name,type,data,x,y);
+
+    function QuestionNode(id, name, type, data, x, y) {
+        node.call(this, id, name, type, data, x, y);
     }
+
     QuestionNode.prototype = new node();
     QuestionNode.prototype.drop = function () {
         $scope.schema.all.push(this);
     };
 
-    QuestionNode.prototype.connect = function (target_node,success,fail) {
-        if(this.data.options.length==0){
-            this.data.options.push({name:'not null',value:'NOTNULL'});
-        }
+    QuestionNode.prototype.connect = function (target_node, success, fail) {
+        this.data.options.push({name: 'not null', value: 'NOTNULL'});
         var self = this;
         var connectDialog = ngDialog.open({
             template: 'connect-editor.html',
-            scope:$scope,
+            scope: $scope,
             showClose: false,
             closeByEscape: false,
-            preCloseCallback: function(value) {
-                if(value) {
+            preCloseCallback: function (value) {
+                if (value) {
                     var target_node = $scope.connectingSourceNode.targetNode;
                     var _if = $scope.connectingSourceNode.selectedOption;
                     var _then = target_node.id;
                     var next = {_if: _if, _then: _then};
-                    if(!self.nexts){self.nexts=[]}
+                    if (!self.nexts) {
+                        self.nexts = []
+                    }
                     self.nexts.push(next);
                     target_node.prev = self.id;
                     success(_if);
-                }else{
+                } else {
                     console.log('delete connection');
                     fail();
                 }
             }
         });
-        $scope.connectingSourceNode = {selectedOption:"",node:self,targetNode: target_node}
+        $scope.connectingSourceNode = {selectedOption: "", node: self, targetNode: target_node}
     };
     //QuestionNode.prototype.connectOK = function () {
     //};

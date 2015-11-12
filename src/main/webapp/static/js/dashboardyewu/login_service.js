@@ -20,7 +20,7 @@ app.service('LoginService', [
          * register
          * */
         function register(user) {
-            $http.post("/register", user)
+            return $http.post("/register", user)
                 .then(
                 function (response) {
                     return response.data;

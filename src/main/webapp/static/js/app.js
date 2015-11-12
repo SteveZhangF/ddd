@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('clientApp', ['ngRoute', 'ui.bootstrap', 'ui.bootstrap.contextMenu', 'angularBootstrapNavTree', 'dndLists', 'ui.tree']);
+var app = angular.module('clientApp', ['ngRoute', 'ui.bootstrap', 'ui.bootstrap.contextMenu','angularFileUpload', 'angularBootstrapNavTree', 'dndLists','smart-table', 'ui.tree', 'ngDialog', 'angularSpinner']);
 
 app.factory('LogInData', function () {
     return {
@@ -24,6 +24,7 @@ app.config(['$httpProvider', function ($httpProvider) {
                     }
                 } else {
                     //$location.path('/');
+
                 }
                 return config;
             },
@@ -47,36 +48,52 @@ app.run([
         $rootScope.$on("$routeChangeError", function (event, current,
                                                       previous, eventObj) {
             if (eventObj.authenticated === false) {
-                // $location.path("/login");
-                console.log("no authenticated");
+                alert('Please log in');
+                $location.path('/');
             }
         });
     }]);
 app.config(['$routeProvider', function ($routeProvider) {
     var resolve = {
         auth: ["$q", "LoginService", function ($q, LoginService) {
-            var userInfo = LoginService.getUserInfo();
-            if (userInfo) {
-                return $q.when(userInfo);
-            } else {
-                return $q.reject({
-                    authenticated: false
-                });
-            }
+            //var userInfo = LoginService.getUserInfo();
+            //if (userInfo!=null && userInfo.accessToken!=0) {
+            //    return $q.when(userInfo);
+            //} else {
+            //    return $q.reject({
+            //        authenticated: false
+            //    });
+            //}
         }]
     };
 
     $routeProvider.when("/", {
-        //templateUrl : "index.html",
-        resolve: resolve
 
     }).when("/company", {
-        templateUrl: "user/company.html",
+        templateUrl: "user/company_edit.html",
         resolve: resolve
-    }).when("/login", {
-        template: "<script>console.log(coconfigurationuration)<script>",
-        controller: ""
-    }).when("/workflows", {templateUrl: "user/moduel.html"})
+    }).when("/workflows", {
+        templateUrl: "user/moduel.html",
+        resolve: resolve
+    }).when("/register", {
+        templateUrl: "user/register.html"
+    }).when("/employees",{
+            templateUrl:"user/employee_list.html",
+            resolve:resolve
+        }
+    ).when("/view_employee",{
+            templateUrl:"user/employee_edit.html",
+            resolve:resolve
+        })
+        .when("/config",{
+            templateUrl:"user/user_config.html",
+            resolve:resolve
+        })
+        .when("/form",{
+            templateUrl:"user/view_document.html",
+            resolve:resolve
+        })
+        ;
 }]);
 
 app.filter('checkmark', function () {
@@ -104,3 +121,65 @@ app.controller('DropdownCtrl', function ($scope, $log) {
     };
 });
 
+app.directive('ngAutocomplete', function ($parse) {
+    return {
+
+        scope: {
+            details: '=',
+            ngAutocomplete: '=',
+            options: '='
+        },
+
+        link: function (scope, element, attrs, model) {
+
+            //options for autocomplete
+            var opts;
+
+            //convert options provided to opts
+            var initOpts = function () {
+                opts = {}
+                if (scope.options) {
+                    if (scope.options.types) {
+                        opts.types = []
+                        opts.types.push(scope.options.types)
+                    }
+                    if (scope.options.bounds) {
+                        opts.bounds = scope.options.bounds
+                    }
+                    if (scope.options.country) {
+                        opts.componentRestrictions = {
+                            country: scope.options.country
+                        }
+                    }
+                }
+            }
+            initOpts();
+
+            //create new autocomplete
+            //reinitializes on every change of the options provided
+            var newAutocomplete = function () {
+                scope.gPlace = new google.maps.places.Autocomplete(element[0], opts);
+                google.maps.event.addListener(scope.gPlace, 'place_changed', function () {
+                    scope.$apply(function () {
+//              if (scope.details) {
+                        scope.details = scope.gPlace.getPlace();
+//              }
+                        scope.ngAutocomplete = element.val();
+                    });
+                })
+            };
+            newAutocomplete();
+
+            //watch options provided to directive
+            scope.watchOptions = function () {
+                return scope.options
+            };
+            scope.$watch(scope.watchOptions, function () {
+                initOpts();
+                newAutocomplete();
+                element[0].value = '';
+                scope.ngAutocomplete = element.val();
+            }, true);
+        }
+    };
+});

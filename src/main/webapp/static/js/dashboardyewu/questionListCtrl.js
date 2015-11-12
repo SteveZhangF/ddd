@@ -13,7 +13,7 @@ app.directive('previewQuestion', function () {
         scope: {
             question: '='
         },
-        template: "<div class=\"panel panel-default\"><div class=\"panel-heading\">{{question.name}}</div><div class=\"panel-body\" id=\"question_content\"></div></div>",
+        template: "<div class=\"panel panel-default\"><div class=\"panel-heading\">{{question.name}}</div><div class=\"panel-body\" ><div id=\"description\">{{question.description}}</div><div id=\"question_content\"></div></div></div>",
         replace: true,
         link: function (scope, elem) {
 
@@ -59,6 +59,7 @@ app.controller('QuestionController', ['$scope', 'QuestionService', 'ngDialog', f
         {id: '1', name: 'questions1', type: 'text', content: '', description: ''},
         {id: '2', name: 'question2', type: 'select', content: '', description: ''},
         {id: '3', name: 'question3', type: 'textarea', content: '', description: ''}
+
     ];
 
     $scope.refreshAll = function () {
@@ -137,6 +138,9 @@ app.controller('QuestionController', ['$scope', 'QuestionService', 'ngDialog', f
             case 'selectDepartment':
                 content = '<plugin id="{+id+}"><select class="form-control"><option>Department</option></select></plugin>';
                 break;
+            case 'file':
+                content='<plugin id="{+id+}"><input type="file" class="form-control"></plugin>';
+                break;
         }
         $scope.question.content = content;
     };
@@ -162,7 +166,7 @@ app.controller('QuestionController', ['$scope', 'QuestionService', 'ngDialog', f
         }
     };
     //<label class="form-control"><input type="checkbox" value="ddd" > ddd</label>
-    $scope.types = ['textarea', "select", "text","checkbox","selectEmployee","selectDepartment"];
+    $scope.types = ['textarea', "select", "text","checkbox","selectEmployee","selectDepartment","file"];
 
     // when add a question button clicked
     $scope.createNew = function () {
