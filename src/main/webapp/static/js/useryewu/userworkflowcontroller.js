@@ -5,7 +5,7 @@
  * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
-app.controller('UserWorkflowController', ['$scope', 'UserWorkFlowService', 'LoginService', 'UserQuestionService', 'EmployeeService',function ($scope, UserWorkFlowService, LoginService, UserQuestionService,EmployeeService) {
+app.controller('UserWorkflowController', ['$scope', 'UserWorkFlowService', 'LoginService', 'UserQuestionService', 'EmployeeService','FileUploader',function ($scope, UserWorkFlowService, LoginService, UserQuestionService,EmployeeService,FileUploader) {
     $scope.workflows = [];
     $scope.currentNode = {};
     $scope.currentWorkFlow = {name: '', id: '', type: '', oe_id: ''};
@@ -198,10 +198,19 @@ app.controller('UserWorkflowController', ['$scope', 'UserWorkFlowService', 'Logi
 
         UserWorkFlowService.getRecordValue($scope.record).then(
             function (response) {
+
+
+
                 if ($scope.nodeData.type == 'checkbox') {
                     $scope.record.values = [$scope.nodeData.options];
                 }
                 $scope.record = response;
+
+                if($scope.nodeData.type == "file"){
+                    $scope.contractPreview.preview = false;
+                    $scope.contractPreview.file = $scope.record.value;
+                    $scope.contractPreview.pdfCount = 1+$scope.contractPreview.pdfCount;
+                }
 
                 if($scope.nodeData.type == 'checkbox'){
                     var values = eval($scope.record.value);
@@ -335,4 +344,41 @@ app.controller('UserWorkflowController', ['$scope', 'UserWorkFlowService', 'Logi
         );
     };
     $scope.nodeData = {};
+
+
+    /**
+     *  customized uploader
+     * */
+    var contractUploader = $scope.contractUploader = new FileUploader({
+        url: '/upload/',
+        formData: [{type: 'customized'}, {userId: LoginService.getUserInfo().userId}]
+    });
+
+    if (LoginService.getUserInfo().accessToken) {
+        var token = LoginService.getUserInfo();
+        if (token) {
+            contractUploader.headers['X-AUTH-TOKEN'] = token.accessToken;
+        }
+    } else {
+        contractUploader.headers['X-AUTH-TOKEN'] = '0';
+    }
+    contractUploader.onAfterAddingFile = function (fileItem) {
+        contractUploader.queue.length = 0;
+        contractUploader.queue.push(fileItem);
+        $scope.contractPreview.preview = true;
+        $scope.contractPreview.file = fileItem._file;
+        $scope.contractPreview.pdfCount = $scope.contractPreview.pdfCount + 1;
+    };
+    contractUploader.onSuccessItem = function (item, response, status, headers) {
+        $scope.record.value = response;
+    };
+
+    $scope.contractPreview = {
+        preview: false,
+        file: $scope.record.value,
+        pdfCount: -1,
+        height: '100%',
+        width: '100%'
+    }
+
 }]);

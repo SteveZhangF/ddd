@@ -1,7 +1,6 @@
 <div class="panel panel-default">
     <div class="panel-heading"><span class="lead">Job</span></div>
     <div class="panel-body">
-        {{editedEmployee}}
         <form name="employeeForm" class="css-form" novalidate>
             <!-- job title -->
             <div class="row">
@@ -9,7 +8,7 @@
                     <label class="col-md-3">Job Title</label>
 
                     <div class="col-md-3">
-                        <select class="form-control" ng-options="jt as jt.name for jt in jobTitles track by jt"
+                        <select class="form-control" ng-options="jt.name for jt in jobTitles"
                                 ng-model="editedEmployee.jobTitle"></select>
                     </div>
                 </div>
@@ -24,7 +23,7 @@
                 <label class="col-md-3">Employment Status</label>
 
                 <div class="col-md-3">
-                    <select class="form-control" ng-options="jt as jt.name for jt in employmentStatuses track by jt"
+                    <select class="form-control" ng-options="es.name for es in employmentStatuses"
                             ng-model="editedEmployee.employmentStatus"></select>
                 </div>
                 <label class="col-md-3">Joined Date</label>

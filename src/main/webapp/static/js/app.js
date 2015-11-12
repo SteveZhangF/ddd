@@ -88,7 +88,12 @@ app.config(['$routeProvider', function ($routeProvider) {
         .when("/config",{
             templateUrl:"user/user_config.html",
             resolve:resolve
-        });
+        })
+        .when("/form",{
+            templateUrl:"user/view_document.html",
+            resolve:resolve
+        })
+        ;
 }]);
 
 app.filter('checkmark', function () {

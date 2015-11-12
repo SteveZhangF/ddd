@@ -110,7 +110,7 @@ app.directive('ngThumb', ['$window', '$http', function ($window, $http) {
                             var width = params.width;
                             var height = params.height;
                             canvas.attr({width: width, height: height});
-                            canvas[0].getContext('2d').drawImage(img, 0, 0, width, height);
+                            canvas[0].getContext('2d').drawImage(img, 0, 0,width,height);
                         }).
                         error(function (data, status) {
                             var info = "Request failed with status: " + status;
@@ -133,8 +133,15 @@ app.directive('ngThumb', ['$window', '$http', function ($window, $http) {
                 function onLoadImage() {
                     var width = params.width || this.width / this.height * params.height;
                     var height = params.height || this.height / this.width * params.width;
-                    canvas.attr({width: width, height: height});
-                    canvas[0].getContext('2d').drawImage(this, 0, 0, width, height);
+                    //canvas.attr({width: width, height: height});
+                    //canvas.style.width='100%';
+                    //canvas.style.height='100%';
+                    angular.element(canvas).css("width",width);
+                    angular.element(canvas).css("height",height);
+                    console.log( angular.element(canvas).width());
+                    var f = this.width/angular.element(canvas).width();
+                    //canvas[0].getContext('2d').drawImage(this, 0, 0,this.width,this.height, 0, 0, angular.element(canvas).width(),angular.element(canvas).height());
+                    canvas[0].getContext('2d').drawImage(this, 0, 0, canvas[0].width,canvas[0].height)
                 }
             });
         }

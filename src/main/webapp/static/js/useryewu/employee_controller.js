@@ -6,26 +6,6 @@ app.controller('UserEmployeeController', ['$scope', 'EmployeeService', 'LoginSer
     $scope.selectedAll = false;
     $scope.itemPerPage = 5;
     $scope.isEditingEmployee = false;
-    //// define for employee
-    //var Employee = function (firstName, lastName, email, jobTitle, startTime, endTime) {
-    //    this.firstName = firstName;
-    //    this.lastName = lastName;
-    //    this.email = email;
-    //    this.jobTitle = jobTitle;
-    //    this.startTime = startTime;
-    //    this.endTime = endTime;
-    //    this.selected = false;
-    //    //gender
-    //    //ssn
-    //    //driver lsn
-    //    //driver exp
-    //
-    //
-    //};
-    //
-    //for (var i = 0; i < 10; i++) {
-    //    $scope.employees.push(new Employee("steve" + i, "zhang" + i, "zhangke@sss.ccc" + i, "developed" + i, new Date('1987-05-21'), "10.2"));
-    //}
 
 
     /**
@@ -152,6 +132,24 @@ app.controller('UserEmployeeEditController', ['$scope', 'EmployeeService', 'User
     $scope.selectedMenu = $scope.menus[0];
 
     $scope.employeeEditError = {hasError: {error: false, success: false}, msg: ""};
+    var userId = LoginService.getUserInfo().userId;
+    UserEmploymentStatusService.getEmploymentStatusByUserId(userId).then(function (data) {
+            $scope.employmentStatuses = data;
+        }, function (err) {
+            $scope.employmentStatuses=[{name:'NULL,Please create statuses first'}]
+        }
+    );
+
+    UserJobTitleService.getJobTitleByUserId(userId).then(
+        function (data) {
+            $scope.jobTitles = data;
+        },
+        function (err) {
+            $scope.jobTitles=[{name:'NULL,Please create Job Titles first'}]
+        }
+    );
+
+
     var uuid = $location.search().employeeId;
     if (uuid) {
         $scope.startSpin();
@@ -168,21 +166,6 @@ app.controller('UserEmployeeEditController', ['$scope', 'EmployeeService', 'User
             $scope.contractPreview.pdfCount = 1;
 
             //loading job titles and employment status .etc.
-            var userId = LoginService.getUserInfo().userId;
-            UserEmploymentStatusService.getEmploymentStatusByUserId(userId).then(function (data) {
-                    $scope.employmentStatuses = data;
-                }, function (err) {
-                }
-            );
-
-            UserJobTitleService.getJobTitleByUserId(userId).then(
-                function (data) {
-                    $scope.jobTitles = data;
-                },
-                function (err) {
-
-                }
-            );
 
         }, function (err) {
             $scope.stopSpin();
@@ -279,8 +262,8 @@ app.controller('UserEmployeeEditController', ['$scope', 'EmployeeService', 'User
     $scope.thumb = {
         preview: false,
         file: $scope.editedEmployee.imagePath,
-        height: 200,
-        width: 200,
+        height: '100%',
+        width: '100%',
         headImageCount: -1,
     };
 

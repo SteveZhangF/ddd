@@ -1,11 +1,11 @@
 <div ng-controller="UserEmployeeEditController">
-    <div class="row">{{editedEmployee}}
+    <div class="row">
         <div class="col-md-2">
             <div class="panel panel-default">
                 <div class="panel-heading"><span class="lead">{{newEmployee?"new employee":editedEmployee.firstName+" "+editedEmployee.lastName}}</span>
                 </div>
                 <div class="panel-body" style="position:relative">
-                    <div ng-show="headImageUploader.isHTML5"  class="img-thumbnail" ng-thumb="thumb"></div>
+                    <div ng-show="headImageUploader.isHTML5" id="thumb_container"  ng-style="{display:block}"  class="img-thumbnail" ng-thumb="thumb"></div>
                     <div class="input-group">
                         <input   type="file" nv-file-select="" class="form-control input-sm" uploader="headImageUploader"  aria-describedby="img-upload"/>
                         <span class="input-group-addon" id="img-upload" ng-click="headImageUploader.queue[0].upload()"

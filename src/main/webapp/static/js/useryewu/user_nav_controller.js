@@ -10,7 +10,7 @@ app.controller('UserNavController', ['$scope', function ($scope) {
                 ]},
                 {name:"My Documents",subMenu:[
                     {name:"Start Document",subMenu:[],href:"#/workflows"},
-                    {name:"View Document",subMenu:[],href:""}
+                    {name:"View Document",subMenu:[],href:"#/form"}
                 ]},
                 {name:"Config",subMenu:[],href:"#/config"
                 }
