@@ -4,10 +4,7 @@ import app.model.wordflow.workflowUser.UserWorkFlow;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "APP_USER")
@@ -23,18 +20,21 @@ public class User {
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
-    public String getWorkflows() {
-        return workflows;
+
+
+    @ElementCollection(fetch=FetchType.EAGER)
+    @CollectionTable(name="user_workflow_currentNode")
+    @MapKeyColumn(name="workflow_id")
+    @Column(name="currentNode_id")
+    private Map<String, String> workFlowCurrentNode = new HashMap<>();
+
+    public Map<String, String> getWorkFlowCurrentNode() {
+        return workFlowCurrentNode;
     }
 
-    public void setWorkflows(String workflows) {
-        this.workflows = workflows;
+    public void setWorkFlowCurrentNode(Map<String, String> workFlowCurrentNode) {
+        this.workFlowCurrentNode = workFlowCurrentNode;
     }
-
-    //    @OneToMany
-    @Lob
-    @Column(columnDefinition = "BLOB")
-    private String workflows = "";
 
     private String companyId;
 

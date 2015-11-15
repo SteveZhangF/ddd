@@ -1,10 +1,8 @@
 <!-- navbar -->
-<div class="nav_container" ng-controller="DashBoardNavController">
-    <nav class="navbar navbar-default" style="margin-bottom: 0">
+<div>
+    <nav class="navbar navbar-default" >
         <ul class="nav navbar-nav">
-            <li ng-repeat="menu in myMenu" class="{{menu == selectedMenu?'active':''}}"><a href="{{menu.href}}"
-                                                                                           ng-click="menuClicked(menu)"><span>{{menu.name}}</span><span
-                    ng-show="menu.subMenu.length!=0" class="caret"></span></a>
+            <li ><a href="#/index"><span>Home</span></a>
             </li>
         </ul>
         <ul class="nav navbar-nav pull-right" ng-controller="LoginController">
@@ -13,7 +11,9 @@
         </ul>
     </nav>
 </div>
+
 <!-- end navbar -->
+
 <script type="text/ng-template" id="login.html">
     <div class="container-fluid">
         <h1>Log in with your account</h1>

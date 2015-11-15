@@ -1,0 +1,114 @@
+<div class="row" ng-controller="RecordsController">
+    <div class="col-md-2">
+        <div class="well">
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation" class="{{x.selected?'active':''}}" ng-click="recordSelect(x)"
+                    ng-repeat="x in records"><a href="">{{x.name}}</a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+    <div class="col-md-10">
+        <div class="panel panel-primary">
+            <div class="panel-heading">{{selectedRecordConfig.tableForm.name}}</div>
+            <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="user-records-spinner"></span>
+            <div class="panel-body">
+                <div class="alert alert-success" ng-show="$scope.errorMsg.hasMsg && !$scope.errorMsg.isError">Success!</div>
+                <div class="alert alert-danger" ng-show="$scope.errorMsg.hasMsg && $scope.errorMsg.isError">Success!</div>
+                <div class="row">
+                    <label class="col-md-3">Record Name</label>
+
+                    <div class="list-group col-md-3">
+                        <a href="" class="list-group-item">
+                            <p class="list-group-item-text">{{selectedRecordConfig.tableForm.name}}</p>
+                        </a>
+                    </div>
+                </div>
+                <p></p>
+
+                <div class="row">
+                    <label class="col-md-3">Record Description</label>
+
+                    <div class="list-group col-md-6">
+                        <a href="" class="list-group-item">
+                            <p class="list-group-item-text">{{selectedRecordConfig.tableForm.description}}</p>
+                        </a>
+                    </div>
+                </div>
+                <p></p>
+
+                <div class="row">
+                    <label class="col-md-3">One Table per</label>
+
+                    <div class="list-group col-md-3">
+                        <a href="" class="list-group-item">
+                            <p class="list-group-item-text">{{selectedRecordConfig.tableForm.tableRate}}</p>
+                        </a>
+                    </div>
+
+                    <label class="col-md-3">One Record per</label>
+
+                    <div class="list-group col-md-3">
+                        <a href="" class="list-group-item">
+                            <p class="list-group-item-text">{{selectedRecordConfig.tableForm.recordRate}}</p>
+                        </a>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <label class="col-md-3">Default Values</label>
+
+                    <div class="col-md-9">
+                        <div class="row" ng-repeat="f in selectedRecordConfig.tableForm.fields">
+                            <label class="col-md-3">{{f.name}}</label>
+
+                            <div class="col-md-3">
+                                <div ng-switch="f.type">
+                                    <div ng-switch-when="date">
+                                             <select ng-model="selectedRecordConfig.defaultValues[f.id]" class="form-control"
+                                                     ng-options="dow for dow in dayOfWeek">
+                                             </select>
+                                    </div>
+                                    <div ng-switch-when="employee">
+                                        <select ng-model="selectedRecordConfig.defaultValues[f.id]" class="form-control"
+                                                ng-options="employee.uuid as employee.firstName for employee in employees"></select>
+                                    </div>
+                                    <div ng-switch-when="text">
+                                        <input type="text" ng-model="selectedRecordConfig.defaultValues[f.id]"
+                                               class="form-control">
+                                    </div>
+                                    <div ng-switch-when="week of month">
+                                        <select ng-model="selectedRecordConfig.defaultValues[f.id]" class="form-control">
+                                            <option>auto</option>
+                                        </select>
+                                    </div>
+                                    <div ng-switch-when="month of year">
+                                        <select ng-model="selectedRecordConfig.defaultValues[f.id]" class="form-control">
+                                            <option>auto</option>
+                                        </select>
+                                    </div>
+                                    <p></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-3">
+                        <button class="btn btn-sm btn-primary" ng-click="saveRecord()">Save</button>
+                        <button class="btn btn-sm btn-info">Cancel</button>
+                        <button class="btn btn-sm btn-default" ng-click="preview()">Preview</button>
+                    </div>
+                </div>
+
+                <div id="preview_temp"></div>
+
+                <div ng-if="isPreviewShowing">
+                    <object style="width:100%;height: 100%" data="{{content}}" type="application/pdf"></object>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

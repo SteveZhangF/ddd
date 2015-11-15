@@ -13,7 +13,7 @@ app.directive('phone', function () {
         require: 'ngModel',
         link: function (scope, elm, attrs, ctrl) {
 
-            var pattern=/^\+?\d{2}[- ]?\d{3}[- ]?\d{5}$/;
+            var pattern = /^\+?\d{2}[- ]?\d{3}[- ]?\d{5}$/;
 
             ctrl.$validators.phone = function (modelValue, viewValue) {
                 if (ctrl.$isEmpty(modelValue)) {
@@ -25,7 +25,22 @@ app.directive('phone', function () {
         }
     };
 });
-app.controller('UserCompanyController', ['$scope', 'CompanyService', 'LoginService','usSpinnerService' ,function ($scope, CompanyService, LoginService,usSpinnerService) {
+
+app.controller("UserCompanyNavController", ['$scope', function ($scope) {
+    $scope.companyMenu = [{name: "Company Information", subMenu: [], href: "user/company_edit.html"},
+        {name: "Employee List", subMenu: [], href: "user/employee_list.html"}
+    ];
+    $scope.selectedMenu = $scope.companyMenu[0];
+    $scope.menuSelect = function (menu) {
+        angular.forEach($scope.companyMenu, function (itm) {
+            itm.selected = itm.name === menu.name;
+        });
+        $scope.selectedMenu = menu;
+    };
+}])
+;
+
+app.controller('UserCompanyController', ['$scope', 'CompanyService', 'LoginService', 'usSpinnerService', function ($scope, CompanyService, LoginService, usSpinnerService) {
 
     /**
      * spinner start
@@ -50,7 +65,7 @@ app.controller('UserCompanyController', ['$scope', 'CompanyService', 'LoginServi
      * spanner end
      * */
 
-    $scope.companyError = {hasError:{success:false,error:false},msg:''};
+    $scope.companyError = {hasError: {success: false, error: false}, msg: ''};
 
     $scope.loadingCompany = function () {
         $scope.startSpin();
@@ -75,7 +90,7 @@ app.controller('UserCompanyController', ['$scope', 'CompanyService', 'LoginServi
     //update company information
     $scope.save = function () {
         $scope.startSpin();
-        CompanyService.updateCompany($scope.company,$scope.company.uuid).then(function (response) {
+        CompanyService.updateCompany($scope.company, $scope.company.uuid).then(function (response) {
             $scope.companyError.hasError.error = false;
             $scope.companyError.hasError.success = true;
             $scope.companyError.msg = "Success!";

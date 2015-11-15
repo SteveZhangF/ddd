@@ -30,6 +30,14 @@ public class WorkFlowNodeController {
     @Autowired
     WorkFlowNodeService workFlowNodeService;
 
+    @RequestMapping(value = "/user/workflownode/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<WorkFlowNode> getOneWorkFlowNodeForUser(@PathVariable("id") String id) {
+        WorkFlowNode workFlown = workFlowNodeService.get(id);
+        if (workFlown == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(workFlown, HttpStatus.OK);
+    }
 
     @RequestMapping(value = "/workflownode/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WorkFlowNode> getOneWorkFlowNode(@PathVariable("id") String id) {

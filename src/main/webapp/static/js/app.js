@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('clientApp', ['ngRoute', 'ui.bootstrap', 'ui.bootstrap.contextMenu','angularFileUpload', 'angularBootstrapNavTree', 'dndLists','smart-table', 'ui.tree', 'ngDialog', 'angularSpinner']);
+var app = angular.module('clientApp', ['ngRoute', 'ui.bootstrap', 'ui.bootstrap.contextMenu','angularFileUpload', 'angularBootstrapNavTree', 'customizedDirective','dndLists','smart-table', 'ui.tree', 'ngDialog', 'angularSpinner']);
 
 app.factory('LogInData', function () {
     return {
@@ -70,7 +70,7 @@ app.config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when("/", {
 
     }).when("/company", {
-        templateUrl: "user/company_edit.html",
+        templateUrl: "user/company.html",
         resolve: resolve
     }).when("/workflows", {
         templateUrl: "user/moduel.html",
@@ -89,8 +89,8 @@ app.config(['$routeProvider', function ($routeProvider) {
             templateUrl:"user/user_config.html",
             resolve:resolve
         })
-        .when("/form",{
-            templateUrl:"user/view_document.html",
+        .when("/document",{
+            templateUrl:"user/document.html",
             resolve:resolve
         })
         ;

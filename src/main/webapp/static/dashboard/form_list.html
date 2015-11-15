@@ -5,7 +5,6 @@
             <tr>
                 <th st-sort="id">ID</th>
                 <th st-sort="form_name">Form Name</th>
-                <th st-sort="createTime">Create Time</th>
                 <th st-sort="updateTime">Update Time</th>
                 <th>
                     <button type="button" ng-click="createNew()" class="btn btn-md">
@@ -29,9 +28,7 @@
             <tbody>
             <tr ng-repeat="x in forms">
                 <td>{{ $index + 1 }}</td>
-                <td>{{ x.id }}</td>
                 <td>{{x.form_name}}</td>
-                <td>{{x.createTime}}</td>
                 <td>{{x.updateTime}}</td>
                 <td>
                     <button type="button" ng-click="editFormFormatAction(x)" class="btn btn-md">

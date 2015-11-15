@@ -12,13 +12,6 @@
             <li><a href="" ng-click="logout()" ng-show="isLoginedIn()" ><span>Log out</span></a></li>
         </ul>
     </nav>
-    <nav ng-show="subMenu.length!=0" class="navbar navbar-default" style="margin-bottom: 10px">
-        <ul class="nav navbar-nav">
-            <li ng-repeat="menu in subMenu" class="{{menu == selectedSubMenu?'active':''}}"><a href="{{menu.href}}"
-                                                                                               ng-click="subMenuClicked(menu)"><span>{{menu.name}}</span></a>
-            </li>
-        </ul>
-    </nav>
 </div>
 <!-- end navbar -->
 <script type="text/ng-template" id="login.html">

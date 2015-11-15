@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('dashboardApp', ['ngRoute', 'ui.bootstrap','ngDialog', 'ui.bootstrap.contextMenu', 'angularBootstrapNavTree','virtualList','smart-table','froala','angularSpinner']);
+var app = angular.module('dashboardApp', ['ngRoute', 'ui.bootstrap','ngDialog', 'ui.bootstrap.contextMenu', 'customizedDirective','angularBootstrapNavTree','virtualList','smart-table','froala','angularSpinner']);
 
 // add an interceptor to add the token to the request head
 app.config(['$httpProvider', function ($httpProvider) {
@@ -14,7 +14,7 @@ app.config(['$httpProvider', function ($httpProvider) {
                         config.headers['X-AUTH-TOKEN'] = token.accessToken;
                     }
                 } else {
-                    $location.path('/');
+                    //$location.path('/');
                 }
                 return config;
             },
@@ -78,6 +78,16 @@ app.config(['$routeProvider', function ($routeProvider) {
     }).when("/workflows",{
         templateUrl:"dashboard/workflow.html"
     }).when("/questions",{templateUrl:"dashboard/question_list.html"})
+        .when("/table_forms",{
+            templateUrl:"dashboard/table_form_list.html",
+            //resolve:resolve
+        })
+        .when("/table_form_edit",
+        {
+            templateUrl:"dashboard/table_form_edit.html",
+            //resolve:resolve
+        })
+    ;
 
 }]);
 app.filter('checkmark', function () {

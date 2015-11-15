@@ -21,33 +21,27 @@
 
                 </div>
                 <hr>
-                <table st-table="employees_display"   st-safe-src="employees" class="table table-striped">
+                <table st-table="tableFormsDisplay"   st-safe-src="tableForms" class="table table-striped">
                     <thead>
                     <tr>
                         <th><label>
                             <input type="checkbox" ng-model="selectedAll" ng-click="selectAll()">
                         </label></th>
                         <th st-sort="{{$index}}">Index</th>
-                        <th st-sort="firstName">First Name</th>
-                        <th st-sort="lastName">Last Name</th>
-                        <th st-sort="email">Email</th>
-                        <th st-sort="jobTitle">Job Title</th>
-                        <th st-sort="startTime">Start Time</th>
-                        <th st-sort="endTime">End Time</th>
+                        <th st-sort="name">Name</th>
+                        <th st-sort="createTime">Create Time</th>
+                        <th st-sort="updateTime">Update Time</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="x in employees">
+                    <tr ng-repeat="x in tableFormsDisplay">
                         <td><label>
                             <input type="checkbox" ng-model="x.selected" ng-change="select()">
                         </label></td>
                         <td>{{ $index + 1 }}</td>
-                        <td><a href="" ng-click="editEmployee(x)">{{x.firstName}}</a></td>
-                        <td>{{x.lastName}}</td>
-                        <td>{{x.email}}</td>
-                        <td>{{x.jobTitle.name}}</td>
-                        <td>{{x.startDate | date}}</td>
-                        <td>{{x.endDate}}</td>
+                        <td><a href="" ng-click="editTableForm(x)">{{x.name}}</a></td>
+                        <td>{{x.createTime | date}}</td>
+                        <td>{{x.updateTime | date}}</td>
                     </tr>
                     </tbody>
                     <tfoot>

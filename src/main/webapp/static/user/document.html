@@ -1,4 +1,4 @@
-<div ng-controller="UserConfigController" class="row">
+<div ng-controller="UserDocumentNavController" class="row">
     <div class="col-md-2">
         <div class="well">
             <ul class="nav nav-pills nav-stacked">
@@ -8,7 +8,6 @@
         </div>
     </div>
     <div class="col-md-10">
-        <div ng-include="selectedMenu.url"></div>
+        <div ng-include="selectedMenu.href"></div>
     </div>
-
 </div>

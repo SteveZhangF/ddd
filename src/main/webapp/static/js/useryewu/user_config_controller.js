@@ -3,12 +3,9 @@
 app.controller('UserConfigController', ['$scope', function ($scope) {
     $scope.menus = [
         {name: 'Account Config', url: 'user/account_config.html', selected: true},
-        {name: 'Job', selected: false, subMenu:
-            [
-                {name:'Job Titles',url:'user/job_title_config.html',selected:false},
-                {name:'Employment Status',url:'user/job_employment_status_config.html',selected:false}
-            ]
-        }
+        {name: 'Job Titles', url: 'user/job_title_config.html', selected: false},
+        {name: 'Employment Status', url: 'user/job_employment_status_config.html', selected: false},
+        {name: 'Records', url: 'user/records_config.html', selected: false}
     ];
     $scope.selectedMenu = $scope.menus[0];
     $scope.menuSelect = function (menu) {
@@ -65,10 +62,10 @@ app.controller("JobTitleController", ['$scope', 'usSpinnerService', '$timeout', 
     /**
      * spanner end
      * */
-    $scope.hasError = {error:false,success:false};
-    $scope.setError = function (ifError,data) {
+    $scope.hasError = {error: false, success: false};
+    $scope.setError = function (ifError, data) {
         console.log(data);
-        $scope.hasError.error=ifError;
+        $scope.hasError.error = ifError;
         $scope.hasError.success = !ifError;
     };
 
@@ -80,10 +77,10 @@ app.controller("JobTitleController", ['$scope', 'usSpinnerService', '$timeout', 
                 $scope.jobTitles = data;
                 $scope.employmentStatusesDisplay = angular.copy($scope.employmentStatuses);
                 $scope.stopSpin();
-                $scope.setError(false,data);
+                $scope.setError(false, data);
             },
             function (err) {
-                $scope.setError(true,err);
+                $scope.setError(true, err);
                 $scope.stopSpin();
             }
         );
@@ -116,17 +113,17 @@ app.controller("JobTitleController", ['$scope', 'usSpinnerService', '$timeout', 
         UserJobTitleService.deleteJobTitles(ids).then(
             function (data) {
                 $scope.loadAll();
-                $scope.setError(false,data);
+                $scope.setError(false, data);
             },
             function (err) {
                 $scope.loadAll();
-                $scope.setError(true,err);
+                $scope.setError(true, err);
             }
         );
         //delete
     };
 
-    $scope.newJobTitle = {name: '', description: '', editing: false,isNew:true};
+    $scope.newJobTitle = {name: '', description: '', editing: false, isNew: true};
     $scope.editJobTitle = function (jobTitle) {
         jobTitle.editing = !jobTitle.editing;
     };
@@ -134,31 +131,31 @@ app.controller("JobTitleController", ['$scope', 'usSpinnerService', '$timeout', 
     $scope.saveTitle = function (jobTitle) {
         jobTitle.userId = LoginService.getUserInfo().userId;
 
-        if(jobTitle.isNew){
+        if (jobTitle.isNew) {
 
             UserJobTitleService.saveJobTitle(jobTitle).then(
                 function (data) {
-                    $scope.newJobTitle.name="";
-                    $scope.newJobTitle.description="";
+                    $scope.newJobTitle.name = "";
+                    $scope.newJobTitle.description = "";
                     $scope.newJobTitle.editing = false;
                     $scope.newJobTitle.isNew = true;
                     $scope.loadAll();
-                    $scope.setError(false,data);
+                    $scope.setError(false, data);
                 },
                 function (err) {
                     $scope.loadAll();
-                    $scope.setError(true,err);
+                    $scope.setError(true, err);
                 }
             );
-        }else{
+        } else {
             UserJobTitleService.updateJobTitle(jobTitle).then(
                 function (data) {
                     $scope.loadAll();
-                    $scope.setError(false,data);
+                    $scope.setError(false, data);
                 },
                 function (err) {
                     $scope.loadAll();
-                    $scope.setError(true,err);
+                    $scope.setError(true, err);
                 }
             )
         }
@@ -170,7 +167,7 @@ app.controller("JobTitleController", ['$scope', 'usSpinnerService', '$timeout', 
     }
 }]);
 
-app.controller("EmploymentStatusController", ['$scope',  'usSpinnerService', '$timeout', 'LoginService', 'UserEmploymentStatusService',function ($scope,usSpinnerService,$timeout,LoginService,UserEmploymentStatusService) {
+app.controller("EmploymentStatusController", ['$scope', 'usSpinnerService', '$timeout', 'LoginService', 'UserEmploymentStatusService', function ($scope, usSpinnerService, $timeout, LoginService, UserEmploymentStatusService) {
     /**
      * spinner start
      * */
@@ -191,10 +188,10 @@ app.controller("EmploymentStatusController", ['$scope',  'usSpinnerService', '$t
     /**
      * spanner end
      * */
-    $scope.hasError = {error:false,success:false};
-    $scope.setError = function (ifError,data) {
+    $scope.hasError = {error: false, success: false};
+    $scope.setError = function (ifError, data) {
         console.log(data);
-        $scope.hasError.error=ifError;
+        $scope.hasError.error = ifError;
         $scope.hasError.success = !ifError;
     };
 
@@ -206,10 +203,10 @@ app.controller("EmploymentStatusController", ['$scope',  'usSpinnerService', '$t
                 $scope.employmentStatuses = data;
                 $scope.employmentStatusesDisplay = angular.copy($scope.employmentStatuses);
                 $scope.stopSpin();
-                $scope.setError(false,data);
+                $scope.setError(false, data);
             },
             function (err) {
-                $scope.setError(true,err);
+                $scope.setError(true, err);
                 $scope.stopSpin();
             }
         );
@@ -242,17 +239,17 @@ app.controller("EmploymentStatusController", ['$scope',  'usSpinnerService', '$t
         UserEmploymentStatusService.deleteEmploymentStatus(ids).then(
             function (data) {
                 $scope.loadAll();
-                $scope.setError(false,data);
+                $scope.setError(false, data);
             },
             function (err) {
                 $scope.loadAll();
-                $scope.setError(true,err);
+                $scope.setError(true, err);
             }
         );
         //delete
     };
 
-    $scope.newEmploymentStatus = {name: '', description: '', editing: false,isNew:true};
+    $scope.newEmploymentStatus = {name: '', description: '', editing: false, isNew: true};
     $scope.editEmploymentStatus = function (employmentStatus) {
         employmentStatus.editing = !employmentStatus.editing;
     };
@@ -260,31 +257,31 @@ app.controller("EmploymentStatusController", ['$scope',  'usSpinnerService', '$t
     $scope.saveEmploymentStatus = function (employmentStatus) {
         employmentStatus.userId = LoginService.getUserInfo().userId;
 
-        if(employmentStatus.isNew){
+        if (employmentStatus.isNew) {
 
             UserEmploymentStatusService.saveEmploymentStatus(employmentStatus).then(
                 function (data) {
-                    $scope.newEmploymentStatus.name="";
-                    $scope.newEmploymentStatus.description="";
+                    $scope.newEmploymentStatus.name = "";
+                    $scope.newEmploymentStatus.description = "";
                     $scope.newEmploymentStatus.editing = false;
                     $scope.newEmploymentStatus.isNew = true;
                     $scope.loadAll();
-                    $scope.setError(false,data);
+                    $scope.setError(false, data);
                 },
                 function (err) {
                     $scope.loadAll();
-                    $scope.setError(true,err);
+                    $scope.setError(true, err);
                 }
             );
-        }else{
+        } else {
             UserEmploymentStatusService.updateEmploymentStatus(employmentStatus).then(
                 function (data) {
                     $scope.loadAll();
-                    $scope.setError(false,data);
+                    $scope.setError(false, data);
                 },
                 function (err) {
                     $scope.loadAll();
-                    $scope.setError(true,err);
+                    $scope.setError(true, err);
                 }
             )
         }

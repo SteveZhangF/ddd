@@ -28,7 +28,7 @@ app.controller('UserWorkflowController', ['$scope', 'UserWorkFlowService', 'Logi
         this.type = type;
         this.oe_id = oe_id;
         this.currentNode = current_node;
-    }
+    };
 
 
     var Node = function (type, name, id, data, nexts, prev) {
@@ -38,16 +38,16 @@ app.controller('UserWorkflowController', ['$scope', 'UserWorkFlowService', 'Logi
         this.data = data;
         this.nexts = nexts;
         this.prev = prev;
-    }
+    };
 
     var NormalNode = function (type, name, id, data, nexts, prev) {
         Node.call(this, type, name, id, data, nexts, prev);
-    }
+    };
     NormalNode.prototype = new Node();
 
     var QuestionNode = function (type, name, id, data, nexts, prev) {
         Node.call(this, type, name, id, data, nexts, prev);
-    }
+    };
     QuestionNode.prototype = new Node();
     QuestionNode.prototype.getData = function () {
         // get question content
@@ -198,9 +198,6 @@ app.controller('UserWorkflowController', ['$scope', 'UserWorkFlowService', 'Logi
 
         UserWorkFlowService.getRecordValue($scope.record).then(
             function (response) {
-
-
-
                 if ($scope.nodeData.type == 'checkbox') {
                     $scope.record.values = [$scope.nodeData.options];
                 }
@@ -379,6 +376,6 @@ app.controller('UserWorkflowController', ['$scope', 'UserWorkFlowService', 'Logi
         pdfCount: -1,
         height: '100%',
         width: '100%'
-    }
+    };
 
 }]);

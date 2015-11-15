@@ -1,54 +1,37 @@
 'use strict';
-app.directive('checkList', function () {
-    return {
-        scope: {
-            list: '=checkList',
-            numList: '=checkNumList',
-            value: '@',
-            'check': '&onCheck'
-        },
-        link: function (scope, elem, attrs) {
-            var handler = function (setup) {
-                var checked = elem.prop('checked');
-                var index = scope.list.indexOf(scope.value);
 
-                if (checked && index == -1) {
-                    if (setup) {
-                        elem.prop('checked', false);
-                    } else {
-                        scope.list.push(scope.value);
-                        scope.numList ? scope.numList.push(attrs.reqNum) : "";
-                    }
-                } else if (!checked && index != -1) {
-                    if (setup) {
-                        elem.prop('checked', true);
-                    } else {
-                        scope.list.splice(index, 1);
-                        scope.numList ? scope.numList.splice(index, 1) : "";
-                    }
-
-                }
-            };
-
-            var setupHandler = function () {
-                handler(true);
-            };
-            var changeHandler = function () {
-                handler(false);
-            };
-
-            elem.bind('change', function () {
-                scope.$apply(changeHandler);
-            });
-            scope.$watch('list', setupHandler, true);
-        }
-    };
-});
 app.controller('UserController', ['$scope', 'UserService', 'WorkFlowService', 'ngDialog', function ($scope, UserService, WorkFlowService, ngDialog) {
     var self = this;
 
-    $scope.user = {id: null, ssoId: '', companyId: '', email: "", state: "", userProfiles: []};
-    $scope.users = [];
+    //$scope.user = {id: null, ssoId: '', companyId: '', email: "", state: "", userProfiles: []};
+    $scope.users = [{
+        "id": 1,
+        "ssoId": "123",
+        "password": "",
+        "workFlowCurrentNode": {},
+        "companyId": "40288085509cd0ce01509cd374b20000",
+        "email": "s@s.c",
+        "state": "Active",
+        "userProfiles": [{"id": 3, "type": "USER"}]
+    }, {
+        "id": 2,
+        "ssoId": "1111111",
+        "password": "1111111",
+        "workFlowCurrentNode": {},
+        "companyId": null,
+        "email": "z@k.c",
+        "state": "Active",
+        "userProfiles": [{"id": 3, "type": "USER"}]
+    }, {
+        "id": 3,
+        "ssoId": "2222222",
+        "password": "1111111",
+        "workFlowCurrentNode": {},
+        "companyId": "4028808550ea5bfa0150ea5eb5350000",
+        "email": "sdqfspd@live.com",
+        "state": "Active",
+        "userProfiles": [{"id": 3, "type": "USER"}]
+    }];
 
 
     self.fetchAllUsers = function () {
@@ -106,35 +89,51 @@ app.controller('UserController', ['$scope', 'UserService', 'WorkFlowService', 'n
         }, {
             id: 2, name: "dierge", index: '2'
         }],
-        checked: [],
-        checkedname: []
-    }
+        checked: []
+    };
     var dialog;
     $scope.ok = function () {
-        UserService.updateUserWorkflow($scope.user.id, $scope.workflow.checked);
-        console.log($scope.workflow.checked);
-        if(dialog){
+        for (var i = 0; i < $scope.workflow.checked.length; i++) {
+            if ($scope.user.workFlowCurrentNode[$scope.workflow.checked[i]] == undefined) {
+                $scope.user.workFlowCurrentNode[$scope.workflow.checked[i]] = '';
+            }
+        }
+        UserService.updateUserWorkflow($scope.user.id, $scope.user.workFlowCurrentNode);
+        if (dialog) {
             dialog.close("");
         }
 
-    }
+    };
 
     $scope.cancel = function () {
-        if(dialog){
+        if (dialog) {
             dialog.close("");
         }
-    }
+    };
 
 
     $scope.editor = function (user) {
         $scope.user = user;
+        var wf = $scope.workflow.all;
+        $scope.workflow.checked.length = 0;
+        console.log(user.workFlowCurrentNode);
+        for (var i = 0; i < wf.length; i++) {
+            if (user.workFlowCurrentNode[wf[i].id] != undefined) {
+                console.log("true");
+                $scope.workflow.checked.push(wf[i].id);
+            }
+        }
         WorkFlowService.fetchAllWorkFlow().then(function (wf) {
             $scope.workflow.all = wf;
             $scope.workflow.checked.length = 0;
-            var wf = eval(user.workflows);
             for (var i = 0; i < wf.length; i++) {
-                $scope.workflow.checked.push(wf[i]);
+                if (user.workFlowCurrentNode[wf.id]) {
+                    $scope.workflow.checked.push(wf[i]);
+                }
             }
+            //for (var i = 0; i < wf.length; i++) {
+            //    $scope.workflow.checked.push(wf[i]);
+            //}
         });
         dialog = ngDialog.open({
             template: 'user-editor.html',

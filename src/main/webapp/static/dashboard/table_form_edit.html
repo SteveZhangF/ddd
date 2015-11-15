@@ -1,0 +1,167 @@
+<div class="panel panel-primary" ng-controller="TableFormEditController">
+    <div class="panel-heading">
+        <span class="lead">Edit Table Form </span>
+        <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="table-form-list-spinner"></span>
+    </div>
+    <div class="panel-body">
+        <div class="alert alert-success" ng-show="errorMsg.hasMsg && !errorMsg.isError">Success!</div>
+        <div class="alert alert-danger" ng-show="errorMsg.hasMsg && errorMsg.isError">Error! Please Try Later!</div>
+        <form name="table_form_form" class="css-form" novalidate>
+            <div class="row">
+                <label class="col-md-3">Name</label>
+
+                <div class="col-md-3"
+                     ng-class="{'has-error':table_form_form.name.$invalid &&!table_form_form.name.$pristine}">
+                    <input type="text" name="name" class="form-control" ng-model="editedTableForm.name" required>
+                </div>
+            </div>
+            <p></p>
+
+            <div class="row">
+                <label class="col-md-3">Create Time</label>
+                <label class="col-md-3">{{editedTableForm.createTime | date:'yyyy-MM-dd HH:mm '}}</label>
+                <label class="col-md-3">Update Time</label>
+                <label class="col-md-3">{{editedTableForm.updateTime | date:'yyyy-MM-dd HH:mm'}}</label>
+
+            </div>
+            <p></p>
+
+            <div class="row">
+                <label class="col-md-3">One table per
+                </label>
+
+                <div class="col-md-3">
+                    <select class="form-control" name="tableRate" ng-model="editedTableForm.tableRate">
+                        <option>Year</option>
+                        <option>Month</option>
+                        <option>Week</option>
+                        <option>Day</option>
+                    </select>
+                </div>
+                <label class="col-md-3">One Record per
+                </label>
+
+                <div class="col-md-3">
+                    <select class="form-control" name="recordRate" ng-model="editedTableForm.recordRate">
+                        <option>Year</option>
+                        <option>Month</option>
+                        <option>Week</option>
+                        <option>Day</option>
+                    </select>
+                </div>
+            </div>
+            <p></p>
+
+            <div class="row">
+                <label class="col-md-3">Description</label>
+
+                <div class="col-md-6"
+                     ng-class="{'has-error':table_form_form.description.$invalid &&!table_form_form.description.$pristine}">
+                    <textarea  name="description" class="form-control" ng-model="editedTableForm.description"
+                              required></textarea>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <label class="col-md-3">Fields</label>
+
+                <div class="col-md-6">
+                    <table class="table table-hover table-striped">
+                        <thead>
+                        <tr class="info">
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Operation</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="field in editedTableForm.fields"
+                            ng-dblclick="field.editing=!field.editing == true">
+                            <td>{{$index}}
+                            </td>
+                            <td><span ng-show="!!!field.editing">{{field.name}}</span>
+                                <input type="text" class="form-control" ng-model="field.name" ng-show="field.editing">
+                            </td>
+
+                            <td><span ng-show="!!!field.editing">{{field.type}}</span>
+                                <select class="form-control" ng-model="field.type" ng-show="field.editing" ng-options="ft for ft in fieldTypes"></select>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" ng-click="updateField(field)">Update</button>
+                                <button class="btn btn-sm btn-danger" ng-click="deleteField(field)">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input type="text" ng-model="newField.name" class="form-control">
+                            </td>
+                            <td>
+                                <select class="form-control" ng-model="newField.type" ng-options="ft for ft in fieldTypes"></select>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" ng-click="addField(newField)">Add</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-md-3">Format</label>
+
+                <div class="col-md-3">
+                    <button class="btn btn-sm btn-primary" ng-show="!isEditingFormat" ng-click="editFormat()">Edit
+                        Format
+                    </button>
+                    <button class="btn btn-sm btn-primary" ng-show="isEditingFormat" ng-click="saveFormat()">Save
+                        Format
+                    </button>
+                    <button class="btn btn-sm btn-primary" ng-show="isEditingFormat" ng-click="isEditingFormat=false">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+            <p></p>
+
+            <div class="row">
+                <label class="col-md-3"></label>
+
+                <div class="col-md-9" id="formDesigner" context-menu="menuOptions" froala="froalaOptions"
+                     ng-model="myHtml" ng-show="isEditingFormat"></div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-3">
+                    <button class="btn btn-primary btn-sm" ng-click="saveTableForm()">Save</button>
+                    <button class="btn btn-default btn-sm" ng-click="cancelTableForm()">Cancel</button>
+                    <button class="btn btn-info btn-sm" ng-click="preview()">Preview</button>
+                </div>
+            </div>
+        </form>
+
+        <div id="preview_temp"></div>
+
+        <div ng-show="isPreviewShowing">
+            <object style="width:100%;height: 100%" data="{{content}}" type="application/pdf"></object>
+        </div>
+
+        <!--<table class="table table-hover table-bordered table-striped" id="preview_table" >-->
+            <!--<thead>-->
+            <!--<tr>-->
+                <!--<th ng-repeat="field in editedTableForm.fields">-->
+                    <!--{{field.name}}-->
+                <!--</th>-->
+            <!--</tr>-->
+            <!--</thead>-->
+            <!--<tbody>-->
+            <!--<tr>-->
+                <!--<td id="{{field.id}}" ng-repeat="field in editedTableForm.fields">-->
+                <!--</td>-->
+            <!--</tr>-->
+            <!--</tbody>-->
+        <!--</table>-->
+
+    </div>
+</div>

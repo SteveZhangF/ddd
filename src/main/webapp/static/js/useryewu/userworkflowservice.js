@@ -27,8 +27,8 @@ app.factory('UserWorkFlowService', ['$http', '$q','LoginService' ,function ($htt
             );
         },
         //however, here i have to user put instead of get
-        getCurrentNode: function (userWorkflow) {
-            return $http.put('/user/workflow/',userWorkflow)
+        getCurrentNode: function (id) {
+            return $http.get('/user/workflownode/'+id)
                 .then(
                 function (response) {
                     return response.data;

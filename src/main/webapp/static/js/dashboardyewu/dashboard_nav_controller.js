@@ -1,24 +1,26 @@
 'use strict';
 var app = angular.module("dashboardApp");
 app.controller('DashBoardNavController', ['$scope', function ($scope) {
+    //<div id="sidebar-nav">
+    //    <ul id="dashboard-menu">
+    //    <li><a href="index.html"><span>Home</span>
+    //    </a></li>
+    //<li><a href="#/users"><span>Users</span></a></li>
+    //<li><a href="#/forms"><span>All Forms</span></a></li>
+    //<li><a href="#/workflows"><span>Work Flow</span></a></li>
+    //<li><a href="#/questions"><span>Questions</span></a></li>
+    //</ul>
+    //</div>
     $scope.myMenu =
         [
             {name:"Home",subMenu:[],href:"#/index"},
-            {name: "My Company",
-                subMenu: [{name: "Company Information", subMenu: [],href:"#/company"},
-                    {name: "Employee List", subMenu: [],href:"#/employees"}
-                ]},
-            {name:"My Documents",subMenu:[
-                {name:"Start Document",subMenu:[],href:"#/workflows"},
-                {name:"View Document",subMenu:[],href:"#/form"}
-            ]},
-            {name:"Config",subMenu:[],href:"#/config"
-            }
+            {name: "Users",href:"#/users"},
+            {name:"forms",href:"#/forms"},
+            {name:"Questions Sequences",href:"#/workflows"},
+            {name:"Questions",href:"#/questions"},
+            {name:"Table Forms",href:"#/table_forms"}
         ]
     ;
-    $scope.result1 = '';
-    $scope.selectedMenu=$scope.myMenu[0];
-    $scope.selectedSubMenu = null;
     $scope.menuClicked = function (menu) {
         $scope.selectedMenu = menu;
     };

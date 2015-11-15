@@ -1,0 +1,13 @@
+<div ng-controller="UserCompanyNavController" class="row">
+    <div class="col-md-2">
+        <div class="well">
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation" class="{{x.selected?'active':''}}" ng-click="menuSelect(x)" ng-repeat="x in companyMenu"><a href="">{{x.name}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-10">
+        <div ng-include="selectedMenu.href"></div>
+    </div>
+</div>

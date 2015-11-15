@@ -8,8 +8,10 @@ import app.model.user.State;
 import app.model.user.User;
 import app.model.user.UserProfileType;
 import app.model.userconstructure.Company;
+import app.model.wordflow.WorkFlow;
 import app.service.system.UserService;
 import app.service.userconstructure.CompanyService;
+import app.service.workflow.WorkFlowService;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class UserController {
@@ -84,7 +87,6 @@ public class UserController {
     }
 
 
-
     /**
      * delete a user
      */
@@ -100,7 +102,6 @@ public class UserController {
         List<User> users = userService.list();
         return new ResponseEntity<List<User>>(users, HttpStatus.OK);
     }
-
 
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
@@ -120,7 +121,7 @@ public class UserController {
             } catch (Exception e) {
                 return new ResponseEntity<Message>(HttpStatus.EXPECTATION_FAILED);
             }
-        }else{
+        } else {
             return new ResponseEntity<Message>(HttpStatus.CONFLICT);
         }
 
@@ -177,13 +178,21 @@ public class UserController {
     @Autowired
     SessionFactory sessionFactory;
 
+    @Autowired
+    WorkFlowService workFlowService;
+
     @RequestMapping(value = "/user/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public void updateUserWorkflow(@PathVariable("id") int id, @RequestBody String workflows, HttpServletResponse response) {
+    public void updateUserWorkflow(@PathVariable("id") int id, @RequestBody Map<String, String> workflows, HttpServletResponse response) {
         User user = userService.findById(id);
-        System.out.println(workflows);
-        user.setWorkflows(workflows);
+
+        for (String key : workflows.keySet()) {
+            if (workflows.get(key).equals("")) {
+                WorkFlow workFlow = workFlowService.get(key);
+                workflows.put(key,workFlow.getStartNode_id());
+            }
+        }
+        user.setWorkFlowCurrentNode(workflows);
         try {
-//            userService.update(user);
             userService.update(user);
             response.setStatus(HttpServletResponse.SC_OK);
         } catch (Exception e) {
@@ -193,11 +202,11 @@ public class UserController {
     }
 
     @RequestMapping(value = "/user/getworkflow/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getUserWorkflow(@PathVariable("id") int id) {
+    public ResponseEntity<Map<String, String>> getUserWorkflow(@PathVariable("id") int id) {
         User user = userService.findById(id);
         if (user == null)
-            return "no user found";
-        return user.getWorkflows();
+            return new ResponseEntity<Map<String, String>>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<Map<String, String>>(user.getWorkFlowCurrentNode(), HttpStatus.OK);
     }
 
     class UserInfo {

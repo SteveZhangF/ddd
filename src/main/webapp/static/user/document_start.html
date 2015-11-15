@@ -1,0 +1,33 @@
+<!--
+  ~ Copyright (c) 2015. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  -->
+<div ng-controller="UserDocumentStartController" class="row">
+    <div class="well">
+        Hi, Welcome to start your documentary!
+        <p>
+        {{nowFlow.description}}
+        </p>
+        <p>Click next when you finish</p>
+        <div class="row">
+            <nav>
+                <ul class="pager">
+                    <li class="previous {{flowIndex==0?'disabled':''}}"><a
+                            ng-click="prev()"
+                            href=""><span
+                            aria-hidden="true">&larr;</span> Prev</a></li>
+                    <li class="next {{flowIndex==flows.length-1?'disabled':''}}"><a
+                            ng-click="next()"
+                            href="">Next <span
+                            aria-hidden="true">&rarr;</span></a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div ng-include="nowFlow.url">
+    </div>
+</div>
+
