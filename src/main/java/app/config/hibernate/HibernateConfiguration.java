@@ -25,8 +25,8 @@ import java.util.Properties;
 @PropertySource(value = {"classpath:application.properties"})
 public class HibernateConfiguration {
 
-    @Autowired
-    private Environment environment;
+//    @Autowired
+//    private Environment environment;
 
     @Bean
     public LocalSessionFactoryBean sessionFactory() throws URISyntaxException {
@@ -59,12 +59,13 @@ public class HibernateConfiguration {
     //		<property name="hbm2ddl.auto">update</property>
     private Properties hibernateProperties() {
         Properties properties = new Properties();
-        properties.put("hibernate.dialect", environment.getRequiredProperty("hibernate.dialect"));
-        properties.put("hibernate.show_sql", environment.getRequiredProperty("hibernate.show_sql"));
-        properties.put("hibernate.format_sql", environment.getRequiredProperty("hibernate.format_sql"));
+//        properties.put("hibernate.dialect", environment.getRequiredProperty("hibernate.dialect"));
+//        properties.put("hibernate.show_sql", environment.getRequiredProperty("hibernate.show_sql"));
+//        properties.put("hibernate.format_sql", environment.getRequiredProperty("hibernate.format_sql"));
+
         //  properties.put("hibernate.hdm2ddl.auto", environment.getRequiredProperty("hibernate.hdm2ddl.auto"));
         properties.put("hibernate.hbm2ddl.auto", "update");
-        System.out.println(environment.getRequiredProperty("hibernate.hdm2ddl.auto"));
+//        System.out.println(environment.getRequiredProperty("hibernate.hdm2ddl.auto"));
         return properties;
     }
 
