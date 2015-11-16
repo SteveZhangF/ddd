@@ -44,15 +44,28 @@ public class HibernateConfiguration {
 //        dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
 //        dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
 //        dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
-        URI dbUri = new URI(System.getenv("DATABASE_URL"));
+//        URI dbUri = new URI(System.getenv("DATABASE_URL"));
+//        String username = dbUri.getUserInfo().split(":")[0];
+//        String password = dbUri.getUserInfo().split(":")[1];
+//        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
+//
+//        BasicDataSource basicDataSource = new BasicDataSource();
+//        basicDataSource.setUrl(dbUrl);
+//        basicDataSource.setUsername(username);
+//        basicDataSource.setPassword(password);
+
+        URI dbUri = new URI(System.getenv("CLEARDB_DATABASE_URL"));
+
         String username = dbUri.getUserInfo().split(":")[0];
         String password = dbUri.getUserInfo().split(":")[1];
-        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
+        String dbUrl = "jdbc:mysql://" + dbUri.getHost() + dbUri.getPath();
 
         BasicDataSource basicDataSource = new BasicDataSource();
         basicDataSource.setUrl(dbUrl);
         basicDataSource.setUsername(username);
         basicDataSource.setPassword(password);
+
+
         return basicDataSource;
     }
 

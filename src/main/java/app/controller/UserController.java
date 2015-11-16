@@ -134,7 +134,7 @@ public class UserController {
         }
 
     }
-
+// heroku COMMAND [--app APP] [command-specific-options]
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<UserInfo> login(@RequestBody User userinfo, HttpServletResponse response) {
