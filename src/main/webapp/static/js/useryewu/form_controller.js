@@ -1,8 +1,6 @@
 'use strict';
 
 app.controller('DocumentViewController', ['$scope', '$filter', 'UserFormService', 'LoginService', 'EmployeeService', 'RecordService', 'UserWorkFlowService', 'usSpinnerService', function ($scope, $filter, UserFormService, LoginService, EmployeeService, RecordService, UserWorkFlowService, usSpinnerService) {
-
-
     /**
      * spinner start
      * */
@@ -433,7 +431,9 @@ app.controller('DocumentViewController', ['$scope', '$filter', 'UserFormService'
             function (dispose) {
                 $scope.content = pdf.output("dataurlstring");
                 console.log(name);
-                callBack(name,pdf.output("dataurlstring"));
+                if(typeof (callBack) == 'function'){
+                    callBack(name,pdf.output("dataurlstring"));
+                }
             }, margins);
         angular.element(source).css("display", "none");
     };

@@ -1,0 +1,237 @@
+<style>div[data-angular-treeview] {
+    /* prevent user selection */
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    /* default */
+    font-family: Tahoma;
+    font-size: 13px;
+    color: #555;
+    text-decoration: none;
+}
+
+div[data-tree-model] ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: none;
+    overflow: hidden;
+}
+
+div[data-tree-model] li {
+    position: relative;
+    padding: 0 0 0 20px;
+    line-height: 20px;
+}
+
+div[data-tree-model] li .expanded {
+    padding: 1px 10px;
+    background-image: url("http://cfile23.uf.tistory.com/image/205B973A50C13F4B19D9BD");
+    background-repeat: no-repeat;
+}
+
+div[data-tree-model] li .collapsed {
+    padding: 1px 10px;
+    background-image: url("http://cfile23.uf.tistory.com/image/1459193A50C13F4B1B05FB");
+    background-repeat: no-repeat;
+}
+
+div[data-tree-model] li .normal {
+    padding: 1px 10px;
+    background-image: url("http://cfile23.uf.tistory.com/image/165B663A50C13F4B196CCA");
+    background-repeat: no-repeat;
+}
+
+div[data-tree-model] li i, div[data-tree-model] li span {
+    cursor: pointer;
+}
+
+div[data-tree-model] li .selected {
+    background-color: #aaddff;
+    font-weight: bold;
+    padding: 1px 5px;
+}
+</style>
+
+
+<div ng-controller="FormFolderTreeController" class="row">
+    <div class="well col-md-2">
+        <div
+                data-angular-treeview="true"
+                data-tree-id="modelTree"
+                data-tree-model="folders"
+                data-node-id="id"
+                data-node-label="name"
+                data-node-is-leaf="leaf"
+                data-node-show-progress="false"
+                data-node-children="children">
+        </div>
+    </div>
+    <div class="col-md-10">
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <span class="lead">{{modelTree.currentNode.name}}</span>
+                <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="folder-spinner"></span>
+            </div>
+            <div class="panel-body">
+                <div class="alert alert-danger" role="alert" ng-show="errorMsg.hasMsg && errorMsg.isError">
+                    Failed,please try later!
+                </div>
+                <div class="alert alert-success" role="alert" ng-show="errorMsg.hasMsg && !errorMsg.isError">
+                    Success!
+                </div>
+                <div class="well">
+                    <div class="row">
+                        <label class="col-md-3">Name:
+                            <input type="text" class="form-control" ng-model="thisFolder.name" ng-disabled="thisFolder.id=='0'">
+                        </label>
+
+                        <label class="col-md-3">Create Time:
+                            <input type="text" class="form-control" ng-model="thisFolder.createTime" disabled>
+                        </label>
+
+                        <label class="col-md-3">Last Update Time:
+                            <input type="text" class="form-control" ng-model="thisFolder.updateTime" disabled>
+                        </label>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-9">Description:
+                            <textarea class="form-control" ng-model="thisFolder.description" ng-disabled="thisFolder.id=='0'"></textarea>
+                        </label>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button class="btn btn-primary" ng-click="saveFolder(thisFolder)">Save</button>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="well">
+                    <div>
+                        <button class="btn btn-primary" ng-click="newFolder.editing=true">Add Folder</button>
+                        <div ng-show="newFolder.editing">
+                            <label>Name:
+                            </label>
+                            <input ng-model="newFolder.name" class="form-control">
+                            <label>Description:
+                            </label>
+                            <textarea ng-model="newFolder.description" class="form-control"></textarea>
+
+                            <p></p>
+                            <button class="btn btn-default" ng-click="saveFolder(newFolder)">Save</button>
+                            <button class="btn btn-warning" ng-click="newFolder.editing=false">Cancel</button>
+                            <hr>
+                        </div>
+                        <button class="btn btn-default" ng-click="showForms()">Add Forms</button>
+                        <div ng-show="showForming">
+                            <table  st-table="formsDisplay" st-safe-src="forms" class="table">
+                                <thead>
+                                <tr>
+                                    <th>
+                                        <label>
+                                            <input type="checkbox" ng-model="selectedAllForms" ng-click="selectAllForms()">
+                                        </label>
+                                    </th>
+                                    <th st-sort="{{$index}}">Index</th>
+                                    <th st-sort="form_name">Name</th>
+                                    <th>
+                                        <select ng-model="formPerPage" >
+                                            <option selected>5</option>
+                                            <option>10</option>
+                                        </select>Per page
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <tr ng-repeat="f in forms">
+                                    <td><label>
+                                        <input type="checkbox" ng-model="f.selected" ng-change="selectForm()">
+                                    </label></td>
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>{{f.form_name}}</td>
+                                </tr>
+                                </tbody>
+                                <tr>
+                                    <td colspan="8" class="text-center">
+                                        <div st-pagination="" st-items-by-page="formPerPage" st-displayed-pages="7"></div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <button class="btn btn-primary" ng-click="addForms()">OK</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-danger" ng-click="deleteSelectedFolderOrFile()">Delete</button>
+
+
+                    </div>
+                    <hr>
+                    <table st-table="childrenDisplay" st-safe-src="thisFolder.children" class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th><label>
+                                <input type="checkbox" ng-model="selectedAll" ng-click="selectAll()">
+                            </label></th>
+                            <th st-sort="{{$index}}">Index</th>
+                            <th st-sort="fileType">Type</th>
+                            <th st-sort="name">Name</th>
+                            <th st-sort="createTime">Create Time</th>
+                            <th st-sort="updateTime">Update Time</th>
+                            <th>
+                                <select ng-model="itemPerPage" >
+                                    <option selected>5</option>
+                                    <option>10</option>
+                                </select>Per page
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat-start="x in childrenDisplay">
+                            <td><label>
+                                <input type="checkbox" ng-model="x.selected" ng-change="select()">
+                            </label></td>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{x.leaf?"File":"Folder"}}</td>
+                            <td><a href="" ng-click="editFileOrFolder(x)">{{x.name}}</a></td>
+                            <td>{{x.createTime | date}}</td>
+                            <td>{{x.updateTime | date}}</td>
+                        </tr>
+                        <tr ng-repeat-end ng-show="x.editing">
+                            <td colspan="5">
+                                <form class="form-horizontal">
+                                    <div>
+                                        <label>Name:
+                                        </label>
+                                        <input ng-model="x.name" class="form-control">
+                                        <label>Description:
+                                        </label>
+                                        <textarea ng-model="x.description" class="form-control"></textarea>
+                                        <hr>
+                                        <button class="btn btn-default" ng-click="saveFolder(x)">Save</button>
+                                        <button class="btn btn-warning" ng-click="loadFolder({id:x.parent_id})">Cancel</button>
+                                    </div>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colspan="8" class="text-center">
+                                <div st-pagination="" st-items-by-page="itemPerPage" st-displayed-pages="7"></div>
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

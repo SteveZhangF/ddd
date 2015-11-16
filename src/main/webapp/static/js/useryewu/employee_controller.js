@@ -262,7 +262,7 @@ app.controller('UserEmployeeEditController', ['$scope', 'EmployeeService', 'User
     $scope.thumb = {
         preview: false,
         file: $scope.editedEmployee.imagePath,
-        height: '100%',
+        height: '50%',
         width: '100%',
         headImageCount: -1,
     };

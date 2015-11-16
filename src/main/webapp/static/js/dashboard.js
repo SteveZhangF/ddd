@@ -87,6 +87,10 @@ app.config(['$routeProvider', function ($routeProvider) {
             templateUrl:"dashboard/table_form_edit.html",
             //resolve:resolve
         })
+        .when("/form_folders",{
+            templateUrl:"dashboard/folder_list.html",
+            //resolve:resolve
+        })
     ;
 
 }]);

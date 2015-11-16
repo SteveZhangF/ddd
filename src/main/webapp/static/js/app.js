@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('clientApp', ['ngRoute', 'ui.bootstrap', 'ui.bootstrap.contextMenu','angularFileUpload', 'angularBootstrapNavTree', 'customizedDirective','dndLists','smart-table', 'ui.tree', 'ngDialog', 'angularSpinner']);
+var app = angular.module('clientApp', ['ngRoute', 'ui.bootstrap', 'ui.bootstrap.contextMenu','angularFileUpload',  'customizedDirective','smart-table',  'ngDialog', 'angularSpinner']);
 
 app.factory('LogInData', function () {
     return {

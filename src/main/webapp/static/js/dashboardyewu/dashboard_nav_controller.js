@@ -15,10 +15,12 @@ app.controller('DashBoardNavController', ['$scope', function ($scope) {
         [
             {name:"Home",subMenu:[],href:"#/index"},
             {name: "Users",href:"#/users"},
-            {name:"forms",href:"#/forms"},
+            {name:"Forms",href:"#/forms"},
+            {name:"Form Folders",href:'#/form_folders'},
             {name:"Questions Sequences",href:"#/workflows"},
             {name:"Questions",href:"#/questions"},
             {name:"Table Forms",href:"#/table_forms"}
+
         ]
     ;
     $scope.menuClicked = function (menu) {

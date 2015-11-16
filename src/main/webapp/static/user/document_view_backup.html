@@ -1,0 +1,111 @@
+<div ng-controller="DocumentViewController" class="row">
+    <div class="col-md-2">
+        <div class="well">
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation" class="{{x.selected?'active':''}}" ng-click="FormChoose(x)"
+                    ng-repeat="x in forms"><a href="">{{x.form_name}}</a></li>
+            </ul>
+            <p></p>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <input class="btn btn-default" title="Generate Documents" type="button" ng-click="downLoad()"
+                           value="Gene...">
+                </div>
+                <div class="col-md-6">
+                    <input class="btn btn-default" title="Download Documents" type="button" ng-click="downLoadStart()"
+                           value="Down...">
+                </div>
+            </div>
+            <hr>
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation" class="{{x.selected?'active':''}}" ng-click="TableFormChoose(x)"
+                    ng-repeat="x in tableForms"><a href="">{{x.name}}</a></li>
+            </ul>
+            <p></p>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <input class="btn btn-default" title="Generate Logs" type="button" ng-click="downLoadTableForm()"
+                           value="Gene...">
+                </div>
+                <div class="col-md-6">
+                    <input class="btn btn-default" title="Download Logs" type="button"
+                           ng-click="downLoadTableFormStart()" value="Down...">
+                </div>
+            </div>
+            <hr>
+        </div>
+    </div>
+    <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="user-document-view-spinner"></span>
+
+    <div class="col-md-10 " ng-if="viewTableForm">
+        <div class="panel panel-primary">
+            <div class="panel-heading">{{selectedRecordConfig.tableForm.name}}</div>
+            <div class="panel-body" style="height: 100%">
+                <div class="row">
+                    <label class="col-md-3">Form
+                        <input class="form-control" ng-model="tableFormConfig.start" type="date">
+                    </label>
+                    <label class="col-md-3">To
+                        <input class="form-control" ng-model="tableFormConfig.end" type="date">
+                    </label>
+
+                    <div class="col-md-3">
+                        <label>Operate
+                            <input type="button" class="form-control" value="Edit" ng-click="editTable()">
+                        </label>
+                    </div>
+                </div>
+                <div id="table_container" ng-if="tableFormConfig.isEditing">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th ng-repeat="head in tableFormConfig.thead">{{head.name}}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="tr in tableFormConfig.tr">
+                            <td ng-repeat="td in tr">{{td.value}}</td>
+                            <td>
+                                <button class="btn btn-danger" ng-click="deleteTR($index)">Delete</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <object ng-show="!tableFormConfig.isEditing" style="width:100%;height: 100%" data="{{content}}"
+                            type="application/pdf"></object>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-10" ng-if="viewForm">
+        <div class="panel panel-primary">
+            <div class="panel-heading">{{selectedForm.form_name}}</div>
+
+            <div class="panel-body" style="height: 100%">
+
+                <div ng-if="selectedForm.formType=='CompanyForm'">
+                    <object style="width:100%;height: 100%" data="{{content}}" type="application/pdf"></object>
+                </div>
+                <div class="row" ng-if="selectedForm.formType=='EmployeeForm'">
+                    <div class="col-md-2">
+                        <ul class="nav nav-pills nav-stacked">
+                            <li role="presentation" class="{{x.selected?'active':''}}" ng-click="showForm(e)"
+                                ng-repeat="e in employees"><a href="">{{e.firstName+" "+e.lastName}}</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-10">
+                        <object style="width:100%;height: 100%" data="{{content}}" type="application/pdf"></object>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<div id="form_container" style="color:white">
+</div>
