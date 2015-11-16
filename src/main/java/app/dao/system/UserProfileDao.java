@@ -18,4 +18,5 @@ import app.model.user.UserProfileType;
 public interface UserProfileDao {
     UserProfile findbyID(int id);
     UserProfile findbyType(UserProfileType type);
+    void persist(UserProfile entity);
 }

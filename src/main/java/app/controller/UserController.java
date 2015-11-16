@@ -6,6 +6,7 @@ import app.dao.system.UserProfileDao;
 import app.message.Message;
 import app.model.user.State;
 import app.model.user.User;
+import app.model.user.UserProfile;
 import app.model.user.UserProfileType;
 import app.model.userconstructure.Company;
 import app.model.wordflow.WorkFlow;
@@ -108,7 +109,14 @@ public class UserController {
     public ResponseEntity<Message> register(@RequestBody User user, HttpServletResponse response) {
 
         if (userService.findBySso(user.getSsoId()) == null) {
-            user.getUserProfiles().add(userProfileDao.findbyType(UserProfileType.USER));
+            UserProfile userProfile = userProfileDao.findbyType(UserProfileType.USER);
+            if(userProfile == null){
+                userProfile = new UserProfile();
+                userProfile.setType(UserProfileType.USER.getUserProfileType());
+                userProfileDao.persist(userProfile);
+            }
+
+            user.getUserProfiles().add(userProfile);
             user.setState(State.ACTIVE.getState());
             try {
                 userService.save(user);

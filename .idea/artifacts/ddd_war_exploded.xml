@@ -48,6 +48,7 @@
           <element id="library" level="project" name="Maven: org.springframework:spring-test:4.1.4.RELEASE" />
           <element id="library" level="project" name="Maven: commons-dbcp:commons-dbcp:1.4" />
           <element id="library" level="project" name="Maven: commons-pool:commons-pool:1.5.4" />
+          <element id="library" level="project" name="Maven: postgresql:postgresql:9.1-901-1.jdbc4" />
         </element>
       </element>
       <element id="directory" name="META-INF">

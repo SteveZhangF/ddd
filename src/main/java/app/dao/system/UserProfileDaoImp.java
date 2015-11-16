@@ -35,4 +35,9 @@ public class UserProfileDaoImp extends AbstractDao<Integer,UserProfile> implemen
         crit.add(Restrictions.eq("type", type.getUserProfileType()));
         return (UserProfile) crit.uniqueResult();
     }
+
+    @Override
+    public void persist(UserProfile entity) {
+        super.persist(entity);
+    }
 }
