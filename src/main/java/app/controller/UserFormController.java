@@ -1,6 +1,5 @@
 package app.controller;
 
-import app.model.forms.Form;
 import app.model.report.Question;
 import app.model.report.Record;
 import app.service.form.FormService;
@@ -65,4 +64,28 @@ public class UserFormController {
         List<Question> questions = questionService.getQuestionsByFormId(form_id);
         return new ResponseEntity<>(questions, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/user/form/saveValue/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Record>> saveQuestionValues(@RequestBody Record[] records) {
+        for (Record record : records) {
+            String oeId =record.getOeId();
+            String questionId = record.getQuestionId();
+            int userId = record.getUserId();
+            Map<String, Object> map = new HashMap<>();
+            map.put("oeId",oeId);
+            map.put("userId",userId);
+            map.put("questionId",questionId);
+            List<Record> list = recordService.getListbyParams(map);
+            if(list.size() == 0){
+                recordService.save(record);
+            }else{
+                list.get(0).setValue(record.getValue());
+                recordService.update(list.get(0));
+            }
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
 }

@@ -87,10 +87,7 @@ app.service('LoginService', [
 
             $http({
                 method: "POST",
-                url: "/logout",
-                headers: {
-                    // "access_token" : userInfo.accessToken
-                }
+                url: "/logout"
             }).then(function (result) {
                 $window.sessionStorage["userInfo"] = null;
                 userInfo = null;

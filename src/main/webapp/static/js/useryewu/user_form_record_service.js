@@ -32,6 +32,18 @@ app.factory('UserFormRecordService',['$http','$q', function ($http,$q) {
                     return $q.reject(err);
                 }
             );
+        },
+        
+        saveQuestionValues: function (records) {
+            return $http.post('/user/form/saveValue/',records)
+                .then(
+                function (response) {
+                    return response.data;
+                },
+                function (err) {
+                    return $q.reject(err);
+                }
+            );
         }
     }
 

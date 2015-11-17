@@ -7,6 +7,33 @@ app.controller('DocumentViewTreeController',
         function ($scope, $filter, UserFormService, LoginService,
                   EmployeeService, RecordService, UserWorkFlowService,
                   usSpinnerService, UserFolderService, UserFormRecordService) {
+            /**
+             * spinner start
+             * */
+
+            $scope.errorMsg = {hasMsg: false, isError: false};
+            $scope.spinneractive = false;
+            $scope.startSpin = function () {
+                if (!$scope.spinneractive) {
+                    $scope.errorMsg.hasMsg = true;
+                    usSpinnerService.spin('user-document-view-spinner');
+                    $scope.spinneractive = true;
+
+                    $scope.errorMsg.hasMsg = false;
+                }
+            };
+            $scope.stopSpin = function (flag) {
+                if ($scope.spinneractive) {
+                    usSpinnerService.stop('user-document-view-spinner');
+                    $scope.errorMsg.hasMsg = true;
+                    $scope.errorMsg.isError = !flag;
+                    $scope.spinneractive = false;
+                }
+            };
+
+            /**
+             * spanner end
+             * */
 
 
             $scope.folders = [];
@@ -26,12 +53,14 @@ app.controller('DocumentViewTreeController',
 
             $scope.getFolderTree = function () {
                 var userId = LoginService.getUserInfo().userId;
+                $scope.startSpin();
                 UserFolderService.getUserFolders(userId).then(
                     function (data) {
                         $scope.folders = data;
+                        $scope.stopSpin(true);
                     },
                     function (err) {
-
+                        $scope.stopSpin(false);
                     }
                 );
             };
@@ -52,6 +81,7 @@ app.controller('DocumentViewTreeController',
             // 用record替换 form内容中的question
             $scope.getFullFormWhichWithRecord = function (form_id, oe_id, user_id) {
                 var orgForm = null;
+                $scope.startSpin();
                 UserFormService.getOneForm(form_id).then(
                     function (data) {
                         orgForm = data;
@@ -75,14 +105,15 @@ app.controller('DocumentViewTreeController',
                                 }
                                 angular.element('#form_container').html('').append(formElement);
                                 $scope.showPDF();
+                                $scope.stopSpin(true);
                             },
                             function (err) {
-
+                                $scope.stopSpin(false);
                             });
 
                     },
                     function (err) {
-
+                        $scope.stopSpin(false);
                     });
 
 
@@ -120,22 +151,85 @@ app.controller('DocumentViewTreeController',
             };
 
             $scope.editNode = function (node) {
-                if(node.leaf){
-                    $scope.editingQuestions = [];
-                    $scope.questionIndex = 0;
+                if (node.leaf) {
+                    $scope.folderTree.currentNode.editingQuestions = [];
+                    $scope.startSpin();
                     UserFormRecordService.getAllQuestions(node.form_id)
                         .then(
                         function (data) {
-                            $scope.editingQuestions = data;
-                            $scope.folderTree.currentNode.isEditing = true;
+                            $scope.folderTree.currentNode.editingQuestions = data;
+
+                            var userId = LoginService.getUserInfo().userId;
+                            var oeId = LoginService.getUserInfo().companyId;
+
+                            var questionIds = [];
+                            for (var i = 0; i < data.length; i++) {
+                                var qId = data[i].id;
+                                questionIds.push(qId);
+                            }
+
+                            UserFormRecordService.getFormRecords(userId, oeId, questionIds)
+                                .then(function (records) {
+                                    $scope.folderTree.currentNode.isEditing = true;
+                                    for (var j = 0; j < records.length; j++) {
+                                        var record = records[j];
+                                        var record_question_id = record.questionId;
+                                        for (var k = 0; k < $scope.folderTree.currentNode.editingQuestions.length; k++) {
+                                            if ($scope.folderTree.currentNode.editingQuestions[k].id == record_question_id) {
+                                                $scope.folderTree.currentNode.editingQuestions[k].value = record.value;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    $scope.stopSpin(true);
+                                },
+                                function (err) {
+                                    $scope.stopSpin(false);
+                                });
                         },
                         function (err) {
-
+                            $scope.stopSpin(false);
                         }
                     );
                 }
             };
-            $scope.editingQuestions = [];
+            var Record = function (questionId, oe_id, user_id, value) {
+                this.questionId = questionId;
+                this.oeId = oe_id;
+                this.userId = user_id;
+                this.value = value;
+            };
+            $scope.saveQuestionValue = function (questions) {
+                var userId = LoginService.getUserInfo().userId;
+                var oeId = LoginService.getUserInfo().companyId;
+                var records = [];
+                for (var i = 0; i < questions.length; i++) {
+                    var record = new Record(questions[i].id,oeId,userId,questions[i].value);
+                    records.push(record);
+                }
+                $scope.startSpin();
+                UserFormRecordService.saveQuestionValues(records).then(
+                    function (data) {
+                        $scope.stopSpin(true);
+                        $scope.folderTree.currentNode.isEditing = false;
+                        $scope.FormChoose($scope.folderTree.currentNode);
+                    },
+                    function (err) {
+                        $scope.stopSpin(false);
+                    }
+                );
+            }
+            $scope.printPdf = function() {
+                var printContents = document.getElementById('').innerHTML;
+                var popupWin = window.open('pdf-object', '_blank', 'width=300,height=300');
+                popupWin.document.open()
+                popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="style.css" /></head><body onload="window.print()">' + printContents + '</html>');
+                popupWin.document.close();
+            }
+            $scope.cancelEditForm = function () {
+                $scope.folderTree.currentNode.isEditing = false;
+                $scope.FormChoose($scope.folderTree.currentNode);
+            }
 
 
         }]);
