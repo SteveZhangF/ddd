@@ -73,7 +73,14 @@ public class UserController {
 
         if (userService.findById(id) == null)
             return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
-        userService.update(user);
+        User user2 = userService.get(user.getId());
+        user2.setUserProfiles(user.getUserProfiles());
+        user2.setState(user.getState());
+        user2.setWorkFlowCurrentNode(user.getWorkFlowCurrentNode());
+        user2.setCompanyId(user.getCompanyId());
+        user2.setEmail(user.getEmail());
+        user2.setFolders(user.getFolders());
+        userService.update(user2);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
