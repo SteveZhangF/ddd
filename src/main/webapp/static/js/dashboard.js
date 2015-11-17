@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('dashboardApp', ['ngRoute', 'ui.bootstrap','ngDialog', 'ui.bootstrap.contextMenu', 'customizedDirective','angularBootstrapNavTree','virtualList','smart-table','froala','angularSpinner','angularjs-dropdown-multiselect']);
+var app = angular.module('dashboardApp', ['ngRoute', 'ui.bootstrap', 'ngDialog', 'ui.bootstrap.contextMenu', 'customizedDirective', 'angularBootstrapNavTree', 'virtualList', 'smart-table', 'froala', 'angularSpinner', 'angularjs-dropdown-multiselect']);
 
 // add an interceptor to add the token to the request head
 app.config(['$httpProvider', function ($httpProvider) {
@@ -8,19 +8,24 @@ app.config(['$httpProvider', function ($httpProvider) {
         return {
             'request': function (config) {
                 config.headers = config.headers || {};
-                if ($window.sessionStorage["userInfo"]) {
-                    var token = JSON.parse($window.sessionStorage["userInfo"]);
-                    if (token) {
-                        config.headers['X-AUTH-TOKEN'] = token.accessToken;
-                    }
+                var path = $location.$$path;
+                if (path == '/login' || path == '/') {
+
                 } else {
-                    //$location.path('/');
+                    if ($window.sessionStorage["userInfo"]) {
+                        var token = JSON.parse($window.sessionStorage["userInfo"]);
+                        if (token) {
+                            config.headers['X-AUTH-TOKEN'] = token.accessToken;
+                        }
+                    } else {
+                        $location.path('/login');
+                    }
                 }
                 return config;
             },
             'responseError': function (response) {
                 if (response.status === 401 || response.status === 403) {
-                    $location.path('/');
+                    $location.path('/login');
                 }
                 return $q.reject(response);
             }
@@ -40,14 +45,12 @@ app.run([
     "$location",
     function ($rootScope, $location) {
         $rootScope.$on("$routeChangeSuccess", function (userInfo) {
-            console.log(userInfo);
         });
 
         $rootScope.$on("$routeChangeError", function (event, current,
                                                       previous, eventObj) {
             if (eventObj.authenticated === false) {
-                // $location.path("/login");
-                // show the log in page
+                $location.path("/login");
             }
         });
     }]);
@@ -65,31 +68,38 @@ app.config(['$routeProvider', function ($routeProvider) {
             }
         }]
     }
-    $routeProvider.when("/", {
-        resolve: resolve
+    $routeProvider.when("/index", {
+        templateUrl: 'dashboard/login.html',
+        //resolve: resolve
     }).when("/users", {
         templateUrl: "dashboard/user_list.html",
-        //TODO remove resolve
-        //resolve: resolve
-    }).when("/forms",{
-        templateUrl:"dashboard/form_list.html",
-        //TODO remove resolve commit
-        //resolve: resolve
-    }).when("/workflows",{
-        templateUrl:"dashboard/workflow.html"
-    }).when("/questions",{templateUrl:"dashboard/question_list.html"})
-        .when("/table_forms",{
-            templateUrl:"dashboard/table_form_list.html",
-            //resolve:resolve
+        resolve: resolve
+    }).when("/forms", {
+        templateUrl: "dashboard/form_list.html",
+        resolve: resolve
+    }).when("/workflows", {
+        templateUrl: "dashboard/workflow.html",
+        resolve: resolve
+    }).when("/questions", {
+        templateUrl: "dashboard/question_list.html",
+        resolve: resolve
+    })
+        .when("/table_forms", {
+            templateUrl: "dashboard/table_form_list.html",
+            resolve: resolve
         })
         .when("/table_form_edit",
         {
-            templateUrl:"dashboard/table_form_edit.html",
-            //resolve:resolve
+            templateUrl: "dashboard/table_form_edit.html",
+            resolve: resolve
         })
-        .when("/form_folders",{
-            templateUrl:"dashboard/folder_list.html",
-            //resolve:resolve
+        .when("/form_folders", {
+            templateUrl: "dashboard/folder_list.html",
+            resolve: resolve
+        })
+        .when("/login", {
+            templateUrl: 'dashboard/login.html',
+            //resolve: resolve
         })
     ;
 
@@ -116,10 +126,9 @@ app.controller('DropdownCtrlz', function ($scope, $log) {
     };
 });
 
-app.controller('flowDesignerController',function($scope){
-    $scope.datajson = [{id:'1',label:'dddd'}];
-    return {
-    }
+app.controller('flowDesignerController', function ($scope) {
+    $scope.datajson = [{id: '1', label: 'dddd'}];
+    return {}
 });
 
 

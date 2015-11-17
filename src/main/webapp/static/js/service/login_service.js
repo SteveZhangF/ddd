@@ -114,14 +114,14 @@ app.service('LoginService', [
             }
         }
 
-        function updateUser(user){
+        function updateUser(user) {
             var deferred = $q.defer();
             $http.put("/updateUser", {
                 ssoId: user.ssoId,
                 password: user.password
             }).then(
                 function (result) {
-                   return result.data;
+                    return result.data;
                 }, function (error) {
                     deferred.reject(error);
                 });
@@ -135,67 +135,10 @@ app.service('LoginService', [
             getUserInfo: getUserInfo,
             register: register,
             refreshUserInfo: refreshUserInfo,
-            updateUser:updateUser
+            updateUser: updateUser
         };
     }]);
-app.controller('LoginController', ['$scope', 'LoginService', 'ngDialog','LogInData','usSpinnerService','$location', function ($scope, LoginService, ngDialog,LogInData,usSpinnerService,$location) {
-
-
-    $scope.spinneractive = false;
-    $scope.startSpin = function () {
-        if (!$scope.spinneractive) {
-            usSpinnerService.spin('login-spinner');
-            $scope.spinneractive = true;
-        }
-    };
-    $scope.stopSpin = function () {
-        if ($scope.spinneractive) {
-            usSpinnerService.stop('login-spinner');
-            $scope.spinneractive = false;
-        }
-    };
-    $scope.loginError={hasError:false,isError:false,msg:''};
-    $scope.login = function (user) {
-        $scope.startSpin();
-        LoginService.login(user.ssoId, user.password).then(function (response) {
-            $scope.stopSpin();
-            $scope.loginError.hasError = true;
-            $scope.loginError.isError = false;
-        }, function (err) {
-            if(err.status==404){
-                $scope.stopSpin();
-                $scope.loginError.hasError = true;
-                $scope.loginError.isError = true;
-                $scope.loginError.msg = "no such user";
-            }else if(err.status==403){
-                $scope.stopSpin();
-                $scope.loginError.hasError = true;
-                $scope.loginError.isError = true;
-                $scope.loginError.msg = "wrong username or password";
-            }
-        });
-    };
-    $scope.logout = function () {
-        LoginService.logout();
-        $location.path('/index');
-    };
-
-    $scope.forgetPassword = function () {
-
-    };
-
-    $scope.isLoginedIn = function () {
-        return LogInData.isLogedIn;
-    };
-
-    if($scope.isLoginedIn()){
-        $location.path('/document');
-    }
-
-
-}]);
-
-app.controller('RegisterController', ['$scope','$location','$timeout','$interval' ,'LoginService', 'usSpinnerService', function ($scope,$location,$timeout,$interval,LoginService, usSpinnerService) {
+app.controller('RegisterController', ['$scope', '$location', '$timeout', '$interval', 'LoginService', 'usSpinnerService', function ($scope, $location, $timeout, $interval, LoginService, usSpinnerService) {
     $scope.master = {};
 
     $scope.error = false;
@@ -222,11 +165,11 @@ app.controller('RegisterController', ['$scope','$location','$timeout','$interval
                 $scope.success = true;
                 var stop = $interval(function () {
                     $scope.time = $scope.time - 1;
-                    if($scope.time ==0){
+                    if ($scope.time == 0) {
                         $location.path('/');
                         $interval.cancel(stop);
                     }
-                },1000);
+                }, 1000);
 
             },
             function (err) {
@@ -234,11 +177,11 @@ app.controller('RegisterController', ['$scope','$location','$timeout','$interval
                 $scope.error = true;
                 var stop = $interval(function () {
                     $scope.time = $scope.time - 1;
-                    if($scope.time ==0){
+                    if ($scope.time == 0) {
                         $location.path('/');
                         $interval.cancel(stop);
                     }
-                },1000);
+                }, 1000);
             });
     };
     $scope.reset = function (form) {
@@ -277,6 +220,66 @@ app.directive('pwd2', function () {
         }
     };
 });
+
+app.controller('LoginController', ['$scope', 'LoginService', 'ngDialog', 'LogInData', 'usSpinnerService', '$location', function ($scope, LoginService, ngDialog, LogInData, usSpinnerService, $location) {
+
+    $scope.spinneractive = false;
+    $scope.startSpin = function () {
+        if (!$scope.spinneractive) {
+            usSpinnerService.spin('login-spinner');
+            $scope.spinneractive = true;
+        }
+    };
+    $scope.stopSpin = function () {
+        if ($scope.spinneractive) {
+            usSpinnerService.stop('login-spinner');
+            $scope.spinneractive = false;
+        }
+    };
+    $scope.loginError = {hasError: false, isError: false, msg: ''};
+    $scope.login = function (user) {
+        $scope.startSpin();
+        LoginService.login(user.ssoId, user.password).then(function (response) {
+            $scope.stopSpin();
+            $scope.loginError.hasError = true;
+            $scope.loginError.isError = false;
+        }, function (err) {
+            if (err.status == 404) {
+                $scope.stopSpin();
+                $scope.loginError.hasError = true;
+                $scope.loginError.isError = true;
+                $scope.loginError.msg = "no such user";
+            } else if (err.status == 403) {
+                $scope.stopSpin();
+                $scope.loginError.hasError = true;
+                $scope.loginError.isError = true;
+                $scope.loginError.msg = "wrong username or password";
+            }
+        });
+    };
+
+    $scope.logout = function () {
+        LoginService.logout().then(
+            function () {
+                $location.path('/');
+            }
+        );
+    };
+
+    $scope.forgetPassword = function () {
+
+    };
+
+    $scope.isLoginedIn = function () {
+        return LogInData.isLogedIn;
+    };
+
+    if ($scope.isLoginedIn()) {
+        $location.path('/document');
+    }
+
+
+}]);
 
 app.directive('username', function ($q, $timeout) {
     return {

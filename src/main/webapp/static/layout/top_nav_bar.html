@@ -14,26 +14,6 @@
     </nav>
 </div>
 <!-- end navbar -->
-<script type="text/ng-template" id="login.html">
-    <div class="container-fluid">
-        <h1>Log in with your account</h1>
-        <hr>
-        <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="login-spinner"></span>
-        <div class="alert alert-danger" ng-show="loginError.hasError" role="alert">{{loginError.msg}}</div>
-        <div class="form-group">
-            <input type="text" name="email" ng-model="userInfo.userId" id="user_id" class="form-control"
-                   placeholder="user id">
-        </div>
-        <div class="form-group">
-            <input type="password" name="key" id="key" ng-model="userInfo.password" class="form-control" placeholder="Password">
-            <a class="pull-right" href="" ng-click="forgetPassword()">forget password</a>
-            <a class="pull-right"><span>|</span></a>
-            <a class="pull-right" href="#/register" ng-click="newUser()">New User</a>
-        </div>
-        <hr>
-        <input type="button" id="btn-login" class="btn btn-primary  btn-block" ng-click="login()" value="Log in">
-    </div>
-</script>
 
 
 
