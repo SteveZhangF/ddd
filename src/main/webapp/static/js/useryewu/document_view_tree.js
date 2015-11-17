@@ -146,6 +146,8 @@ app.controller('DocumentViewTreeController',
 
                     function (dispose) {
                         $scope.content = pdf.output("dataurlstring");
+                        //pdf.autoPrint();  // <<--------------------- !!
+                        //pdf.output('dataurlnewwindow');
                     }, margins);
                 angular.element(source).css("display", "none");
             };
@@ -204,7 +206,7 @@ app.controller('DocumentViewTreeController',
                 var oeId = LoginService.getUserInfo().companyId;
                 var records = [];
                 for (var i = 0; i < questions.length; i++) {
-                    var record = new Record(questions[i].id,oeId,userId,questions[i].value);
+                    var record = new Record(questions[i].id, oeId, userId, questions[i].value);
                     records.push(record);
                 }
                 $scope.startSpin();
@@ -218,14 +220,36 @@ app.controller('DocumentViewTreeController',
                         $scope.stopSpin(false);
                     }
                 );
-            }
-            $scope.printPdf = function() {
-                var printContents = document.getElementById('').innerHTML;
-                var popupWin = window.open('pdf-object', '_blank', 'width=300,height=300');
-                popupWin.document.open()
-                popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="style.css" /></head><body onload="window.print()">' + printContents + '</html>');
-                popupWin.document.close();
-            }
+            };
+            $scope.printPdf = function () {
+                var pdf = new jsPDF('p', 'pt', 'a4');
+                var source = $('#form_container').get(0);
+                angular.element(source).css("display", "block");
+                var specialElementHandlers = {
+                    '#bypassme': function (element, renderer) {
+                        return true
+                    }
+                };
+                var margins = {
+                    top: 80,
+                    bottom: 60,
+                    left: 40,
+                    width: 522
+                };
+                pdf.fromHTML(
+                    source, // HTML string or DOM elem ref.
+                    margins.left, // x coord
+                    margins.top, { // y coord
+                        'width': margins.width, // max width of content on PDF
+                        'elementHandlers': specialElementHandlers
+                    },
+
+                    function (dispose) {
+                        pdf.autoPrint();  // <<--------------------- !!打印吧pdf君
+                        pdf.output('dataurlnewwindow');
+                    }, margins);
+                angular.element(source).css("display", "none");
+            };
             $scope.cancelEditForm = function () {
                 $scope.folderTree.currentNode.isEditing = false;
                 $scope.FormChoose($scope.folderTree.currentNode);

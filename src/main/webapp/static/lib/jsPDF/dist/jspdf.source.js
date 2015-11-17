@@ -2647,6 +2647,7 @@ var jsPDF = (function(global) {
         return this;
     };
 })(jsPDF.API);
+
 /** ====================================================================
  * jsPDF Cell plugin
  * Copyright (c) 2013 Youssef Beddad, youssef.beddad@gmail.com
