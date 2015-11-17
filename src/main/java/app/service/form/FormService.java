@@ -13,4 +13,5 @@ import java.util.List;
 public interface FormService extends IBaseGenericService<Form, Integer> {
     List<Form> getFormListforMenu();
     boolean updateFormContent(int id,String json) throws IOException;
+
 }

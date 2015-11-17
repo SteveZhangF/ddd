@@ -31,27 +31,27 @@ public class UserServiceImpl extends BaseGenericServiceImpl<User, Integer> imple
 
     @Override
     public void saveOrUpdate(User entity) {
-        super.saveOrUpdate(entity);
+        dao.saveOrUpdate(entity);
     }
 
     @Override
     public void delete(User entity) {
-        super.delete(entity);
+        dao.delete(entity);
     }
 
     @Override
     public User get(Integer id) {
-        return super.get(id);
+        return dao.get(id);
     }
 
     @Override
     public User load(Integer id) {
-        return null;
+        return dao.load(id);
     }
 
     @Override
     public List<User> loadAll() {
-        return null;
+        return dao.loadAll();
     }
 
     @Override
@@ -61,6 +61,6 @@ public class UserServiceImpl extends BaseGenericServiceImpl<User, Integer> imple
 
     @Override
     public void update(User entity) {
-        super.update(entity);
+        dao.update(entity);
     }
 }

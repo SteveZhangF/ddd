@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('dashboardApp', ['ngRoute', 'ui.bootstrap','ngDialog', 'ui.bootstrap.contextMenu', 'customizedDirective','angularBootstrapNavTree','virtualList','smart-table','froala','angularSpinner']);
+var app = angular.module('dashboardApp', ['ngRoute', 'ui.bootstrap','ngDialog', 'ui.bootstrap.contextMenu', 'customizedDirective','angularBootstrapNavTree','virtualList','smart-table','froala','angularSpinner','angularjs-dropdown-multiselect']);
 
 // add an interceptor to add the token to the request head
 app.config(['$httpProvider', function ($httpProvider) {

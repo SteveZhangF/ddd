@@ -267,6 +267,17 @@ app.factory('FolderService', ['$http', '$q', function ($http, $q) {
                     return $q.reject(err);
                 }
             );
+        },
+
+        getFolderForSelect: function () {
+            return $http.get('/folder/getFolderForSelect/').then(
+                function (response) {
+                    return response.data;
+                },
+                function (err) {
+                    return $q.reject(err);
+                }
+            );
         }
     };
 

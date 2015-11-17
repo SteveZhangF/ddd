@@ -11,8 +11,12 @@ package app.dao.question;
 import app.model.report.Question;
 import app.newDao.IBaseGenericDAO;
 
+import java.util.List;
+
 /**
  * Created by steve on 10/18/15.
  */
 public interface QuestionDao extends IBaseGenericDAO<Question,Integer> {
+
+    List<Question> getQuestionsByFormId(int form_id);
 }

@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -134,5 +135,13 @@ public class FolderServiceImpl extends BaseGenericServiceImpl<Folder, String> im
     public Folder getFolderByName(String name){
         name = name.trim();
         return folderDao.getbyParam("name",name);
+    }
+
+    @Override
+    public List<Folder> getFolderForSelect() {
+        String[] fields = {"id","name"};
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("parent_id","0");
+        return folderDao.getListbyFieldAndParams(fields,map);
     }
 }

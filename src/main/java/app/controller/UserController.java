@@ -88,20 +88,15 @@ public class UserController {
     }
 
 
-    /**
-     * delete a user
-     */
-    @RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> deleteUser(@PathVariable("id") int id) {
-
-        return new ResponseEntity<User>(HttpStatus.OK);
-    }
 
     // get all users
     @RequestMapping(value = "/user/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<User>> listAllUser() {
         List<User> users = userService.list();
-        return new ResponseEntity<List<User>>(users, HttpStatus.OK);
+        for(User user:users){
+            user.setPassword(null);
+        }
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
 

@@ -68,6 +68,10 @@ public class QuestionServiceImpl extends BaseGenericServiceImpl<Question,Integer
             question.setContent(content);
             this.update(question);
         }
+    }
 
+    @Override
+    public List<Question> getQuestionsByFormId(int form_id) {
+        return  questionDao.getQuestionsByFormId(form_id);
     }
 }

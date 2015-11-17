@@ -1,7 +1,10 @@
 package app.model.user;
 
+import app.model.forms.Folder;
 import app.model.wordflow.workflowUser.UserWorkFlow;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.*;
@@ -19,7 +22,9 @@ public class User {
 
     @Column(name = "PASSWORD", nullable = false)
     private String password;
-
+    @ManyToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Folder> folders = new ArrayList<>();
 
 
     @ElementCollection(fetch=FetchType.EAGER)
@@ -106,6 +111,14 @@ public class User {
 
     public void setCompanyId(String companyId) {
         this.companyId = companyId;
+    }
+
+    public List<Folder> getFolders() {
+        return folders;
+    }
+
+    public void setFolders(List<Folder> folders) {
+        this.folders = folders;
     }
 
     @Override

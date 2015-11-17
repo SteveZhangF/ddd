@@ -10,6 +10,7 @@ package app.dao.question;
 
 import app.model.report.Question;
 import app.newDao.HibernateBaseGenericDAOImpl;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -74,5 +75,13 @@ public class QuestionDaoImpl extends HibernateBaseGenericDAOImpl<Question,Intege
     @Override
     public List<Question> getListbyParam(String param, Object value) {
         return super.getListbyParam(param, value);
+    }
+
+    @Override
+    public List<Question> getQuestionsByFormId(int form_id) {
+        String sql;
+        sql = "select q from Question q,Form f where q in elements(f.questions) and f.id="+form_id;
+        Query query = this.getSessionFactory().getCurrentSession().createQuery(sql);
+        return query.list();
     }
 }

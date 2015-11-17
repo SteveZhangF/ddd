@@ -18,6 +18,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 /**
@@ -74,5 +76,11 @@ public class QuestionServiceImplTest {
     @Test
     public void testUpdate() throws Exception {
 
+    }
+
+    @Test
+    public void testGetQuestionsByFormId() throws Exception {
+        List list = questionService.getQuestionsByFormId(4);
+        System.out.print(list.size());
     }
 }

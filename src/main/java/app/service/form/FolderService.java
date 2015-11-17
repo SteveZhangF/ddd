@@ -30,4 +30,6 @@ public interface FolderService extends IBaseGenericService<Folder, String> {
 
     Folder getFolderByName(String name);
 
+    List<Folder> getFolderForSelect();
+
 }

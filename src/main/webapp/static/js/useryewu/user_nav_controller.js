@@ -3,7 +3,7 @@
 app.controller('UserNavController', ['$scope', function ($scope) {
     $scope.myMenu =
         [
-            {name: "Home", subMenu: [], href: "#/index"},
+            {name: "Home", subMenu: [], href: "#/"},
             {name: "My Company", subMenu: [], href: "#/company"},
             {
                 name: "My Documents", subMenu: [], href: "#/document"

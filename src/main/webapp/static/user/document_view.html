@@ -63,10 +63,11 @@ div[data-tree-model] li .selected {
     <div class="well col-md-2">
         <div
                 data-angular-treeview="true"
-                data-tree-id="modelTree"
-                data-tree-model="roleList"
+                data-tree-id="folderTree"
+                data-tree-model="folders"
                 data-node-id="id"
                 data-node-label="name"
+                data-node-is-leaf="leaf"
                 data-node-show-Progress="true"
                 data-node-children="children">
         </div>
@@ -74,11 +75,31 @@ div[data-tree-model] li .selected {
     <div class="col-md-10">
         <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="user-document-view-spinner"></span>
 
-        <div class="panel panel-primary">
-            <div class="panel-heading">{{selectedForm.form_name}}</div>
+        <div class="panel panel-primary" ng-if="!folderTree.currentNode.isEditing">
+            <div class="panel-heading">{{folderTree.currentNode.name}}
+                <button ng-click="editNode(folderTree.currentNode)" class="pull-right btn btn-default">Edit</button>
+            </div>
 
             <div class="panel-body" style="height: 100%">
                 <object style="width:100%;height: 100%" data="{{content}}" type="application/pdf"></object>
+            </div>
+        </div>
+        <div class="panel panel-primary" ng-if="folderTree.currentNode.isEditing">
+            <div class="panel-heading">{{editingQuestions[questionIndex].name}}</div>
+            <div class="panel-body" style="height: 100%">
+                <h4>{{editingQuestions[questionIndex].description}}
+                </h4>
+                <hr>
+                <div id="node-data-content">
+                    <div ng-switch="editingQuestions[questionIndex].type">
+                        <select class="form-control" ng-switch-when="select" ng-model="record.value">
+                            <option ng-repeat="opt in editingQuestions[questionIndex].options" value="{{opt.value}}">{{opt.name}}</option>
+                        </select>
+                        <input class="form-control" ng-switch-when="text" type="text" ng-model="record.value">
+                        <textarea class="form-control" ng-switch-when="textarea" ng-model="record.value"></textarea>
+
+                    </div>
+                </div>
             </div>
         </div>
     </div>

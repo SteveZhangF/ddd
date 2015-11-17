@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('clientApp', ['ngRoute', 'ui.bootstrap', 'ui.bootstrap.contextMenu','angularFileUpload',  'customizedDirective','smart-table',  'ngDialog', 'angularSpinner']);
+var app = angular.module('clientApp', ['ngRoute', 'ui.bootstrap', 'ui.bootstrap.contextMenu', 'angularFileUpload', 'customizedDirective', 'smart-table', 'ngDialog', 'angularSpinner']);
 
 app.factory('LogInData', function () {
     return {
@@ -16,21 +16,28 @@ app.config(['$httpProvider', function ($httpProvider) {
         return {
             'request': function (config) {
                 config.headers = config.headers || {};
-                //TODO for development
-                if ($window.sessionStorage["userInfo"]) {
-                    var token = JSON.parse($window.sessionStorage["userInfo"]);
-                    if (token) {
-                        config.headers['X-AUTH-TOKEN'] = token.accessToken;
-                    }
-                } else {
-                    //$location.path('/');
+                console.log($location.$$path);
+                var path = $location.$$path;
+                if (path == '/register' || path == '/login' || path=='/') {
 
+                } else {
+                    if ($window.sessionStorage["userInfo"]) {
+                        var token = JSON.parse($window.sessionStorage["userInfo"]);
+                        if (token) {
+                            config.headers['X-AUTH-TOKEN'] = token.accessToken;
+                        }
+                    } else {
+                        $location.path('/login');
+                    }
                 }
+
+
                 return config;
             },
             'responseError': function (response) {
+                console.log(response.status);
                 if (response.status === 401 || response.status === 403) {
-                    $location.path('/');
+                    $location.path('/login');
                 }
                 return $q.reject(response);
             }
@@ -48,52 +55,54 @@ app.run([
         $rootScope.$on("$routeChangeError", function (event, current,
                                                       previous, eventObj) {
             if (eventObj.authenticated === false) {
-                alert('Please log in');
-                $location.path('/');
+                $location.path('/login');
             }
         });
     }]);
 app.config(['$routeProvider', function ($routeProvider) {
     var resolve = {
         auth: ["$q", "LoginService", function ($q, LoginService) {
-            //var userInfo = LoginService.getUserInfo();
-            //if (userInfo!=null && userInfo.accessToken!=0) {
-            //    return $q.when(userInfo);
-            //} else {
-            //    return $q.reject({
-            //        authenticated: false
-            //    });
-            //}
+            var userInfo = LoginService.getUserInfo();
+            if (userInfo != null && userInfo.accessToken != 0) {
+                return $q.when(userInfo);
+            } else {
+                return $q.reject({
+                    authenticated: false
+                });
+            }
         }]
     };
 
-    $routeProvider.when("/", {
-
-    }).when("/company", {
-        templateUrl: "user/company.html",
-        resolve: resolve
-    }).when("/workflows", {
-        templateUrl: "user/moduel.html",
-        resolve: resolve
-    }).when("/register", {
-        templateUrl: "user/register.html"
-    }).when("/employees",{
-            templateUrl:"user/employee_list.html",
-            resolve:resolve
-        }
-    ).when("/view_employee",{
-            templateUrl:"user/employee_edit.html",
-            resolve:resolve
+    $routeProvider.
+        when("/", {
+            templateUrl: "user/user_index.html"
         })
-        .when("/config",{
-            templateUrl:"user/user_config.html",
-            resolve:resolve
+        .when("/login", {
+            templateUrl: "user/login.html"
+        }).when("/company", {
+            templateUrl: "user/company.html",
+            resolve: resolve
+        }).when("/workflows", {
+            templateUrl: "user/moduel.html",
+            resolve: resolve
+        }).when("/register", {
+            templateUrl: "user/register.html"
+        }).when("/employees", {
+            templateUrl: "user/employee_list.html",
+            resolve: resolve
+        }).when("/view_employee", {
+            templateUrl: "user/employee_edit.html",
+            resolve: resolve
         })
-        .when("/document",{
-            templateUrl:"user/document.html",
-            resolve:resolve
+        .when("/config", {
+            templateUrl: "user/user_config.html",
+            resolve: resolve
         })
-        ;
+        .when("/document", {
+            templateUrl: "user/document.html",
+            resolve: resolve
+        })
+    ;
 }]);
 
 app.filter('checkmark', function () {

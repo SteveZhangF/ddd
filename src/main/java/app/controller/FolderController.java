@@ -10,13 +10,21 @@ package app.controller;
 
 import app.model.forms.Folder;
 import app.model.forms.Form;
+import app.model.user.User;
 import app.service.form.FolderService;
 import app.service.form.FormService;
+import app.service.system.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by steve on 11/16/15.
@@ -26,6 +34,23 @@ public class FolderController {
 
     @Autowired
     FolderService folderService;
+
+    //for user
+    @Autowired
+    UserService userService;
+
+    @RequestMapping(value = "/user/folders/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getUserFolderTree(@PathVariable int userId) throws IOException {
+        User user = userService.get(userId);
+        List<Folder> folders = user.getFolders();
+        ObjectMapper mapper = new ObjectMapper();
+        ArrayNode array = mapper.createArrayNode();
+        for (Folder folder : folders) {
+            String tree = folderService.getAllFoldersForTree(folder.getId()).toString();
+            array.add(mapper.readTree(tree));
+        }
+        return new ResponseEntity<>(array.toString(), HttpStatus.OK);
+    }
 
     @RequestMapping(value = "/folder/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getFolderTree(@PathVariable String id) {
@@ -86,13 +111,14 @@ public class FolderController {
 
     @Autowired
     FormService formService;
+
     //
     @RequestMapping(value = "/folder/addForms/{parentId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Folder> addForms(@PathVariable String parentId,@RequestBody int[] ids) {
+    public ResponseEntity<Folder> addForms(@PathVariable String parentId, @RequestBody int[] ids) {
         Folder parent = folderService.get(parentId);
         for (int id : ids) {
             Form form = formService.get(id);
-            if(form!=null){
+            if (form != null) {
                 Folder folder = new Folder();
                 folder.setName(form.getForm_name());
                 folder.setDescription(form.getForm_desc());
@@ -106,4 +132,12 @@ public class FolderController {
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/folder/getFolderForSelect/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Folder>> getFolderForSelect() {
+        List<Folder> list = folderService.getFolderForSelect();
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+
 }

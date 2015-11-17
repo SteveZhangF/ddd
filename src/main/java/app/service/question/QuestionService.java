@@ -11,10 +11,14 @@ package app.service.question;
 import app.model.report.Question;
 import app.newService.IBaseGenericService;
 
+import java.util.List;
+
 /**
  * Created by steve on 10/18/15.
  */
 public interface QuestionService extends IBaseGenericService<Question,Integer> {
 
     void setPluginId(Question question);
+
+    List<Question> getQuestionsByFormId(int form_id);
 }

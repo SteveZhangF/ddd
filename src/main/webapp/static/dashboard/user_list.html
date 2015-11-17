@@ -1,84 +1,86 @@
-<div ng-controller="UserController as controller" class="row">
-    <div class="">
-        <table st-table="users" class="table table-striped">
-            <thead>
-            <tr>
-                <th st-sort="{{$index}}">Index</th>
-                <th st-sort="id">ID</th>
-                <th st-sort="ssoId">SSOID</th>
-                <th st-sort="companyId">CompanyID</th>
-                <th st-sort="email">Email</th>
-                <th st-sort="state">State</th>
-                <th st-sort="userProfiles">User Profiles</th>
-            </tr>
-            <tr>
-                <th colspan="3">
-                    <input st-search="ssoId" placeholder="search for SSOID" class="input-sm form-control"
-                           type="search"/>
-                </th>
-                <th colspan="1">
-                    <input st-search="email" placeholder="search for email" class="input-sm form-control"
-                           type="search"/>
-                </th>
-                <th colspan="2">
-                    <input st-search="companyId" placeholder="search for company id" class="input-sm form-control"
-                           type="search"/>
-                </th>
-                <th colspan="1">
-                    <input st-search="userProfiles" placeholder="search for user profiles" class="input-sm form-control"
-                           type="search"/>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="x in users">
-                <td>{{ $index + 1 }}</td>
-                <td>{{ x.id }}</td>
-                <td>{{x.ssoId}}</td>
-                <td>{{x.companyId}}</td>
-                <td>{{x.email}}</td>
-                <td>{{x.state}}</td>
-                <td>{{x.userProfiles}}</td>
-                <td>
-                    <button type="button" ng-click="editor(x)" class="btn btn-sm btn-success">
-                        <i class="glyphicon glyphicon-edit">
-                        </i>
-                    </button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-<script type="text/ng-template" id="user-editor.html">
-    <h1>Editing User</h1>
-    <div class="well">
-        <form class="form-inline">
-            <div class="form-group">
-                <label for="Creator">User SSOID:</label>
-                <input ng-model="user.ssoId" type="text" class="form-control" id="Creator"
-                       placeholder="Jane Doe" disabled>
+<div class="generic-container" ng-controller="UserController as ctrl">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="lead">User List </span>
+            <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="user-list-spinner"></span>
+        </div>
+        <div class="panel-body">
+            <div class="alert alert-danger" role="alert" ng-show="errorMsg.hasError && errorMsg.isError">{{errorMsg.msg}}</div>
+            <div class="alert alert-success" role="alert" ng-show="errorMsg.hasError && !errorMsg.isError">{{errorMsg.msg}}!</div>
+            <div class="well">
+                <table st-table="usersDisplay" st-safe-src="users" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th><label>
+                            <input type="checkbox" ng-model="selectedAll" ng-click="selectAll()">
+                        </label></th>
+                        <th st-sort="{{$index}}">Index</th>
+                        <th st-sort="ssoId">Name</th>
+                        <th st-sort="email">Email</th>
+                        <th st-sort="companyId">Company Name</th>
+                        <th st-sort="state">Status</th>
+                        <th st-sort="userProfiles">Role</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat-start="x in usersDisplay">
+                        <td><label>
+                            <input type="checkbox" ng-model="x.selected" ng-change="select()">
+                        </label></td>
+                        <td>{{ $index + 1 }}</td>
+                        <td><a href="" ng-click="editUser(x)">{{x.ssoId}}</a></td>
+                        <td>{{x.email}}</td>
+                        <td>{{x.companyId}}</td>
+                        <td>{{x.state}}</td>
+                        <td><span ng-repeat="role in x.userProfiles" ng-switch="role.type">
+                            <span ng-switch-when="USER" class="label label-success">{{role.type}}</span>
+                            <span ng-switch-when="ADMIN" class="label label-danger">{{role.type}}</span>
+                        </span></td>
+                    </tr>
+                    <tr ng-repeat-end ng-if="x.editing">
+                        <td colspan="5">
+                            <div class="row">
+                                <label class="col-md-3">SSOID:
+                                </label>
+
+                                <div class="col-md-3">
+                                    <input ng-model="x.ssoId" class="form-control" disabled>
+                                </div>
+                                <hr>
+                            </div>
+                            <div class="row">
+                                <label class="col-md-3">Folder:</label>
+
+                                <div class="col-md-3">
+                                    <div ng-dropdown-multiselect="" options="folders" selected-model="x.folders"
+                                         extra-settings="x.editSetting">>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="hero-unit">
+                                        <span ng-repeat="folder in x.folders">
+                                        <span class="label label-default">{{folder.name}}<span
+                                                class="glyphicon glyphicon-remove" ng-click="editUser(x).deleteFolder(folder)"></span></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-default" ng-click="updateUser(x)">Update</button>
+                            <button class="btn btn-warning" ng-click=" loadAll()">Cancel</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="8" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemPerPage" st-displayed-pages="7"></div>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
             </div>
-            <div class="form-group">
-                <label ng-repeat="wf in workflow.all"  class="form-control">
-                <input type="checkbox" checklist-model="workflow.checked" checklist-value="wf.id"> {{wf.name}}
-                </label>
-            </div>
-            <input ng-model="user.id" type="hidden"/>
-        </form>
-        <div class="row">
-            <button type="button" class="btn btn-success" ng-click="ok()">OK</button>
-            <button type="button" class="btn btn-danger" ng-click="cancel()">Cancel</button>
         </div>
     </div>
-</script>
-<style>
-    .st-sort-ascent:before {
-        content: '\25B2';
-    }
-
-    .st-sort-descent:before {
-        content: '\25BC';
-    }
-
-</style>
+</div>
