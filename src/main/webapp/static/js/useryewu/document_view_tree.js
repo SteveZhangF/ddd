@@ -156,7 +156,7 @@ app.controller('DocumentViewTreeController',
                 if (node.leaf) {
                     $scope.folderTree.currentNode.editingQuestions = [];
                     $scope.startSpin();
-                    UserFormRecordService.getAllQuestions(node.form_id)
+                    UserFormRecordService.getAllQuestions(node.data_id)
                         .then(
                         function (data) {
                             $scope.folderTree.currentNode.editingQuestions = data;
