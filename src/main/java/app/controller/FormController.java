@@ -78,7 +78,6 @@ public class FormController {
         Form form1 = formService.get(id);
         if (form1 != null) {
             form1.setForm_name(form.getForm_name());
-            form1.setUpdateTime(new Date(new java.util.Date().getTime()));
             form1.setFormType(form.getFormType());
             form1.setForm_desc(form.getForm_desc());
             formService.update(form1);
@@ -106,7 +105,6 @@ public class FormController {
 
         Form formTable = formService.get(id);
         if (formTable == null) {
-            System.out.println("Unable to delete. Company with id " + id + " not found");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         formService.delete(formTable);

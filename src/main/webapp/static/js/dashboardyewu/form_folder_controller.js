@@ -261,19 +261,6 @@ app.controller('FileController', ['$scope', 'FormService', 'FolderService', 'Que
         }
     };
 
-
-    $scope.$watch(
-        function (scope) {
-            return scope.editingFileNode.file.id;
-        },
-        function () {
-            $scope.froalaOptions.froalaEditor('html.set', '');
-            $scope.froalaOptions.froalaEditor('html.insert', $scope.editingFileNode.file.content, true);
-            $scope.loadQuestionsForFile();
-        }
-    );
-
-
     $scope.loadQuestionsForFile = function () {
         $scope.startSpin();
         var parentFolderId = $scope.editingFileNode.parent_id;
@@ -289,7 +276,28 @@ app.controller('FileController', ['$scope', 'FormService', 'FolderService', 'Que
         );
     };
 
-    $scope.loadQuestionsForFile();
+    var init = function () {
+        $timeout(
+            function () {
+                $scope.froalaOptions.froalaEditor('html.set', '');
+                if ($scope.editingFileNode.file.content) {
+                    var i = $scope.froalaOptions.froalaEditor('html.insert', $scope.editingFileNode.file.content, true);
+                }
+
+                $scope.loadQuestionsForFile();
+//                 console.log(i);
+            }
+        );
+    };
+
+    $scope.$watch(
+        function (scope) {
+            return scope.editingFileNode.file.id;
+        },
+        function () {
+            init();
+        }
+    );
     //$scope.froalaOptions.froalaEditor('html.set', "");
     //$scope.froalaOptions.froalaEditor('html.insert', $scope.editingFileNode.file.content, true);
 

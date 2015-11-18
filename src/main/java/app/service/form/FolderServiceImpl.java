@@ -61,6 +61,8 @@ public class FolderServiceImpl extends BaseGenericServiceImpl<Folder, String> im
 
     @Override
     public void saveOrUpdate(Folder entity) {
+        entity.setCreateTime(new Timestamp(new java.util.Date().getTime()));
+        entity.setUpdateTime(new Timestamp(new java.util.Date().getTime()));
         folderDao.saveOrUpdate(entity);
     }
 
@@ -79,7 +81,7 @@ public class FolderServiceImpl extends BaseGenericServiceImpl<Folder, String> im
         List<Folder> childrenObjects = getFoldersBasedOnParentId(parentId);
 
         for (Folder child : childrenObjects) {
-            if(child.getDataType() == null){
+            if (child.getDataType() == null) {
                 child.setDataType(Folder.FolderDataType.Folder);
             }
             if (child.getDataType().equals(Folder.FolderDataType.Question) || child.getDataType().equals(Folder.FolderDataType.WorkFlow))
@@ -97,9 +99,9 @@ public class FolderServiceImpl extends BaseGenericServiceImpl<Folder, String> im
 
     @Override
     public List<Folder> getFoldersBasedOnParentId(String parent_id) {
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("parent_id",parent_id);
-        map.put("deleted",false);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("parent_id", parent_id);
+        map.put("deleted", false);
         return folderDao.getListbyParams(map);
     }
 
@@ -115,7 +117,7 @@ public class FolderServiceImpl extends BaseGenericServiceImpl<Folder, String> im
         folder.setLevel(1);
         folder.setDataType(Folder.FolderDataType.Folder);
         folder.setCreateTime(new Timestamp(new java.util.Date().getTime()));
-        this.save(folder);
+        save(folder);
         return folder;
     }
 
@@ -125,7 +127,7 @@ public class FolderServiceImpl extends BaseGenericServiceImpl<Folder, String> im
         folder.setDataType(Folder.FolderDataType.Folder);
         folder.setLevel(parent.getLevel() + 1);
         folder.setParent_id(parent.getId());
-        this.save(folder);
+        save(folder);
         return folder;
     }
 
@@ -153,7 +155,7 @@ public class FolderServiceImpl extends BaseGenericServiceImpl<Folder, String> im
         String[] fields = {"id", "name"};
         HashMap<String, Object> map = new HashMap<>();
         map.put("parent_id", "0");
-        map.put("deleted",false);
+        map.put("deleted", false);
         map.put("dataType", Folder.FolderDataType.Folder);
         return folderDao.getListbyFieldAndParams(fields, map);
     }
@@ -162,8 +164,8 @@ public class FolderServiceImpl extends BaseGenericServiceImpl<Folder, String> im
     public List<Folder> getQuestionNodesBasedOnFolderId(String id) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("parent_id", id);
-        map.put("dataType",Folder.FolderDataType.Question);
-        map.put("deleted",false);
+        map.put("dataType", Folder.FolderDataType.Question);
+        map.put("deleted", false);
         return folderDao.getListbyParams(map);
     }
 }
