@@ -73,7 +73,7 @@ app.controller('DocumentViewTreeController',
                 $scope.viewTableForm = false;
                 var userId = LoginService.getUserInfo().userId;
                 var oeId = LoginService.getUserInfo().companyId;
-                $scope.getFullFormWhichWithRecord(f.form_id, oeId, userId);
+                $scope.getFullFormWhichWithRecord(f.data_id, oeId, userId);
             };
 
             // 读取form内容， 找到里面的question id， 然后 goto －－－> UserFormRecordService.getFormRecords

@@ -103,7 +103,7 @@ app.controller('FormFolderTreeController', ['$scope', '$filter', 'FolderService'
             );
             //$scope.thisFolder = angular.copy(node);
         } else {
-            $scope.editFile(node);
+            //$scope.editFile(node);
             $scope.menu = angular.copy(fileMenu);
             $scope.menu.selectedMenu = $scope.menu.all[0];
             $scope.editFile(node);
@@ -245,7 +245,7 @@ app.controller('FormFolderTreeController', ['$scope', '$filter', 'FolderService'
     //}
 }]);
 
-app.controller('FileController', ['$scope', 'FormService', 'FolderService', 'QuestionService', function ($scope, FormService, FolderService, QuestionService) {
+app.controller('FileController', ['$scope', 'FormService', 'FolderService', 'QuestionService', '$timeout', function ($scope, FormService, FolderService, QuestionService, $timeout) {
     // options for froala text editor
     $scope.froalaOptions = {
         heightMin: 600,
@@ -260,12 +260,14 @@ app.controller('FileController', ['$scope', 'FormService', 'FolderService', 'Que
             }
         }
     };
+
+
     $scope.$watch(
         function (scope) {
             return scope.editingFileNode.file.id;
         },
         function () {
-            $scope.froalaOptions.froalaEditor('html.set', "");
+            $scope.froalaOptions.froalaEditor('html.set', '');
             $scope.froalaOptions.froalaEditor('html.insert', $scope.editingFileNode.file.content, true);
             $scope.loadQuestionsForFile();
         }
@@ -286,7 +288,11 @@ app.controller('FileController', ['$scope', 'FormService', 'FolderService', 'Que
             }
         );
     };
+
     $scope.loadQuestionsForFile();
+    $scope.froalaOptions.froalaEditor('html.set', "");
+    $scope.froalaOptions.froalaEditor('html.insert', $scope.editingFileNode.file.content, true);
+
     $scope.selectedQuestionNodeForFile = {};
 
     $scope.selectQuestionForFile = function (questionNode) {

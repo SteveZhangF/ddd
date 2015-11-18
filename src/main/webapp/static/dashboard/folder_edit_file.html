@@ -38,12 +38,12 @@
             <div set-class-when-at-top="fix-to-top" class="well" style="max-height: 400px">
                 <div style="">
                     <label>Search</label>
-                    <input ng-model="searchQuestionText" class="form-control ">
+                    <input ng-model="search.$" class="form-control ">
 
                 </div>
                 <hr>
                 <div class="list-group " style="width: 100%;max-height: 200px;min-height: 200px" scrollable>
-                    <a href="" title="{{q.description}}" class="list-group-item " ng-class="q.selected?'active':''" ng-repeat="q in questionsForFile" ng-click="selectQuestionForFile(q)">{{q.name}}</a>
+                    <a href="" title="{{q.description}}" class="list-group-item " ng-class="q.selected?'active':''" ng-repeat="q in questionsForFile | filter:search:strict" ng-click="selectQuestionForFile(q)">{{q.name}}</a>
                 </div>
                 <hr>
                 <div style="">
@@ -52,7 +52,7 @@
             </div>
         </div>
         <div class="col-md-10">
-            <div id="formDesigner" froala="froalaOptions" ng-model="thisFolder.editingFile.content"></div>
+            <div id="formDesigner" froala="froalaOptions" ng-model="myHtml"></div>
         </div>
     </div>
 </div>
