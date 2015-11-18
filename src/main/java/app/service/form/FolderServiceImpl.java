@@ -77,21 +77,30 @@ public class FolderServiceImpl extends BaseGenericServiceImpl<Folder, String> im
         Folder folder = get(parentId);
         ArrayNode children = mapper.createArrayNode();
         List<Folder> childrenObjects = getFoldersBasedOnParentId(parentId);
+
         for (Folder child : childrenObjects) {
+            if(child.getDataType() == null){
+                child.setDataType(Folder.FolderDataType.Folder);
+            }
+            if (child.getDataType().equals(Folder.FolderDataType.Question) || child.getDataType().equals(Folder.FolderDataType.WorkFlow))
+                continue;
             children.add(getAllFoldersForTree(child.getId()));
         }
-        if(folder!=null){
+        if (folder != null) {
             ObjectNode node = mapper.valueToTree(folder);
-            node.set("children",children);
+            node.set("children", children);
             return node;
-        }else{
+        } else {
             return children;
         }
     }
 
     @Override
     public List<Folder> getFoldersBasedOnParentId(String parent_id) {
-        return folderDao.getListbyParam("parent_id", parent_id);
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("parent_id",parent_id);
+        map.put("deleted",false);
+        return folderDao.getListbyParams(map);
     }
 
     @Override
@@ -104,44 +113,57 @@ public class FolderServiceImpl extends BaseGenericServiceImpl<Folder, String> im
         folder.setLeaf(false);
         folder.setParent_id("0");
         folder.setLevel(1);
+        folder.setDataType(Folder.FolderDataType.Folder);
         folder.setCreateTime(new Timestamp(new java.util.Date().getTime()));
-        folderDao.save(folder);
+        this.save(folder);
         return folder;
     }
 
     @Override
     public Folder addSubFolder(Folder folder, Folder parent) {
         folder.setLeaf(false);
-
+        folder.setDataType(Folder.FolderDataType.Folder);
         folder.setLevel(parent.getLevel() + 1);
         folder.setParent_id(parent.getId());
-        folderDao.save(folder);
+        this.save(folder);
         return folder;
     }
 
     @Override
-    public void deleteFolder(Folder folder){
+    public void deleteFolder(Folder folder) {
         String parentId = folder.getParent_id();
         List<Folder> children = getFoldersBasedOnParentId(folder.getId());
-        for(Folder child: children){
+        for (Folder child : children) {
             child.setParent_id(parentId);
             child.setLevel(folder.getLevel());
             update(child);
         }
-        delete(folder);
+        folder.setDeleted(true);
+        update(folder);
     }
 
     @Override
-    public Folder getFolderByName(String name){
+    public Folder getFolderByName(String name) {
         name = name.trim();
-        return folderDao.getbyParam("name",name);
+        return folderDao.getbyParam("name", name);
     }
 
     @Override
     public List<Folder> getFolderForSelect() {
-        String[] fields = {"id","name"};
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("parent_id","0");
-        return folderDao.getListbyFieldAndParams(fields,map);
+        String[] fields = {"id", "name"};
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("parent_id", "0");
+        map.put("deleted",false);
+        map.put("dataType", Folder.FolderDataType.Folder);
+        return folderDao.getListbyFieldAndParams(fields, map);
+    }
+
+    @Override
+    public List<Folder> getQuestionNodesBasedOnFolderId(String id) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("parent_id", id);
+        map.put("dataType",Folder.FolderDataType.Question);
+        map.put("deleted",false);
+        return folderDao.getListbyParams(map);
     }
 }

@@ -102,14 +102,12 @@
                         <input id="user" type="text" class="form-control" name="user" value="" placeholder="User"
                                ng-model="user.ssoId" required>
                     </div>
-
                     <div class="input-group"
                          ng-class=" { 'has-error' : loginForm.user.$invalid && !loginForm.user.$pristine }">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                         <input id="password" type="password" class="form-control" name="password" placeholder="Password"
                                ng-model="user.password" required>
                     </div>
-
                     <div class="row">
                         <!-- Button -->
                         <div class="col-sm-12 controls">

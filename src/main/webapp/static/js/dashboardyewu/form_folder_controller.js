@@ -1,17 +1,43 @@
-
 'use strict';
 
-app.controller('FormFolderTreeController', ['$scope', '$filter','FolderService','FormService','usSpinnerService', function ($scope, $filter,  FolderService,FormService,usSpinnerService) {
+app.controller('FormFolderTreeController', ['$scope', '$filter', 'FolderService', 'FormService', 'usSpinnerService', function ($scope, $filter, FolderService, FormService, usSpinnerService) {
     $scope.folders = [
-        {'name':'osha',id:'0','children':[
-            {'name':'blood',id:'1111','children':[],leaf:true,process:'10%'},
-            {'name':'eye',id:'1111','children':[],leaf:false,process:'50%'}
+        {
+            'name': 'osha', id: '0', 'children': [
+            {'name': 'blood', id: '1111', 'children': [], leaf: true, process: '10%'},
+            {'name': 'eye', id: '1111', 'children': [], leaf: false, process: '50%'}
         ]
-            ,leaf:false
+            , leaf: false
             ,
-            process:'60%'}
+            process: '60%'
+        }
     ];
 
+    $scope.menu = {};
+
+    var folderMenu = {
+        all: [{name: 'Edit', url: 'dashboard/folder_edit.html', selected: true}, {
+            name: "Files",
+            url: 'dashboard/folder_files.html'
+        }, {name: 'Questions', url: 'dashboard/folder_questions.html'}, {name: 'Flows'}], selectedMenu: {}
+    };
+
+    var fileMenu = {
+        all: [
+            {
+                name: 'Edit', url: 'dashboard/folder_edit_file.html', selected: true
+            }
+        ],
+        selectedMenu: {}
+    };
+
+    $scope.selectMenu = function (m) {
+        angular.forEach($scope.menu, function (mi) {
+            mi.selected = false;
+        });
+        m.selected = true;
+        $scope.menu.selectedMenu = m;
+    };
 
     /**
      * spinner start
@@ -34,8 +60,8 @@ app.controller('FormFolderTreeController', ['$scope', '$filter','FolderService',
         }
     };
 
-    $scope.$watch( 'modelTree.currentNode', function( newObj, oldObj ) {
-        if( $scope.modelTree && angular.isObject($scope.modelTree.currentNode) ) {
+    $scope.$watch('modelTree.currentNode', function (newObj, oldObj) {
+        if ($scope.modelTree && angular.isObject($scope.modelTree.currentNode)) {
             $scope.loadFolder($scope.modelTree.currentNode);
         }
     }, false);
@@ -49,10 +75,10 @@ app.controller('FormFolderTreeController', ['$scope', '$filter','FolderService',
                 $scope.folders = [];
                 $scope.folders.push(data);
                 $scope.stopSpin(true);
-                if($scope.modelTree.currentNode){
+                if ($scope.modelTree.currentNode) {
                     $scope.loadFolder($scope.modelTree.currentNode);
-                }else{
-                    $scope.loadFolder({id:"0"});
+                } else {
+                    $scope.loadFolder({id: "0"});
                 }
             },
             function (err) {
@@ -62,37 +88,49 @@ app.controller('FormFolderTreeController', ['$scope', '$filter','FolderService',
     };
     $scope.loadFolderTree();
     $scope.loadFolder = function (node) {
-        $scope.startSpin();
-        FolderService.getOneFolder(node.id).then(
-            function (data) {
-                $scope.thisFolder = data;
-                $scope.stopSpin(true);
-            },
-            function (err) {
-                $scope.stopSpin(false);
-            }
-        );
-        $scope.thisFolder = angular.copy(node);
+        if (!node.leaf) {
+            $scope.menu = angular.copy(folderMenu);
+            $scope.menu.selectedMenu = $scope.menu.all[0];
+            $scope.startSpin();
+            FolderService.getOneFolder(node.id).then(
+                function (data) {
+                    $scope.thisFolder = data;
+                    $scope.stopSpin(true);
+                },
+                function (err) {
+                    $scope.stopSpin(false);
+                }
+            );
+            //$scope.thisFolder = angular.copy(node);
+        } else {
+            $scope.editFile(node);
+            $scope.menu = angular.copy(fileMenu);
+            $scope.menu.selectedMenu = $scope.menu.all[0];
+            $scope.editFile(node);
+
+        }
+
     };
-    
-    $scope.select = function () {
-        $scope.selectedAll = $scope.thisFolder.children.every(function (itm) {
+
+
+    $scope.selectFolderOrFile = function () {
+        $scope.thisFolder.selectedAllFolderOrFile = $scope.thisFolder.children.every(function (itm) {
             return itm.selected;
         })
     };
 
-    $scope.selectAll = function () {
-        var toggleStatus = !$scope.selectedAll;
+    $scope.selectAllFolderOrFile = function () {
+        var toggleStatus = !$scope.thisFolder.selectedAllFolderOrFile;
         angular.forEach($scope.thisFolder.children, function (itm) {
             itm.selected = !toggleStatus;
         });
     };
 
-    $scope.newFolder = {isNew:true};
+    $scope.newFolder = {isNew: true};
 
     $scope.saveFolder = function (f) {
         $scope.startSpin();
-        if(f.isNew){
+        if (f.isNew) {
             f.parent_id = $scope.thisFolder.id;
             FolderService.saveFolder(f)
                 .then(function (data) {
@@ -104,8 +142,8 @@ app.controller('FormFolderTreeController', ['$scope', '$filter','FolderService',
                     $scope.stopSpin(false);
                     $scope.loadFolderTree();
                 });
-        }else{
-            FolderService.updateFolder(f.id,f)
+        } else {
+            FolderService.updateFolder(f.id, f)
                 .then(
                 function (data) {
                     $scope.stopSpin(true);
@@ -117,84 +155,443 @@ app.controller('FormFolderTreeController', ['$scope', '$filter','FolderService',
                 }
             );
         }
-
-        console.log(f);
-
     };
     //$scope.
     $scope.editFileOrFolder = function (f) {
-        if(!f.leaf){
+        if (!f.leaf) {
             f.editing = true;
+        } else {
+            $scope.editFile(f);
         }
     };
 
     $scope.deleteSelectedFolderOrFile = function () {
+        var r = confirm("Do you want to delete the selected item?");
+        if (r == true) {
+            var selected = [];
+            for (var i = 0; i < $scope.thisFolder.children.length; i++) {
+                if ($scope.thisFolder.children[i].selected) {
+                    selected.push($scope.thisFolder.children[i].id);
+                }
+            }
+            $scope.startSpin();
+            FolderService.deleteSelectFolders(selected).then(
+                function (data) {
+                    $scope.stopSpin(true);
+                    $scope.loadFolderTree();
+                },
+                function (err) {
+                    $scope.stopSpin(false);
+                    $scope.loadFolderTree();
+                }
+            );
+        }
+    };
+    // for add forms
 
-        var selected = [];
-        for(var i=0;i<$scope.thisFolder.children.length;i++){
-            if($scope.thisFolder.children[i].selected){
-                selected.push($scope.thisFolder.children[i].id);
+    $scope.editFile = function (fileNode) {
+        $scope.startSpin();
+        if (fileNode) {
+            FormService.fetchOneForm(fileNode.data_id)
+                .then(function (data) {
+
+                    $scope.editingFileNode = fileNode;
+                    $scope.editingFileNode.file = data;
+                    $scope.stopSpin(true);
+                    $scope.thisFolder.showFileEditor = true;
+                },
+                function (err) {
+                    $scope.stopSpin(false);
+                });
+        } else {
+            $scope.editingFileNode = {isNew: true, file: {}, parent_id: $scope.thisFolder.id};
+            $scope.thisFolder.showFileEditor = true;
+        }
+    };
+
+
+    //$scope.forms = [{form_name: 'name1', id: '1'}, {form_name: 'name3', id: '2'}, {form_name: 'name2', id: '3'}];
+    //$scope.selectForm = function () {
+    //    $scope.selectedAllForms = $scope.forms.every(function (itm) {
+    //        return itm.selected;
+    //    })
+    //};
+    //
+    //$scope.selectAllForms = function () {
+    //    var toggleStatus = !$scope.selectedAllForms;
+    //    angular.forEach($scope.forms, function (itm) {
+    //        itm.selected = !toggleStatus;
+    //    });
+    //};
+    //
+    //$scope.addForms = function () {
+    //    var selected = [];
+    //    for (var i = 0; i < $scope.forms.length; i++) {
+    //        if ($scope.forms[i].selected) {
+    //            selected.push($scope.forms[i].id);
+    //        }
+    //    }
+    //    $scope.startSpin();
+    //    FolderService.addForms($scope.thisFolder.id, selected).then(
+    //        function (data) {
+    //            $scope.stopSpin(true);
+    //            $scope.loadFolderTree();
+    //        },
+    //        function (err) {
+    //            $scope.stopSpin(false);
+    //            $scope.loadFolderTree();
+    //        }
+    //    );
+    //}
+}]);
+
+app.controller('FileController', ['$scope', 'FormService', 'FolderService', 'QuestionService', function ($scope, FormService, FolderService, QuestionService) {
+    // options for froala text editor
+    $scope.froalaOptions = {
+        heightMin: 600,
+        heightMax: 800,
+        events: {
+            'froalaEditor.focus': function (e, editor) {
+                editor.selection.restore();
+
+            },
+            'froalaEditor.blur': function (e, editor) {
+                editor.selection.save();
             }
         }
+    };
+    $scope.$watch(
+        function (scope) {
+            return scope.editingFileNode.file.id;
+        },
+        function () {
+            $scope.froalaOptions.froalaEditor('html.set', "");
+            $scope.froalaOptions.froalaEditor('html.insert', $scope.editingFileNode.file.content, true);
+            $scope.loadQuestionsForFile();
+        }
+    );
+
+    $scope.questionsForFile = [{name: 'question1'}, {name: 'question1'}, {name: 'question1'}, {name: 'question1'}];
+
+    $scope.loadQuestionsForFile = function () {
         $scope.startSpin();
-        FolderService.deleteSelectFolders(selected).then(
+        var parentFolderId = $scope.editingFileNode.parent_id;
+        FolderService.loadQuestionNodesBasedOnFolderId(parentFolderId)
+            .then(
             function (data) {
+                $scope.questionsForFile = data;
                 $scope.stopSpin(true);
-                $scope.loadFolderTree();
             },
             function (err) {
                 $scope.stopSpin(false);
-                $scope.loadFolderTree();
             }
         );
     };
-    // for add forms
-    
-    $scope.showForms = function () {
-        $scope.showForming = !$scope.showForming;
+
+    $scope.selectedQuestionNodeForFile = {};
+
+    $scope.selectQuestionForFile = function (questionNode) {
+        angular.forEach($scope.questionsForFile, function (itm) {
+            itm.selected = false;
+        });
+        questionNode.selected = true;
+        $scope.selectedQuestionNodeForFile = questionNode;
+    };
+    // insert a selected node in to the file
+    $scope.insertQuestionToFile = function () {
         $scope.startSpin();
-        FormService.fetchAllForms()
-            .then(function (data) {
-                $scope.forms = data;
+        QuestionService.fetchOneQuestion($scope.selectedQuestionNodeForFile.data_id)
+            .then(
+            function (data) {
+                var plugin = angular.element(data.content);
+                if(data.options){
+                    var options = data.options;
+                    //if type is select question
+                    if(data.type=="select"){
+                        for(var i=0;i<options.length;i++){
+                            var opt = angular.element("<option></option>");
+                            opt.text(options[i].name);
+                            opt.attr('value',options[i].value);
+                            plugin.find('select').append(opt);
+                        }
+                    }
+                }
+
+                plugin.find(".form-control").attr('disabled', 'true').attr('title', data.name).removeClass("form-control");
+                plugin.attr("question_id", data.id).attr('name', data.name);
+                var el = angular.element("<div></div>");
+                el.append(plugin);
+                var txt = "{-" + el.html() + "-}";
+                $scope.froalaOptions.froalaEditor('html.insert', txt, true);
+                el = null;
                 $scope.stopSpin(true);
             },
             function (err) {
                 $scope.stopSpin(false);
-            });
+            }
+        );
+
+
     };
-$scope.forms=[{form_name:'name1',id:'1'},{form_name:'name3',id:'2'},{form_name:'name2',id:'3'}];
-    $scope.selectForm = function () {
-        $scope.selectedAllForms = $scope.forms.every(function (itm) {
+
+    //when save file clicked,
+    //if new
+    //      save file
+    //      parse format
+    //      update format
+    //      add to folder
+    //else
+    //      update file
+    //      parse format
+    //load folder tree
+    $scope.parseFileFormat = function (fileNode) {
+        $scope.startSpin();
+        //parse format
+        var content = $scope.froalaOptions.froalaEditor('html.get', false);
+        fileNode.file.content = content;
+        var plugins = angular.element(content).find('plugin');
+        var questions = [];
+        angular.forEach(plugins, function (plugin, i) {
+            var question = {id: ''};
+            question.id = plugin.getAttribute('id');
+            questions.push(question);
+        });
+
+        fileNode.file.questions = questions;
+        // update format
+        FormService.updateFormDetail(fileNode.file, fileNode.file.id).then(
+            function (d) {
+                $scope.stopSpin(true);
+                //if new, add to folder
+                if (fileNode.isNew) {
+                    var selected = [];
+                    selected.push(fileNode.file.id);
+                    FolderService.addForms(fileNode.parent_id, selected).then(
+                        function (data) {
+                            $scope.stopSpin(true);
+                            $scope.loadFolderTree();
+                        },
+                        function (err) {
+                            $scope.stopSpin(false);
+
+                        }
+                    );
+
+                } else {//else update file node and load folder tree
+
+                    fileNode.name = fileNode.file.form_name;
+                    fileNode.description = fileNode.file.form_desc;
+                    delete fileNode.file;
+                    FolderService.updateFolder(fileNode.id, fileNode).
+                        then(function (data) {
+                            $scope.loadFolderTree();
+                        }, function (err) {
+                            $scope.stopSpin(false);
+                        });
+                }
+            },
+            function (e) {
+                $scope.stopSpin(false);
+            }
+        );
+    };
+    // save button clicked
+    $scope.saveFile = function (fileNode) {
+        $scope.startSpin();
+        if (fileNode.isNew) {
+            FormService.createForm(fileNode.file).then(
+                function (data) {
+                    fileNode.file = data;
+                    $scope.parseFileFormat(fileNode);
+                    $scope.stopSpin(true);
+                },
+                function (err) {
+                    $scope.stopSpin(false);
+                }
+            );
+        } else {
+            FormService.updateForm(fileNode.file, fileNode.file.id).then(
+                function (data) {
+                    $scope.parseFileFormat(fileNode);
+                    $scope.stopSpin(true);
+                },
+                function (err) {
+                    $scope.stopSpin(false);
+                }
+            );
+        }
+    }
+
+}]);
+
+app.controller('FolderQuestionController', ['$scope', 'QuestionService', 'FolderService', function ($scope, QuestionService, FolderService) {
+    var Question = function (name, type, options, description) {
+
+    };
+    $scope.types = ['textarea', "select", "text", "checkbox", "selectEmployee", "selectDepartment", "file"];
+    $scope.selectQuestion = function () {
+        $scope.selectedAllQuestion = $scope.questionNodeList.every(function (itm) {
             return itm.selected;
         })
     };
 
-    $scope.selectAllForms = function () {
-        var toggleStatus = !$scope.selectedAllForms;
-        angular.forEach($scope.forms, function (itm) {
+    $scope.selectAllQuestion = function () {
+        var toggleStatus = !$scope.selectedAllQuestion;
+        angular.forEach($scope.questionNodeList, function (itm) {
             itm.selected = !toggleStatus;
         });
     };
-    
-    $scope.addForms = function () {
-        var selected = [];
-        for(var i=0;i<$scope.forms.length;i++){
-            if($scope.forms[i].selected){
-                selected.push($scope.forms[i].id);
-            }
-        }
+
+
+    $scope.questionNodeList = [];
+
+    $scope.loadAllQuestionNodes = function () {
+        var parentNodeId = $scope.thisFolder.id;
         $scope.startSpin();
-        FolderService.addForms($scope.thisFolder.id,selected).then(
+        FolderService.loadQuestionNodesBasedOnFolderId(parentNodeId)
+            .then(
             function (data) {
+                $scope.questionNodeList = data;
                 $scope.stopSpin(true);
-                $scope.loadFolderTree();
             },
             function (err) {
                 $scope.stopSpin(false);
-                $scope.loadFolderTree();
             }
         );
+    };
+    $scope.loadAllQuestionNodes();
+
+    $scope.editQuestion = function (questionNode) {
+        $scope.startSpin();
+        QuestionService.fetchOneQuestion(questionNode.data_id)
+            .then(
+            function (data) {
+                questionNode.question = data;
+                $scope.stopSpin(true);
+                questionNode.editing = true;
+            },
+            function (err) {
+                $scope.stopSpin(false);
+            }
+        );
+    };
+
+    // for create a new question, here the paramter is question but not questionNode
+    $scope.saveQuestion = function (question) {
+        $scope.startSpin();
+        QuestionService.createQuestion(question)
+            .then(
+            function (data) {
+                var selected = [];
+                selected.push(data.id);
+                FolderService.addQuestions($scope.thisFolder.id, selected)
+                    .then(
+                    function (d) {
+                        $scope.loadAllQuestionNodes();
+                        $scope.newQuestion.editing = false;
+                        $scope.newQuestion = {};
+                    }
+                );
+            },
+            function (er) {
+                $scope.stopSpin(false);
+            }
+        );
+    };
+
+    $scope.updateQuestion = function (questionNode) {
+        $scope.startSpin();
+        QuestionService.updateQuestion(questionNode.question, questionNode.question.id)
+            .then(
+            function (data) {
+                questionNode.name = data.name;
+                questionNode.description = data.description;
+                FolderService.updateFolder(questionNode.id, questionNode)
+                    .then(
+                    function (data1) {
+                        $scope.stopSpin(true);
+                        $scope.loadAllQuestionNodes();
+                    },
+                    function (err) {
+                        $scope.stopSpin(false);
+                        $scope.loadAllQuestionNodes();
+                    }
+                );
+            },
+            function (err) {
+                $scope.stopSpin(false);
+                $scope.loadAllQuestionNodes();
+            }
+        );
+    };
+
+    $scope.deleteSelectedQuestion = function () {
+        var r = confirm("Do you want to delete the selected item?");
+        if (r == true) {
+            var selected = [];
+            for (var i = 0; i < $scope.questionNodeList.length; i++) {
+                if ($scope.questionNodeList[i].selected) {
+                    selected.push($scope.questionNodeList[i].id);
+                }
+            }
+            $scope.startSpin();
+            FolderService.deleteSelectFolders(selected).then(
+                function (data) {
+                    $scope.stopSpin(true);
+                    $scope.loadFolderTree();
+                },
+                function (err) {
+                    $scope.stopSpin(false);
+                    $scope.loadFolderTree();
+                }
+            );
+        }
+    };
+
+    $scope.typeChanged = function (question) {
+        var type = question.type;
+        var content = "";
+        switch (type) {
+            case "text":
+                content = '<plugin id="{+id+}"><input class="form-control" type=\"text\"></plugin>';
+                break;
+            case 'textarea':
+                content = '<plugin id="{+id+}"><textarea class="form-control"/></plugin>';
+                break;
+            case 'select':
+                content = '<plugin id="{+id+}"><select class="form-control"></select></plugin>';
+                break;
+            case 'checkbox':
+                content = '<plugin id="{+id+}"></plugin>';
+                break;
+            case 'selectEmployee':
+                content = '<plugin id="{+id+}"><select class="form-control"><option>Employee</option></select></plugin>';
+                break;
+            case 'selectDepartment':
+                content = '<plugin id="{+id+}"><select class="form-control"><option>Department</option></select></plugin>';
+                break;
+            case 'file':
+                content = '<plugin id="{+id+}"><input type="file" class="form-control"></plugin>';
+                break;
+        }
+        question.content = content;
+    };
+
+
+    $scope.newOp = {name: '', value: ''};
+    $scope.addOption = function (question) {
+        if (!question.options) {
+            question.options = [];
+        }
+        question.options.push({name: $scope.newOp.name, value: $scope.newOp.value});
+        $scope.newOp.name = '';
+        $scope.newOp.value = '';
+    };
+
+    $scope.removeOption = function (question, i) {
+        question.options.splice(i, 1);
     }
+
 }]);
 
 app.factory('FolderService', ['$http', '$q', function ($http, $q) {
@@ -202,7 +599,7 @@ app.factory('FolderService', ['$http', '$q', function ($http, $q) {
     return {
 
         getFolderTree: function () {
-            return $http.get('/folder/'+'0')
+            return $http.get('/folder/' + '0')
                 .then(
                 function (response) {
                     return response.data
@@ -212,9 +609,9 @@ app.factory('FolderService', ['$http', '$q', function ($http, $q) {
                 }
             );
         },
-        
+
         getOneFolder: function (id) {
-            return $http.get('/folder/'+id)
+            return $http.get('/folder/' + id)
                 .then(
                 function (response) {
                     return response.data;
@@ -224,9 +621,9 @@ app.factory('FolderService', ['$http', '$q', function ($http, $q) {
                 }
             );
         },
-        
+
         saveFolder: function (folder) {
-            return $http.post('/folder/',folder)
+            return $http.post('/folder/', folder)
                 .then(function (response) {
                     return response.data;
                 }, function (errResponse) {
@@ -234,8 +631,8 @@ app.factory('FolderService', ['$http', '$q', function ($http, $q) {
                 });
         },
 
-        updateFolder: function (id,folder) {
-            return $http.put('/folder/'+id,folder)
+        updateFolder: function (id, folder) {
+            return $http.put('/folder/' + id, folder)
                 .then(
                 function (response) {
                     return response.data;
@@ -247,7 +644,7 @@ app.factory('FolderService', ['$http', '$q', function ($http, $q) {
         },
 
         deleteSelectFolders: function (ids) {
-            return $http.post('/folder/deleteFolders/',ids)
+            return $http.post('/folder/deleteFolders/', ids)
                 .then(function (response) {
                     return response.data;
                 },
@@ -257,8 +654,32 @@ app.factory('FolderService', ['$http', '$q', function ($http, $q) {
             );
         },
 
-        addForms: function (parentId,ids) {
-            return $http.post('/folder/addForms/'+parentId,ids)
+        addForms: function (parentId, ids) {
+            return $http.post('/folder/addForms/' + parentId, ids)
+                .then(
+                function (response) {
+                    return response.data;
+                },
+                function (err) {
+                    return $q.reject(err);
+                }
+            );
+        },
+
+        addQuestions: function (parentId, ids) {
+            return $http.post('/folder/addQuestions/' + parentId, ids)
+                .then(
+                function (response) {
+                    return response.data;
+                },
+                function (err) {
+                    return $q.reject(err);
+                }
+            );
+        },
+
+        loadQuestionNodesBasedOnFolderId: function (parentId) {
+            return $http.get('/folder/getQuestions/' + parentId)
                 .then(
                 function (response) {
                     return response.data;
@@ -282,3 +703,4 @@ app.factory('FolderService', ['$http', '$q', function ($http, $q) {
     };
 
 }]);
+

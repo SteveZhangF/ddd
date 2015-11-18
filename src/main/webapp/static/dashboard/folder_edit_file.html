@@ -1,0 +1,58 @@
+<style>
+    .fix-to-top {
+        position: fixed;
+        top: 0;
+    }
+</style>
+<div ng-controller="FileController">
+
+    <div class="well">
+        <div class="row">
+            <label class="col-md-3">Name:
+                <input type="text" class="form-control" ng-model="editingFileNode.file.form_name">
+            </label>
+
+            <label class="col-md-3">Create Time:
+                <input type="text" class="form-control" ng-model="editingFileNode.file.createTime" disabled>
+            </label>
+
+            <label class="col-md-3">Last Update Time:
+                <input type="text" class="form-control" ng-model="editingFileNode.file.updateTime" disabled>
+            </label>
+        </div>
+        <div class="row">
+            <label class="col-md-9">Description:
+                <textarea class="form-control" ng-model="editingFileNode.file.form_desc"></textarea>
+            </label>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <button class="btn btn-primary btn-sm" ng-click="saveFile(editingFileNode)">Save</button>
+                <button class="btn btn-default btn-sm" ng-click="loadFolderTree();">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-2">
+            <div set-class-when-at-top="fix-to-top" class="well" style="max-height: 400px">
+                <div style="">
+                    <label>Search</label>
+                    <input ng-model="searchQuestionText" class="form-control ">
+
+                </div>
+                <hr>
+                <div class="list-group " style="width: 100%;max-height: 200px;min-height: 200px" scrollable>
+                    <a href="" title="{{q.description}}" class="list-group-item " ng-class="q.selected?'active':''" ng-repeat="q in questionsForFile" ng-click="selectQuestionForFile(q)">{{q.name}}</a>
+                </div>
+                <hr>
+                <div style="">
+                    <button class="btn btn-default btn-sm btn-block" ng-click="insertQuestionToFile()">Insert</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <div id="formDesigner" froala="froalaOptions" ng-model="thisFolder.editingFile.content"></div>
+        </div>
+    </div>
+</div>

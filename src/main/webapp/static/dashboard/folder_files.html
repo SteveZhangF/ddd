@@ -1,0 +1,82 @@
+
+<div ng-if="thisFolder.showFileEditor" >
+    <div ng-include="'dashboard/folder_edit_file.html'"></div>
+</div>
+<div class="well" ng-if="!thisFolder.showFileEditor">
+    <div class="row">
+        <button class="btn btn-primary" ng-click="newFolder.editing=true">Add Folder</button>
+        <button class="btn btn-danger" ng-click="deleteSelectedFolderOrFile()">Delete</button>
+        <button class="btn btn-default pull-right" ng-click="editFile()">Create New Form</button>
+    </div>
+    <div ng-show="newFolder.editing">
+        <label>Name:
+        </label>
+        <input ng-model="newFolder.name" class="form-control">
+        <label>Description:
+        </label>
+        <textarea ng-model="newFolder.description" class="form-control"></textarea>
+
+        <p></p>
+        <button class="btn btn-default" ng-click="saveFolder(newFolder)">Save</button>
+        <button class="btn btn-warning" ng-click="newFolder.editing=false">Cancel</button>
+        <hr>
+    </div>
+
+    <hr>
+    <table st-table="childrenDisplay" st-safe-src="thisFolder.children" class="table table-striped">
+        <thead>
+        <tr>
+            <th><label>
+                <input type="checkbox" ng-model="thisFolder.selectedAllFolderOrFile" ng-click="selectAllFolderOrFile()">
+            </label></th>
+            <th st-sort="{{$index}}">Index</th>
+            <th st-sort="fileType">Type</th>
+            <th st-sort="name">Name</th>
+            <th st-sort="createTime">Create Time</th>
+            <th st-sort="updateTime">Update Time</th>
+            <th>
+                <select ng-model="itemPerPage" >
+                    <option selected>5</option>
+                    <option>10</option>
+                </select>Per page
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat-start="x in childrenDisplay">
+            <td><label>
+                <input type="checkbox" ng-model="x.selected" ng-change="selectFolderOrFile()">
+            </label></td>
+            <td>{{ $index + 1 }}</td>
+            <td>{{x.leaf?"File":"Folder"}}</td>
+            <td><a href="" ng-click="editFileOrFolder(x)">{{x.name}}</a></td>
+            <td>{{x.createTime | date}}</td>
+            <td>{{x.updateTime | date}}</td>
+        </tr>
+        <tr ng-repeat-end ng-show="x.editing">
+            <td colspan="5">
+                <form class="form-horizontal">
+                    <div>
+                        <label>Name:
+                        </label>
+                        <input ng-model="x.name" class="form-control">
+                        <label>Description:
+                        </label>
+                        <textarea ng-model="x.description" class="form-control"></textarea>
+                        <hr>
+                        <button class="btn btn-default" ng-click="saveFolder(x)">Save</button>
+                        <button class="btn btn-warning" ng-click="loadFolder({id:x.parent_id})">Cancel</button>
+                    </div>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="8" class="text-center">
+                <div st-pagination="" st-items-by-page="itemPerPage" st-displayed-pages="7"></div>
+            </td>
+        </tr>
+        </tfoot>
+    </table>
+</div>

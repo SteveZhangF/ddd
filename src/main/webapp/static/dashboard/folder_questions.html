@@ -1,0 +1,168 @@
+<div ng-controller="FolderQuestionController">
+    <div class="well">
+        <div class="row">
+            <button class="btn btn-primary btn-sm" ng-click="newQuestion.editing=true">Add Question</button>
+            <button class="btn btn-danger btn-sm" ng-click="deleteSelectedQuestion()">Add Question</button>
+        </div>
+
+        <!--new question area-->
+        <div ng-if="newQuestion.editing">
+            <form name="newQuestionForm" novalidate>
+                <div class="row"
+                     ng-class="{ 'has-error' : newQuestionForm.name.$invalid && !newQuestionForm.name.$pristine }">
+                    <label class="col-md-3">Name:
+                    </label>
+
+                    <div class="col-md-9">
+                        <input name="name" ng-model="newQuestion.name" class="form-control" required>
+                    </div>
+                </div>
+                <p></p>
+
+                <div class="row"
+                     ng-class="{ 'has-error' : newQuestionForm.type.$invalid && !newQuestionForm.type.$pristine }">
+                    <label class="col-md-3">Type:</label>
+
+                    <div class="col-md-9">
+                        <select required name="type" class="form-control" ng-change="typeChanged(newQuestion)"
+                                ng-options="type for  type in types" ng-model="newQuestion.type"></select>
+                    </div>
+                </div>
+                <p></p>
+
+                <div class="row" ng-if="newQuestion.type=='select'||newQuestion.type=='checkbox'">
+                    <div class="col-md-3">
+                        <label>options</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-4">Name</div>
+                            <div class="col-md-4">Value</div>
+                            <div class="col-md-4"></div>
+                        </div>
+
+                        <div ng-repeat-start="op in newQuestion.options" class="row">
+                            <form name="optionForm" novalidate>
+
+                                <div class="col-md-4"
+                                     ng-class="{ 'has-error' : optionForm.opName.$invalid && !optionForm.opName.$pristine }">
+                                    <input name="opName" type="text" class="form-control" ng-model="op.name"
+                                           maxlength="255"
+                                           required>
+                                    {{optionForm.opName.$invalid +0 }}
+                                    <p class="text-danger" ng-show="optionForm.opName.$invalid">can not be null</p>
+                                </div>
+
+                                <div class="col-md-4"
+                                     ng-class="{ 'has-error' : optionForm.opValue.$invalid && !optionForm.opValue.$pristine }">
+                                    <input name="opValue" type="text" class="form-control" ng-model="op.value"
+                                           maxlength="255" required></div>
+                                <div class="col-md-4">
+                                    <button ng-click="removeOption(newQuestion,$index)" type="button"
+                                            class="btn btn-danger">Delete
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
+                        <p ng-repeat-end></p>
+
+                        <div class="row">
+                            <form name="newOptionForm">
+                                <div class="col-md-4">
+                                    <input name="opName" type="text" class="form-control" ng-model="newOp.name"
+                                           maxlength="255"></div>
+                                <div class="col-md-4">
+                                    <input name="opValue" type="text" class="form-control" ng-model="newOp.value"
+                                           maxlength="255"></div>
+                                <div class="col-md-4">
+                                    <button ng-click="addOption(newQuestion)" type="button"
+                                            class="btn btn-primary btn-sm"
+                                            ng-disabled="newOp.name=='' || newOp.value==''">Add
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <hr>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label class="col-md-3">Description:
+                    </label>
+
+                    <div class="col-md-9">
+                        <textarea ng-model="newQuestion.description" class="form-control"></textarea>
+                    </div>
+                </div>
+
+                <p></p>
+                <button class="btn btn-default" ng-click="saveQuestion(newQuestion)"
+                        ng-disabled="newQuestionForm.$invalid">Save
+                </button>
+                <button class="btn btn-warning" ng-click="newQuestion.editing=false">Cancel</button>
+                <hr>
+            </form>
+        </div>
+
+        <hr>
+        <!--question list table-->
+        <table st-table="questionNodeListDisplay" st-safe-src="questionNodeList" class="table table-striped">
+            <thead>
+            <tr>
+                <th><label>
+                    <input type="checkbox" ng-model="selectedAllQuestion" ng-click="selectAllQuestion()">
+                </label></th>
+                <th st-sort="{{$index}}">Index</th>
+                <th st-sort="name">Name</th>
+                <th st-sort="type">Type</th>
+                <th st-sort="createTime">Create Time</th>
+                <th st-sort="updateTime">Update Time</th>
+                <th>
+                    <select ng-model="itemPerPage">
+                        <option selected>5</option>
+                        <option>10</option>
+                    </select>Per page
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat-start="x in questionNodeListDisplay">
+                <td><label>
+                    <input type="checkbox" ng-model="x.selected" ng-change="selectQuestion()">
+                </label></td>
+                <td>{{ $index + 1 }}</td>
+                <td><a href="" ng-click="editQuestion(x)">{{x.name}}</a></td>
+                <td>{{x.dataType}}</td>
+                <td>{{x.createTime | date}}</td>
+                <td>{{x.updateTime | date}}</td>
+            </tr>
+            <tr ng-repeat-end ng-show="x.editing">
+                <td colspan="5">
+                    <form class="form-horizontal">
+                        <div>
+                            <label>Name:
+                            </label>
+                            <input ng-model="x.question.name" class="form-control">
+                            <label>Description:
+                            </label>
+                            <textarea ng-model="x.question.description" class="form-control"></textarea>
+                            <hr>
+                            <button class="btn btn-default" ng-click="updateQuestion(x)">Save</button>
+                            <button class="btn btn-warning" ng-click="loadAllQuestionNodes()">Cancel</button>
+                        </div>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="8" class="text-center">
+                    <div st-pagination="" st-items-by-page="itemPerPage" st-displayed-pages="7"></div>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+
+</div>

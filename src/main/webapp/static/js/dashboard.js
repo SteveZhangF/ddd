@@ -3,6 +3,12 @@
 var app = angular.module('dashboardApp', ['ngRoute', 'ui.bootstrap', 'ngDialog', 'ui.bootstrap.contextMenu', 'customizedDirective', 'angularBootstrapNavTree', 'virtualList', 'smart-table', 'froala', 'angularSpinner', 'angularjs-dropdown-multiselect']);
 
 // add an interceptor to add the token to the request head
+var debug = true;
+var redirect = function ($location) {
+    if(!debug){
+        $location.path('/login');
+    }
+};
 app.config(['$httpProvider', function ($httpProvider) {
     $httpProvider.interceptors.push(['$q', '$location', '$window', function ($q, $location, $window) {
         return {
@@ -18,14 +24,15 @@ app.config(['$httpProvider', function ($httpProvider) {
                             config.headers['X-AUTH-TOKEN'] = token.accessToken;
                         }
                     } else {
-                        $location.path('/login');
+                        redirect($location);
+                        //$location.path('/login');
                     }
                 }
                 return config;
             },
             'responseError': function (response) {
                 if (response.status === 401 || response.status === 403) {
-                    $location.path('/login');
+                    redirect($location);
                 }
                 return $q.reject(response);
             }
@@ -50,7 +57,7 @@ app.run([
         $rootScope.$on("$routeChangeError", function (event, current,
                                                       previous, eventObj) {
             if (eventObj.authenticated === false) {
-                $location.path("/login");
+                redirect($location);
             }
         });
     }]);
@@ -79,10 +86,10 @@ app.config(['$routeProvider', function ($routeProvider) {
         resolve: resolve
     }).when("/workflows", {
         templateUrl: "dashboard/workflow.html",
-        resolve: resolve
+        resolve:resolve
     }).when("/questions", {
         templateUrl: "dashboard/question_list.html",
-        resolve: resolve
+        resolve:resolve
     })
         .when("/table_forms", {
             templateUrl: "dashboard/table_form_list.html",
@@ -94,7 +101,7 @@ app.config(['$routeProvider', function ($routeProvider) {
             resolve: resolve
         })
         .when("/form_folders", {
-            templateUrl: "dashboard/folder_list.html",
+            templateUrl: "dashboard/folder_list2.html",
             resolve: resolve
         })
         .when("/login", {

@@ -10,9 +10,11 @@ package app.controller;
 
 import app.model.forms.Folder;
 import app.model.forms.Form;
+import app.model.report.Question;
 import app.model.user.User;
 import app.service.form.FolderService;
 import app.service.form.FormService;
+import app.service.question.QuestionService;
 import app.service.system.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -23,7 +25,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -63,6 +64,7 @@ public class FolderController {
                 folder.setLevel(0);
                 folder.setDescription("I am a root folder, please don't delete me!");
                 folder.setId("0");
+                folder.setDataType(Folder.FolderDataType.Folder);
                 folderService.save(folder);
             }
         }
@@ -80,10 +82,11 @@ public class FolderController {
             if (parent != null) {
                 folderService.addSubFolder(folder, parent);
             } else {
-                //save as a root
+                //save as a root/child
                 folder.setParent_id("0");
                 folder.setLevel(1);
                 folder.setLeaf(false);
+                folder.setDataType(Folder.FolderDataType.Folder);
                 folderService.save(folder);
             }
             return new ResponseEntity<>(HttpStatus.OK);
@@ -125,7 +128,8 @@ public class FolderController {
                 folder.setLeaf(true);
                 folder.setLevel(parent.getLevel() + 1);
                 folder.setParent_id(parent.getId());
-                folder.setForm_id(form.getId());
+                folder.setData_id(form.getId());
+                folder.setDataType(Folder.FolderDataType.File);
                 folderService.save(folder);
             }
 
@@ -133,9 +137,40 @@ public class FolderController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Autowired
+    QuestionService questionService;
+
+    @RequestMapping(value = "/folder/addQuestions/{parentId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Folder> addQuestions(@PathVariable String parentId, @RequestBody int[] ids) {
+        Folder parent = folderService.get(parentId);
+        for (int id : ids) {
+            Question question = questionService.get(id);
+            if (question != null) {
+                Folder folder = new Folder();
+                folder.setName(question.getName());
+                folder.setDescription(question.getDescription());
+                folder.setLeaf(true);
+                folder.setLevel(parent.getLevel() + 1);
+                folder.setParent_id(parent.getId());
+                folder.setData_id(question.getId());
+                folder.setDataType(Folder.FolderDataType.Question);
+                folderService.save(folder);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
     @RequestMapping(value = "/folder/getFolderForSelect/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Folder>> getFolderForSelect() {
         List<Folder> list = folderService.getFolderForSelect();
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/folder/getQuestions/{parentId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Folder>> getQuestionNodesBasedOnFolderId(@PathVariable String parentId) {
+        List<Folder> list = folderService.getQuestionNodesBasedOnFolderId(parentId);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 

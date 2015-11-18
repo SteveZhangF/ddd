@@ -42,14 +42,34 @@ public class Folder {
 
     private String parent_id;
 
-    private int form_id;
+    private int data_id;
 
-    public int getForm_id() {
-        return form_id;
+    private FolderDataType dataType;
+
+    private boolean deleted;
+
+    public boolean isDeleted() {
+        return deleted;
     }
 
-    public void setForm_id(int form_id) {
-        this.form_id = form_id;
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public int getData_id() {
+        return data_id;
+    }
+
+    public void setData_id(int data_id) {
+        this.data_id = data_id;
+    }
+
+    public FolderDataType getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(FolderDataType dataType) {
+        this.dataType = dataType;
     }
 
     public String getId() {
@@ -114,5 +134,9 @@ public class Folder {
 
     public void setParent_id(String parent_id) {
         this.parent_id = parent_id;
+    }
+
+    public enum FolderDataType{
+        Question,WorkFlow,File,Folder
     }
 }
