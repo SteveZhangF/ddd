@@ -75,8 +75,8 @@ app.config(['$routeProvider', function ($routeProvider) {
             }
         }]
     }
-    $routeProvider.when("/index", {
-        templateUrl: 'dashboard/login.html',
+    $routeProvider.when("/", {
+        templateUrl: 'dashboard/index.html',
         //resolve: resolve
     }).when("/users", {
         templateUrl: "dashboard/user_list.html",

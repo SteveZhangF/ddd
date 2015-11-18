@@ -1,10 +1,14 @@
 <!-- navbar -->
 <div>
-    <nav class="navbar navbar-default" >
+    <nav class="navbar navbar-default" ng-controller="DashBoardNavController">
         <ul class="nav navbar-nav">
-            <li ><a href="#/index"><span>Home</span></a>
+            <li role="presentation" ng-repeat="menu in myMenu" class="{{menu == selectedMenu?'active':''}}"><a
+                    href="{{menu.href}}"
+                    ng-click="menuClicked(menu)"><span>{{menu.name}}</span></a>
             </li>
         </ul>
+
+
         <ul class="nav navbar-nav pull-right" ng-controller="LoginController">
             <li><a href="#/login"  ng-show="!isLoginedIn()" ><span>Login</span></a></li>
             <li><a href="" ng-click="logout()" ng-show="isLoginedIn()" ><span>Log out</span></a></li>
