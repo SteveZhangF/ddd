@@ -271,7 +271,6 @@ app.controller('FileController', ['$scope', 'FormService', 'FolderService', 'Que
         }
     );
 
-    $scope.questionsForFile = [{name: 'question1'}, {name: 'question1'}, {name: 'question1'}, {name: 'question1'}];
 
     $scope.loadQuestionsForFile = function () {
         $scope.startSpin();
@@ -287,7 +286,7 @@ app.controller('FileController', ['$scope', 'FormService', 'FolderService', 'Que
             }
         );
     };
-
+    $scope.loadQuestionsForFile();
     $scope.selectedQuestionNodeForFile = {};
 
     $scope.selectQuestionForFile = function (questionNode) {
@@ -304,14 +303,14 @@ app.controller('FileController', ['$scope', 'FormService', 'FolderService', 'Que
             .then(
             function (data) {
                 var plugin = angular.element(data.content);
-                if(data.options){
+                if (data.options) {
                     var options = data.options;
                     //if type is select question
-                    if(data.type=="select"){
-                        for(var i=0;i<options.length;i++){
+                    if (data.type == "select") {
+                        for (var i = 0; i < options.length; i++) {
                             var opt = angular.element("<option></option>");
                             opt.text(options[i].name);
-                            opt.attr('value',options[i].value);
+                            opt.attr('value', options[i].value);
                             plugin.find('select').append(opt);
                         }
                     }
