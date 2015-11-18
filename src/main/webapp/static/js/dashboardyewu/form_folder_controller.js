@@ -290,8 +290,8 @@ app.controller('FileController', ['$scope', 'FormService', 'FolderService', 'Que
     };
 
     $scope.loadQuestionsForFile();
-    $scope.froalaOptions.froalaEditor('html.set', "");
-    $scope.froalaOptions.froalaEditor('html.insert', $scope.editingFileNode.file.content, true);
+    //$scope.froalaOptions.froalaEditor('html.set', "");
+    //$scope.froalaOptions.froalaEditor('html.insert', $scope.editingFileNode.file.content, true);
 
     $scope.selectedQuestionNodeForFile = {};
 

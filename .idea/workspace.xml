@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="92c2b9c7-ccdd-447e-a71e-94b865c07d44" name="Default" comment="d">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/static/js/useryewu/document_view_tree.js" afterPath="$PROJECT_DIR$/src/main/webapp/static/js/useryewu/document_view_tree.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/static/dashboard/folder_edit_file.html" afterPath="$PROJECT_DIR$/src/main/webapp/static/dashboard/folder_edit_file.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/static/js/dashboardyewu/form_folder_controller.js" afterPath="$PROJECT_DIR$/src/main/webapp/static/js/dashboardyewu/form_folder_controller.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -1759,7 +1757,7 @@
       <workItem from="1447369415738" duration="16627000" />
       <workItem from="1447621829491" duration="15388000" />
       <workItem from="1447705499368" duration="996000" />
-      <workItem from="1447707211404" duration="27227000" />
+      <workItem from="1447707211404" duration="27432000" />
     </task>
     <task id="LOCAL-00001" summary="d">
       <created>1445040271299</created>
@@ -1771,7 +1769,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="386225000" />
+    <option name="totallyTimeSpent" value="386430000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
