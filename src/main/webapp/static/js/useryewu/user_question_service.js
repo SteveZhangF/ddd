@@ -15,6 +15,18 @@ app.factory('UserQuestionService', ['$http', '$q', function ($http, $q) {
               }
           );
         },
+
+        getQuestionByFolderNodeId : function (folderNodeId) {
+            return $http.get('/user/folders/getQuestionByFolderNodeId/'+folderNodeId)
+                .then(
+                function (response) {
+                    return response.data
+                },
+                function (errResponse) {
+                    return $q.reject(errResponse);
+                }
+            );
+        }
     };
 
 }]);

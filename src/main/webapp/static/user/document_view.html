@@ -77,51 +77,70 @@ div[data-tree-model] li .selected {
         <div class="alert alert-danger" ng-show="errorMsg.hasMsg && errorMsg.isError">Fail! please try later</div>
         <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="user-document-view-spinner"></span>
 
-        <div class="panel panel-primary" ng-if="!folderTree.currentNode.isEditing">
-            <div class="panel-heading">
-                <div class="row">
-                    {{folderTree.currentNode.name}}
-                    <button ng-click="printPdf()" class="pull-right btn btn-sm btn-default">Print
-                    </button>
-                    <button ng-click="editNode(folderTree.currentNode)" class="pull-right btn btn-sm btn-default">Edit
-                    </button>
 
+        <!--folder viewer-->
+        <div id="folder_view" ng-if="folderTree.currentNode.dataType=='Folder'">
+            <div ng-include="'user/document_company_question.html'"></div>
+        </div>
+        <!--folder viewer end-->
+
+
+
+
+        <!--file viewer-->
+        <div id="file_view" ng-if="folderTree.currentNode.dataType=='File'">
+            <!--file preview-->
+            <div class="panel panel-primary" ng-if="!folderTree.currentNode.isEditing">
+                <div class="panel-heading">
+                    <div class="row">
+                        {{folderTree.currentNode.name}}
+                        <button ng-click="printPdf()" class="pull-right btn btn-sm btn-default">Print
+                        </button>
+                        <button ng-click="editNode(folderTree.currentNode)" class="pull-right btn btn-sm btn-default">
+                            Edit
+                        </button>
+
+                    </div>
+                </div>
+
+                <div class="panel-body" style="height: 100%">
+                    <object id="pdf-object" style="width:100%;height: 100%" data="{{content}}"
+                            type="application/pdf"></object>
                 </div>
             </div>
-
-            <div class="panel-body" style="height: 100%">
-                <object id="pdf-object" style="width:100%;height: 100%" data="{{content}}" type="application/pdf"></object>
-            </div>
-        </div>
-        <div class="panel panel-primary" ng-if="folderTree.currentNode.isEditing">
-            <div class="panel-heading">{{folderTree.currentNode.name}}</div>
-            <div class="panel-body">
-                <div ng-repeat="question in folderTree.currentNode.editingQuestions" class="well">
-                    <h4>{{question.description}}
-                    </h4>
-                    <hr>
-                    <div id="node-data-content">
-                        <div ng-switch="question.type">
-                            <select class="form-control" ng-switch-when="select" ng-model="question.value">
-                                <option ng-repeat="opt in question.options" value="{{opt.value}}">{{opt.name}}</option>
-                            </select>
-                            <input class="form-control" ng-switch-when="text" type="text" ng-model="question.value">
+            <!--file editor-->
+            <div class="panel panel-primary" ng-if="folderTree.currentNode.isEditing">
+                <div class="panel-heading">{{folderTree.currentNode.name}}</div>
+                <div class="panel-body">
+                    <div ng-repeat="question in folderTree.currentNode.editingQuestions" class="well">
+                        <h4>{{question.description}}
+                        </h4>
+                        <hr>
+                        <div id="node-data-content">
+                            <div ng-switch="question.type">
+                                <select class="form-control" ng-switch-when="select" ng-model="question.value">
+                                    <option ng-repeat="opt in question.options" value="{{opt.value}}">{{opt.name}}
+                                    </option>
+                                </select>
+                                <input class="form-control" ng-switch-when="text" type="text" ng-model="question.value">
                             <textarea class="form-control" ng-switch-when="textarea"
                                       ng-model="question.value"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <button class="btn btn-sm btn-primary pull-right"
+                                    ng-click="saveQuestionValue(folderTree.currentNode.editingQuestions)">
+                                Save
+                            </button>
+                            <button class="btn btn-sm btn-danger pull-right" ng-click="cancelEditForm()">Cancel</button>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <button class="btn btn-sm btn-primary pull-right"
-                                ng-click="saveQuestionValue(folderTree.currentNode.editingQuestions)">
-                            Save
-                        </button>
-                        <button class="btn btn-sm btn-danger pull-right" ng-click="cancelEditForm()">Cancel</button>
-                    </div>
-                </div>
             </div>
         </div>
+        <!--file view end-->
     </div>
     <div id="form_container" style="color:white">
     </div>

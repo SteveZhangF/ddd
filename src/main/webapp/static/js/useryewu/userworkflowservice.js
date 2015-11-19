@@ -12,6 +12,18 @@ app.factory('UserWorkFlowService', ['$http', '$q','LoginService' ,function ($htt
 
     return {
 
+        getFlowIdByFolderId: function (folderId) {
+            return $http.get("/user/folders/getWorkFlowIdByFolderId/"+folderId)
+                .then(
+                function (response) {
+                    return response.data;
+                },
+                function (err) {
+                    return $q.reject(err);
+                }
+            );
+        },
+
         fetchAllWorkFlow: function () {
             var userId = LoginService.getUserInfo().userId;
             return $http.get('/user/getworkflow/'+userId)
@@ -26,7 +38,19 @@ app.factory('UserWorkFlowService', ['$http', '$q','LoginService' ,function ($htt
                 }
             );
         },
-        //however, here i have to user put instead of get
+
+        getCurrentNodeByWorkFlowIdAndUserIdAndOeId: function (userWorkFlow) {
+            return $http.put("/user/workflow/",userWorkFlow)
+                .then(
+                function (response) {
+                    return response.data;
+                },
+                function (err) {
+                    return $q.reject(err);
+                }
+            );
+        },
+
         getCurrentNode: function (id) {
             return $http.get('/user/workflownode/'+id)
                 .then(

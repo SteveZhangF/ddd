@@ -79,7 +79,7 @@ public class WorkFlowController {
     @RequestMapping(value = "/workflow/detail/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WorkFlow> updateWorkFlowDetail(@PathVariable("id") String id, @RequestBody WorkFlow worfFlow) {
         workFlowService.update(worfFlow);
-//        userWorkFlowService.deleteUWFbyWF(worfFlow.getId());
+        userWorkFlowService.deleteUWFbyWF(worfFlow.getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

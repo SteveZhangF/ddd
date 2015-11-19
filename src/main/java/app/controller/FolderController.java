@@ -42,6 +42,19 @@ public class FolderController {
     @Autowired
     UserService userService;
 
+    @RequestMapping(value = "/user/folders/getWorkFlowIdByFolderId/{folderId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Folder> getWorkFlowIdByFolderId(@PathVariable String folderId) throws IOException {
+        Folder workFlowFolderNode = folderService.getFlowOfFolder(folderId);
+        return new ResponseEntity<>(workFlowFolderNode, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/user/folders/getQuestionByFolderNodeId/{folderId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Question> getQuestionByFolerNodeId(@PathVariable String folderId) throws IOException {
+        Folder questionNode = folderService.get(folderId);
+        Question question =questionService.get(Integer.valueOf(questionNode.getData_id()));
+        return new ResponseEntity<>(question, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/user/folders/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getUserFolderTree(@PathVariable int userId) throws IOException {
         User user = userService.get(userId);
