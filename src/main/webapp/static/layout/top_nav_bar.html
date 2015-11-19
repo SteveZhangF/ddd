@@ -1,18 +1,80 @@
 <!-- navbar -->
-<div class="nav_container" ng-controller="UserNavController">
+<div ng-controller="UserNavController">
+<div class="nav_container" >
+
     <nav class="navbar navbar-default" style="margin-bottom: 0">
-        <ul class="nav navbar-nav">
-            <li ng-repeat="menu in myMenu" class="{{menu == selectedMenu?'active':''}}"><a href="{{menu.href}}"
-                                                                                           ng-click="menuClicked(menu)"><span>{{menu.name}}</span><span
-                    ng-show="menu.subMenu.length!=0" class="caret"></span></a>
-            </li>
-        </ul>
+        <dropdown selected="selectedMenu" all-menu="myMenu" placeholder="{{menu.name}}" menu="menu"
+                  display-name="name" href="href"></dropdown>
+
+        <!--<li ng-repeat="menu in myMenu" class="{{menu == selectedMenu?'active':''}}">-->
+
+        <!--<dropdown ng-if="menu.subMenu.length!=0" placeholder="{{menu.name}}" list="menu.subMenu" selected="selectedMenu" display-name="name" href="href"></dropdown>-->
+
+
+        <!--<a ng-if="menu.subMenu.length==0" href="{{menu.href}}"-->
+        <!--ng-click="menuClicked(menu)"><span>{{menu.name}}</span><span-->
+        <!--ng-show="menu.subMenu.length!=0" class="caret"></span></a>-->
+        <!--</li>-->
         <ul class="nav navbar-nav pull-right" ng-controller="LoginController">
-            <li><a href="#/login" ng-show="!isLoginedIn()" ><span>Login</span></a></li>
-            <li><a href="" ng-click="logout()" ng-show="isLoginedIn()" ><span>Log out</span></a></li>
+            <li><a href="#/login" ng-show="!isLoginedIn()"><span>Login</span></a></li>
+            <li><a href="" ng-click="logout()" ng-show="isLoginedIn()"><span>Log out</span></a></li>
         </ul>
     </nav>
 </div>
+    <ol class="breadcrumb">
+        <li><a href="{{selectedMenu.selectedParentMenu.href}}">{{selectedMenu.selectedParentMenu.name}}</a></li>
+        <li><a href="{{selectedMenu.selectedChildMenu.href}}">{{selectedMenu.selectedChildMenu.name}}</a></li>
+    </ol>
+</div>
+<style>
+    li.dropdown-container {
+        float: left;
+        display: block;
+        position: relative;
+    }
+
+    li.selected > a.dropdown-display {
+        background: white;
+    }
+
+    li.dropdown-container > ul.dropdown-list-hide {
+        float: left;
+        position: relative;
+        width: 100%;
+        height: 0;
+        transform: scale(1, 0);
+        transition: transform ease 250ms;
+    }
+
+    li.dropdown-container > ul.show {
+        float: left;
+
+        position: relative;
+        width: 100%;
+        transform: scale(1, 1);
+        transition: transform ease 250ms;
+        z-index: 20;
+    }
+
+    li.dropdown-container > ul.show > li {
+        background: white;
+    }
+
+    li.dropdown-container > ul.show > li.selected {
+        background: #F0F0F0;
+    }
+
+    li.dropdown-container > ul.show > li + li {
+        background: white;
+        margin-top: 0px;
+        margin-left: 0;
+    }
+
+    li.dropdown-container > a {
+        background: #F0F0F0;
+    }
+
+</style>
 <!-- end navbar -->
 
 

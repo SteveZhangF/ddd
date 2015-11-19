@@ -1,0 +1,20 @@
+<ul class="nav navbar-nav">
+    <li class="dropdown-container" ng-repeat="menu in allMenu"  ng-class="{selected:isParentMenuSelected(menu)}">
+        <!--<div class="dropdown-display" ng-click="show();" ng-class="{ clicked: listVisible }">-->
+        <!--<span class="placeholder">{{placeholder}}</span>-->
+        <!--<i class="fa fa-angle-down"></i>-->
+        <!--</div>-->
+        <a class="dropdown-display" ng-if="menu.subMenu.length>0"
+           ng-click="parentMenuClicked(menu)" ><span>{{menu.name + menu.selected}}</span><span
+                ng-show="menu.subMenu.length>0" class="caret"></span></a>
+        <a class="dropdown-display" ng-if="!menu.subMenu.length>0" href="{{menu.href}}"
+           ng-click="parentMenuClicked(menu)" ><span>{{menu.name + menu.selected}}</span><span
+                ng-show="menu.subMenu.length>0" class="caret"></span></a>
+        <ul class="dropdown-list-hide nav nav-pills nav-stacked"  ng-class="{ show: menu.listVisible }">
+            <li ng-repeat="item in menu.subMenu" ng-click="childMenuClicked(menu,item)" ng-class="{ selected: isSelected(item) }">
+                <a href="{{item[href]}}"><span>{{displayName !== undefined ? item[displayName] : item}}</span></a>
+            </li>
+        </ul>
+    </li>
+</ul>
+

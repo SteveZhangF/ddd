@@ -1,7 +1,14 @@
 'use strict';
 
 var app = angular.module('clientApp', ['ngRoute', 'ui.bootstrap', 'ui.bootstrap.contextMenu', 'angularFileUpload', 'customizedDirective', 'smart-table', 'ngDialog', 'angularSpinner']);
+var debug = false;
+var redirect = function ($location) {
+    console.log('debug:true');
+    if (!debug) {
 
+        $location.path('/login');
+    }
+};
 app.factory('LogInData', function () {
     return {
         isLogedIn: false,
@@ -16,9 +23,8 @@ app.config(['$httpProvider', function ($httpProvider) {
         return {
             'request': function (config) {
                 config.headers = config.headers || {};
-                console.log($location.$$path);
                 var path = $location.$$path;
-                if (path == '/register' || path == '/login' || path=='/') {
+                if (path == '/register' || path == '/login' || path == '/') {
 
                 } else {
                     if ($window.sessionStorage["userInfo"]) {
@@ -27,7 +33,7 @@ app.config(['$httpProvider', function ($httpProvider) {
                             config.headers['X-AUTH-TOKEN'] = token.accessToken;
                         }
                     } else {
-                        $location.path('/login');
+                        redirect($location);
                     }
                 }
 
@@ -37,7 +43,7 @@ app.config(['$httpProvider', function ($httpProvider) {
             'responseError': function (response) {
                 console.log(response.status);
                 if (response.status === 401 || response.status === 403) {
-                    $location.path('/login');
+                    redirect($location);
                 }
                 return $q.reject(response);
             }
@@ -55,10 +61,14 @@ app.run([
         $rootScope.$on("$routeChangeError", function (event, current,
                                                       previous, eventObj) {
             if (eventObj.authenticated === false) {
-                $location.path('/login');
+                redirect($location);
             }
         });
+        angular.element(document).on("click", function (e) {
+            $rootScope.$broadcast("documentClicked", angular.element(e.target));
+        });
     }]);
+
 app.config(['$routeProvider', function ($routeProvider) {
     var resolve = {
         auth: ["$q", "LoginService", function ($q, LoginService) {
@@ -66,9 +76,16 @@ app.config(['$routeProvider', function ($routeProvider) {
             if (userInfo != null && userInfo.accessToken != 0) {
                 return $q.when(userInfo);
             } else {
-                return $q.reject({
-                    authenticated: false
-                });
+                if(debug){
+                    return $q.when(userInfo);
+                }else{
+                    return $q.reject({
+                        authenticated: false
+                    });
+                }
+                //return $q.reject({
+                //    authenticated: false
+                //});
             }
         }]
     };
@@ -102,31 +119,27 @@ app.config(['$routeProvider', function ($routeProvider) {
             templateUrl: "user/document.html",
             resolve: resolve
         })
+        .when("/company_edit", {
+            templateUrl: "user/company_edit.html",
+            resolve: resolve
+        })
+        .when("/employee_list", {
+            templateUrl:"user/employee_list.html",
+            resolve:resolve
+        })
+        .when("/view_document",{
+            templateUrl:"user/document_view.html",
+            resolve:resolve
+        })
+        .when("/start_document",{
+            templateUrl:"user/document_start.html"
+        })
     ;
 }]);
 
 app.filter('checkmark', function () {
     return function (input) {
         return input ? '\u2713' : '\u2718';
-    };
-});
-
-app.controller('DropdownCtrl', function ($scope, $log) {
-    $scope.items = ['The first choice!', 'And another choice for you.',
-        'but wait! A third!'];
-
-    $scope.status = {
-        isopen: false
-    };
-
-    $scope.toggled = function (open) {
-        $log.log('Dropdown is now: ', open);
-    };
-
-    $scope.toggleDropdown = function ($event) {
-        $event.preventDefault();
-        $event.stopPropagation();
-        $scope.status.isopen = !$scope.status.isopen;
     };
 });
 

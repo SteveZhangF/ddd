@@ -153,6 +153,7 @@ app.controller('DocumentViewTreeController',
             };
 
             $scope.editNode = function (node) {
+                // if the node is a file, then show the pdf of the file, when click edit on the file, then list all the related question of this file
                 if (node.leaf) {
                     $scope.folderTree.currentNode.editingQuestions = [];
                     $scope.startSpin();
@@ -193,6 +194,9 @@ app.controller('DocumentViewTreeController',
                             $scope.stopSpin(false);
                         }
                     );
+                }else{
+                // if the node is a folder, then show the question flow of this folder
+
                 }
             };
             var Record = function (questionId, oe_id, user_id, value) {
