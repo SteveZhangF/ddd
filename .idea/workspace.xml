@@ -2,13 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="92c2b9c7-ccdd-447e-a71e-94b865c07d44" name="Default" comment="d">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/webapp/static/dashboard/building.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/webapp/static/dashboard/folder_flow.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/webapp/static/js/dashboardyewu/folder_flow.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/webapp/static/dashboard/workflow2.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/static/js/dashboard.js" afterPath="$PROJECT_DIR$/src/main/webapp/static/js/dashboard.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/static/dashboard/folder_edit.html" afterPath="$PROJECT_DIR$/src/main/webapp/static/dashboard/folder_edit.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/static/dashboard/folder_edit_file.html" afterPath="$PROJECT_DIR$/src/main/webapp/static/dashboard/folder_edit_file.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/static/dashboard/folder_files.html" afterPath="$PROJECT_DIR$/src/main/webapp/static/dashboard/folder_files.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/static/dashboard/folder_list.html" afterPath="$PROJECT_DIR$/src/main/webapp/static/dashboard/folder_list.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/static/dashboard/folder_list2.html" afterPath="$PROJECT_DIR$/src/main/webapp/static/dashboard/folder_list2.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/static/dashboard/folder_questions.html" afterPath="$PROJECT_DIR$/src/main/webapp/static/dashboard/folder_questions.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/static/js/dashboardyewu/form_folder_controller.js" afterPath="$PROJECT_DIR$/src/main/webapp/static/js/dashboardyewu/form_folder_controller.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/static/js/service/login_service.js" afterPath="$PROJECT_DIR$/src/main/webapp/static/js/service/login_service.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ddd.iws" />
@@ -134,8 +136,8 @@
       <file leaf-file-name="FormServiceImpl.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/app/service/form/FormServiceImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.7463175">
-              <caret line="109" column="8" selection-start-line="109" selection-start-column="8" selection-end-line="109" selection-end-column="8" />
+            <state vertical-scroll-proportion="0.7823241">
+              <caret line="78" column="5" selection-start-line="78" selection-start-column="5" selection-end-line="78" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -1766,7 +1768,7 @@
       <workItem from="1447369415738" duration="16627000" />
       <workItem from="1447621829491" duration="15388000" />
       <workItem from="1447705499368" duration="996000" />
-      <workItem from="1447707211404" duration="29145000" />
+      <workItem from="1447707211404" duration="30457000" />
     </task>
     <task id="LOCAL-00001" summary="d">
       <created>1445040271299</created>
@@ -1778,7 +1780,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="388143000" />
+    <option name="totallyTimeSpent" value="389455000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -2284,8 +2286,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/app/service/form/FormServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.7463175">
-          <caret line="109" column="8" selection-start-line="109" selection-start-column="8" selection-end-line="109" selection-end-column="8" />
+        <state vertical-scroll-proportion="0.7823241">
+          <caret line="78" column="5" selection-start-line="78" selection-start-column="5" selection-end-line="78" selection-end-column="5" />
           <folding />
         </state>
       </provider>

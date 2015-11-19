@@ -271,9 +271,9 @@ app.controller('LoginController', ['$scope', 'LoginService', 'ngDialog', 'LogInD
         return LogInData.isLogedIn;
     };
 
-    if ($scope.isLoginedIn()) {
-        $location.path('/document');
-    }
+    //if ($scope.isLoginedIn()) {
+    //    $location.path('/document');
+    //}
 
 
 }]);
