@@ -42,7 +42,7 @@ public class Folder {
 
     private String parent_id;
 
-    private int data_id;
+    private String data_id;
 
     private FolderDataType dataType;
 
@@ -56,11 +56,11 @@ public class Folder {
         this.deleted = deleted;
     }
 
-    public int getData_id() {
+    public String getData_id() {
         return data_id;
     }
 
-    public void setData_id(int data_id) {
+    public void setData_id(String data_id) {
         this.data_id = data_id;
     }
 

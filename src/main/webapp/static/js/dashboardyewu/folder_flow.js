@@ -33,37 +33,82 @@ app.directive('hoverCode', function () {
     };
 });
 
-app.controller('FolderFlowController', ['$scope', 'QuestionService', 'WorkFlowService', 'ngDialog', function ($scope, QuestionService, WorkFlowService, ngDialog) {
+app.controller('FolderFlowController', ['$scope', 'QuestionService', 'WorkFlowService', 'ngDialog', '$timeout', 'FolderService', function ($scope, QuestionService, WorkFlowService, ngDialog, $timeout, FolderService) {
 
     var dialog;
     // edit
 
-    $scope.editDetail = function (workflow) {
+    $scope.progressIndex = 0;
 
-        WorkFlowService.fetchOneWorkFlow(workflow.id).then(function (response) {
-            $scope.workflow = response;
-            $scope.editing_detail = true;
-            $scope.schema.all = $scope.workflow.nodes;
-            for (var i = 0; i < $scope.schema.all.length; i++) {
-                var node = $scope.schema.all[i];
-                for (var j = 0; j < node.nexts.length; j++) {
-                    $scope.connect(node.id, node.nexts[j]._then);
+
+    // load the work flow from server
+    $scope.getFlowOfFolder = function () {
+        var folderId = $scope.thisFolder.id;
+        $scope.startSpin();
+        // will get the folder node which represented to the workflow
+        $scope.progressIndex = 20;
+        $scope.initMenu(folderId);
+        FolderService.getFlowOfFolder(folderId).then(
+            function (data) {
+                console.log(data);
+                if (data.data_id) {
+                    WorkFlowService.fetchOneWorkFlow(data.data_id).then(
+                        function (wf) {
+                            $scope.workflow = wf;
+                            $scope.progressIndex =   $scope.progressIndex + 50;
+                            $scope.showWorkFlow(wf);
+                        },
+                        function (err) {
+                            $scope.stopSpin(false,'loading flow chart failed, please try later');
+                        }
+                    );
+                }else{
+                    $scope.stopSpin(false,'loading flow chart failed, please try later');
                 }
+            },
+            function (err) {
+                $scope.stopSpin(false, 'loading flow chart failed, please try later');
             }
-        });
+        );
+
+    };
+    // when document ready, load the work flow and show it
+    $timeout(function () {
+        $scope.workflow = {};
+        $scope.getFlowOfFolder();
+    });
+
+    //show the work flow detail
+    $scope.showWorkFlow = function (wf) {
+        $scope.schema.all = wf.nodes;
+        for (var i = 0; i < wf.length; i++) {
+            var node = $scope.schema.all[i];
+            for (var j = 0; j < node.nexts.length; j++) {
+                $scope.connect(node.id, node.nexts[j]._then);
+            }
+        }
+        $scope.progressIndex =   $scope.progressIndex +10;
+
     };
 
-    $scope.editDetailSave = function () {
+    // when save button clicked
+    $scope.saveFlow = function () {
         $scope.workflow.nodes = $scope.schema.all;
+        $scope.startSpin();
         WorkFlowService.updateWorkFlowDetail($scope.workflow, $scope.workflow.id).then(function (response) {
-            $scope.editing_detail = false;
-            $scope.refreshAll();
-        });
+            $scope.stopSpin(true,'save flow success');
+            $scope.getFlowOfFolder();
+        },
+            function (err) {
+                $scope.stopSpin(true,'save flow failed,please try later');
+            }
+
+        );
     };
 
-    $scope.editDetailCancel = function () {
-        $scope.editing_detail = false;
-        $scope.refreshAll();
+    //reload flow
+    $scope.resetFlow = function () {
+        $scope.getFlowOfFolder();
     };
 
 
@@ -85,13 +130,21 @@ app.controller('FolderFlowController', ['$scope', 'QuestionService', 'WorkFlowSe
         y: '',
         show: 'false'
     };
-    $scope.showPreviewQuestion = function (event, question) {
+    $scope.showPreviewQuestion = function (event, questionNode) {
         var x = event.pageX;
         var y = event.pageY;
         $scope.hoverCode.x = x;
         $scope.hoverCode.y = y;
-        $scope.menuNodes.previewNode = question;
         $scope.hoverCode.show = "true";
+        var questionId = questionNode.data_id;
+        QuestionService.fetchOneQuestion(questionId)
+            .then(
+            function (data) {
+                $scope.menuNodes.previewNode = question;
+                //TODO
+            }
+        );
+        $scope.menuNodes.previewNode = question;
     };
 
     $scope.hidePreviewQuestion = function () {
@@ -148,6 +201,8 @@ app.controller('FolderFlowController', ['$scope', 'QuestionService', 'WorkFlowSe
     QuestionNode.prototype = new node();
     QuestionNode.prototype.drop = function () {
         $scope.schema.all.push(this);
+
+
     };
 
     QuestionNode.prototype.connect = function (target_node, success, fail) {
@@ -171,20 +226,16 @@ app.controller('FolderFlowController', ['$scope', 'QuestionService', 'WorkFlowSe
                     target_node.prev = self.id;
                     success(_if);
                 } else {
-                    console.log('delete connection');
                     fail();
                 }
             }
         });
         $scope.connectingSourceNode = {selectedOption: "", node: self, targetNode: target_node}
     };
-    //QuestionNode.prototype.connectOK = function () {
-    //};
-
 
     $scope.menuNodes = {normalNodes: [], questionNodes: [], droppedNode: new node(), previewNode: new node()};
 
-    $scope.initMenu = function () {
+    $scope.initMenu = function (parentId) {
         console.log('init menu');
         $scope.menuNodes.normalNodes.length = 0;
         for (var i = 0; i < menu.length; i++) {
@@ -195,7 +246,7 @@ app.controller('FolderFlowController', ['$scope', 'QuestionService', 'WorkFlowSe
             $scope.menuNodes.normalNodes.push(nodez);
         }
 
-        QuestionService.fetchAllQuestions().then(function (response) {
+        FolderService.loadQuestionNodesBasedOnFolderId(parentId).then(function (response) {
 
             $scope.menuNodes.questionNodes.length = 0;
             for (var i = 0; i < response.length; i++) {
@@ -203,25 +254,13 @@ app.controller('FolderFlowController', ['$scope', 'QuestionService', 'WorkFlowSe
                     id: response[i].id,
                     description: response[i].description,
                     name: response[i].name,
-                    content: response[i].content,
-                    options: response[i].options
+                    data_id:response[i].data_id// question id
                 }, 0, 0);
                 $scope.menuNodes.questionNodes.push(nodez);
             }
+            $scope.stopSpin(true,'success to load questions');
         }, function (errResponse) {
-
-            console.log("err while get questions");
-            errResponse = [{id: '1', name: 'questions1', type: 'text', content: '', description: 'asd'},
-                {id: '2', name: 'question2', type: 'select', content: '', description: 'dsa'},
-                {id: '3', name: 'question3', type: 'textarea', content: '', description: 'sda'}];
-            $scope.menuNodes.questionNodes.length = 0;
-            for (var i = 0; i < errResponse.length; i++) {
-                var nodez = new node('menu_question_node_' + i, errResponse[i].name, 'Question', {
-                    id: errResponse[i].id,
-                    description: errResponse[i].description
-                });
-                $scope.menuNodes.questionNodes.push(nodez);
-            }
+            $scope.stopSpin(false,'failed to load questions');
 
         });
     };
@@ -342,7 +381,7 @@ app.controller('FolderFlowController', ['$scope', 'QuestionService', 'WorkFlowSe
 app.directive('plumbItem', function () {
     return {
         replace: true,
-        controller: 'PlumbCtrl',
+        controller: 'FolderFlowController',
         link: function (scope, element, attrs) {
             console.log("Add plumbing for the 'item' element");
 
@@ -383,7 +422,7 @@ app.directive('plumbItem', function () {
 app.directive('plumbMenuItem', function () {
     return {
         replace: true,
-        controller: 'PlumbCtrl',
+        controller: 'FolderFlowController',
         link: function (scope, element, attrs) {
             console.log("Add plumbing for the 'menu-item' element");
 

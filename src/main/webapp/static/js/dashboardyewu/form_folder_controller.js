@@ -7,7 +7,10 @@ app.controller('FormFolderTreeController', ['$scope', '$filter', 'FolderService'
         all: [{name: 'Edit', url: 'dashboard/folder_edit.html', selected: true}, {
             name: "Files",
             url: 'dashboard/folder_files.html'
-        }, {name: 'Questions', url: 'dashboard/folder_questions.html'}, {name: 'Flows',url:'dashboard/building.html'}], selectedMenu: {}
+        }, {name: 'Questions', url: 'dashboard/folder_questions.html'}, {
+            name: 'Flows',
+            url: 'dashboard/workflow2.html'
+        }], selectedMenu: {}
     };
 
     var fileMenu = {
@@ -131,7 +134,11 @@ app.controller('FormFolderTreeController', ['$scope', '$filter', 'FolderService'
                     f.editing = false;
                 },
                 function (err) {
-                    $scope.stopSpin(false, 'save folder failed, please try later');
+                    if (err.status == 409) {
+                        $scope.stopSpin(false, 'save folder failed,already exists');
+                    } else {
+                        $scope.stopSpin(false, 'save folder failed, please try later');
+                    }
                     //$scope.loadFolderTree();
                 });
         } else {
@@ -699,6 +706,17 @@ app.factory('FolderService', ['$http', '$q', function ($http, $q) {
 
         getFolderForSelect: function () {
             return $http.get('/folder/getFolderForSelect/').then(
+                function (response) {
+                    return response.data;
+                },
+                function (err) {
+                    return $q.reject(err);
+                }
+            );
+        },
+
+        getFlowOfFolder: function (folderId) {
+            return $http.get('/folder/getFlowOfFolder/'+folderId).then(
                 function (response) {
                     return response.data;
                 },

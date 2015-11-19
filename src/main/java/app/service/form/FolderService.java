@@ -34,4 +34,6 @@ public interface FolderService extends IBaseGenericService<Folder, String> {
 
     List<Folder> getQuestionNodesBasedOnFolderId(String id);
 
+    Folder getFlowOfFolder(String folderId);
+
 }

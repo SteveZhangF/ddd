@@ -34,16 +34,6 @@ public class WorkFlowNode {
     @GeneratedValue(generator = "idGenerator")
     @GenericGenerator(name = "idGenerator", strategy = "uuid")
     private  String id;
-//    function node(id, name, type, data, x, y) {
-//        this.id = id;
-//        this.name = name;
-//        this.type = type;
-//        this.data = data;
-//        this.x = x;
-//        this.y = y;
-//        this.nexts = [];
-//        this.prev = '';
-//    }
 
     private String name;
     private String type;

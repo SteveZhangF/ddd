@@ -168,4 +168,16 @@ public class FolderServiceImpl extends BaseGenericServiceImpl<Folder, String> im
         map.put("deleted", false);
         return folderDao.getListbyParams(map);
     }
+
+    @Override
+    public Folder getFlowOfFolder(String folderId) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("parent_id", folderId);
+        map.put("dataType", Folder.FolderDataType.WorkFlow);
+        map.put("deleted", false);
+        List<Folder> list = folderDao.getListbyParams(map);
+        if (list.size() == 0) return null;
+        else
+        return folderDao.getListbyParams(map).get(0);
+    }
 }

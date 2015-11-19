@@ -12,10 +12,12 @@ import app.model.forms.Folder;
 import app.model.forms.Form;
 import app.model.report.Question;
 import app.model.user.User;
+import app.model.wordflow.WorkFlow;
 import app.service.form.FolderService;
 import app.service.form.FormService;
 import app.service.question.QuestionService;
 import app.service.system.UserService;
+import app.service.workflow.WorkFlowService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,7 +130,7 @@ public class FolderController {
                 folder.setLeaf(true);
                 folder.setLevel(parent.getLevel() + 1);
                 folder.setParent_id(parent.getId());
-                folder.setData_id(form.getId());
+                folder.setData_id(String.valueOf(form.getId()));
                 folder.setDataType(Folder.FolderDataType.File);
                 folderService.save(folder);
             }
@@ -152,7 +154,7 @@ public class FolderController {
                 folder.setLeaf(true);
                 folder.setLevel(parent.getLevel() + 1);
                 folder.setParent_id(parent.getId());
-                folder.setData_id(question.getId());
+                folder.setData_id(String.valueOf(question.getId()));
                 folder.setDataType(Folder.FolderDataType.Question);
                 folderService.save(folder);
             }
@@ -174,5 +176,33 @@ public class FolderController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
+    @Autowired
+    WorkFlowService workFlowService;
 
+    @RequestMapping(value = "/folder/getFlowOfFolder/{folderId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Folder> getFlowOfFolder(@PathVariable String folderId) {
+
+        Folder workFlowFolderNode = folderService.getFlowOfFolder(folderId);
+        Folder folder = folderService.get(folderId);
+        if (folder == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if (workFlowFolderNode == null) {
+            WorkFlow workFlow = new WorkFlow();
+            workFlow.setName(folder.getName() + "_" + folderId);
+            workFlow.setDescription(folder.getDescription());
+            workFlowService.save(workFlow);
+            workFlowFolderNode = new Folder();
+            workFlowFolderNode.setDeleted(false);
+            workFlowFolderNode.setName("_WF" + folder.getName());
+            workFlowFolderNode.setDataType(Folder.FolderDataType.WorkFlow);
+            workFlowFolderNode.setLeaf(false);
+            workFlowFolderNode.setDescription(folder.getDescription());
+            workFlowFolderNode.setLevel(folder.getLevel() + 1);
+            workFlowFolderNode.setData_id(workFlow.getId());
+            workFlowFolderNode.setParent_id(folderId);
+            folderService.save(workFlowFolderNode);
+        }
+        return new ResponseEntity<>(workFlowFolderNode, HttpStatus.OK);
+    }
 }
