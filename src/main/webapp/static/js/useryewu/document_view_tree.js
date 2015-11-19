@@ -303,12 +303,13 @@ app.controller('UserDocumentCompanyQuestionControllerForTree', ['$scope', 'UserW
         this.oe_id = oeId;
     };
     var userWorkFlow = new UserWorkFlow(LoginService.getUserInfo().userId, 0, 0, LoginService.getUserInfo().companyId);
-    var folderId = $scope.folderTree.currentNode.id;
+
 
     $scope.$watch('folderTree.currentNode', function (newObj, oldObj) {
         if ($scope.folderTree && angular.isObject($scope.folderTree.currentNode)) {
             if($scope.folderTree.currentNode.dataType==='Folder'){
                 $scope.startSpin();
+                var folderId = $scope.folderTree.currentNode.id;
                 UserWorkFlowService.getFlowIdByFolderId(folderId)
                     .then(
                     function (data) {
