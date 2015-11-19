@@ -4,9 +4,9 @@
 </div>
 <div class="well" ng-if="!thisFolder.showFileEditor">
     <div class="row">
-        <button class="btn btn-primary" ng-click="newFolder.editing=true">Add Folder</button>
-        <button class="btn btn-danger" ng-click="deleteSelectedFolderOrFile()">Delete</button>
-        <button class="btn btn-default pull-right" ng-click="editFile()">Create New Form</button>
+        <button class="btn btn-primary btn-sm" ng-click="newFolder.editing=true">Add Folder</button>
+        <button class="btn btn-danger btn-sm" ng-click="deleteSelectedFolderOrFile()">Delete</button>
+        <button class="btn btn-default pull-right btn-sm" ng-click="editFile()">Create New Form</button>
     </div>
     <div ng-show="newFolder.editing">
         <label>Name:
@@ -50,8 +50,8 @@
             <td>{{ $index + 1 }}</td>
             <td>{{x.leaf?"File":"Folder"}}</td>
             <td><a href="" ng-click="editFileOrFolder(x)">{{x.name}}</a></td>
-            <td>{{x.createTime | date}}</td>
-            <td>{{x.updateTime | date}}</td>
+            <td>{{x.createTime  | date:'yyyy-MM-dd HH:mm'}}</td>
+            <td>{{x.updateTime  | date:'yyyy-MM-dd HH:mm'}}</td>
         </tr>
         <tr ng-repeat-end ng-show="x.editing">
             <td colspan="5">

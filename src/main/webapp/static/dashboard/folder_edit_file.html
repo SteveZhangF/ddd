@@ -13,11 +13,11 @@
             </label>
 
             <label class="col-md-3">Create Time:
-                <input type="text" class="form-control" ng-model="editingFileNode.file.createTime" disabled>
+                <input type="text" class="form-control" ng-model="editingFileNode.file.createTime | date:'yyyy-MM-dd HH:mm'" disabled>
             </label>
 
             <label class="col-md-3">Last Update Time:
-                <input type="text" class="form-control" ng-model="editingFileNode.file.updateTime" disabled>
+                <input type="text" class="form-control" ng-model="editingFileNode.file.updateTime | date:'yyyy-MM-dd HH:mm'" disabled>
             </label>
         </div>
         <div class="row">

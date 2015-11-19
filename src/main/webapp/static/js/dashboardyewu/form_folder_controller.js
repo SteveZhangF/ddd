@@ -43,7 +43,7 @@ app.controller('FormFolderTreeController', ['$scope', '$filter', 'FolderService'
      * spinner start
      * */
 
-    $scope.errorMsg = {hasMsg: false, isError: false};
+    $scope.errorMsg = {hasMsg: false, isError: false,msg:''};
     $scope.spinneractive = false;
     $scope.startSpin = function () {
         if (!$scope.spinneractive) {
@@ -51,11 +51,12 @@ app.controller('FormFolderTreeController', ['$scope', '$filter', 'FolderService'
             $scope.spinneractive = true;
         }
     };
-    $scope.stopSpin = function (flag) {
+    $scope.stopSpin = function (flag,msg) {
         if ($scope.spinneractive) {
             usSpinnerService.stop('folder-spinner');
             $scope.errorMsg.hasMsg = true;
             $scope.errorMsg.isError = !flag;
+            $scope.errorMsg.msg = msg;
             $scope.spinneractive = false;
         }
     };
@@ -74,7 +75,7 @@ app.controller('FormFolderTreeController', ['$scope', '$filter', 'FolderService'
             function (data) {
                 $scope.folders = [];
                 $scope.folders.push(data);
-                $scope.stopSpin(true);
+                $scope.stopSpin(true,'success');
                 if ($scope.modelTree.currentNode) {
                     $scope.loadFolder($scope.modelTree.currentNode);
                 } else {
@@ -82,7 +83,7 @@ app.controller('FormFolderTreeController', ['$scope', '$filter', 'FolderService'
                 }
             },
             function (err) {
-                $scope.stopSpin(false);
+                $scope.stopSpin(false,'load folder tree failed, please try later');
             }
         );
     };
@@ -95,10 +96,10 @@ app.controller('FormFolderTreeController', ['$scope', '$filter', 'FolderService'
             FolderService.getOneFolder(node.id).then(
                 function (data) {
                     $scope.thisFolder = data;
-                    $scope.stopSpin(true);
+                    $scope.stopSpin(true,'success');
                 },
                 function (err) {
-                    $scope.stopSpin(false);
+                    $scope.stopSpin(false,'load file or folder failed, please try later');
                 }
             );
             //$scope.thisFolder = angular.copy(node);
@@ -139,18 +140,18 @@ app.controller('FormFolderTreeController', ['$scope', '$filter', 'FolderService'
                     f.editing = false;
                 },
                 function (err) {
-                    $scope.stopSpin(false);
+                    $scope.stopSpin(false,'save folder failed, please try later');
                     $scope.loadFolderTree();
                 });
         } else {
             FolderService.updateFolder(f.id, f)
                 .then(
                 function (data) {
-                    $scope.stopSpin(true);
+                    $scope.stopSpin(true,'success');
                     $scope.loadFolderTree();
                 },
                 function (err) {
-                    $scope.stopSpin(false);
+                    $scope.stopSpin(false,'update folder failed, please try later');
                     $scope.loadFolderTree();
                 }
             );
@@ -177,11 +178,11 @@ app.controller('FormFolderTreeController', ['$scope', '$filter', 'FolderService'
             $scope.startSpin();
             FolderService.deleteSelectFolders(selected).then(
                 function (data) {
-                    $scope.stopSpin(true);
+                    $scope.stopSpin(true,'success');
                     $scope.loadFolderTree();
                 },
                 function (err) {
-                    $scope.stopSpin(false);
+                    $scope.stopSpin(false,'delete folder or file failed, please try later');
                     $scope.loadFolderTree();
                 }
             );
@@ -197,11 +198,11 @@ app.controller('FormFolderTreeController', ['$scope', '$filter', 'FolderService'
 
                     $scope.editingFileNode = fileNode;
                     $scope.editingFileNode.file = data;
-                    $scope.stopSpin(true);
+                    $scope.stopSpin(true,'success');
                     $scope.thisFolder.showFileEditor = true;
                 },
                 function (err) {
-                    $scope.stopSpin(false);
+                    $scope.stopSpin(false,'loading file failed, please try later');
                 });
         } else {
             $scope.editingFileNode = {isNew: true, file: {}, parent_id: $scope.thisFolder.id};
@@ -268,10 +269,10 @@ app.controller('FileController', ['$scope', 'FormService', 'FolderService', 'Que
             .then(
             function (data) {
                 $scope.questionsForFile = data;
-                $scope.stopSpin(true);
+                $scope.stopSpin(true,'success');
             },
             function (err) {
-                $scope.stopSpin(false);
+                $scope.stopSpin(false,'loading questions failed, please try later');
             }
         );
     };
@@ -337,10 +338,10 @@ app.controller('FileController', ['$scope', 'FormService', 'FolderService', 'Que
                 var txt = "{-" + el.html() + "-}";
                 $scope.froalaOptions.froalaEditor('html.insert', txt, true);
                 el = null;
-                $scope.stopSpin(true);
+                $scope.stopSpin(true,'insert question success');
             },
             function (err) {
-                $scope.stopSpin(false);
+                $scope.stopSpin(false,'insert question failed, please try later');
             }
         );
 
@@ -381,11 +382,11 @@ app.controller('FileController', ['$scope', 'FormService', 'FolderService', 'Que
                     selected.push(fileNode.file.id);
                     FolderService.addForms(fileNode.parent_id, selected).then(
                         function (data) {
-                            $scope.stopSpin(true);
+                            $scope.stopSpin(true,'success');
                             $scope.loadFolderTree();
                         },
                         function (err) {
-                            $scope.stopSpin(false);
+                            $scope.stopSpin(false,'create node for file failed,please try later');
 
                         }
                     );
@@ -399,12 +400,12 @@ app.controller('FileController', ['$scope', 'FormService', 'FolderService', 'Que
                         then(function (data) {
                             $scope.loadFolderTree();
                         }, function (err) {
-                            $scope.stopSpin(false);
+                            $scope.stopSpin(false,'update file node failed, please try later');
                         });
                 }
             },
             function (e) {
-                $scope.stopSpin(false);
+                $scope.stopSpin(false,'failed to update file format, please try later');
             }
         );
     };
@@ -416,20 +417,20 @@ app.controller('FileController', ['$scope', 'FormService', 'FolderService', 'Que
                 function (data) {
                     fileNode.file = data;
                     $scope.parseFileFormat(fileNode);
-                    $scope.stopSpin(true);
+                    $scope.stopSpin(true,'save new file success');
                 },
                 function (err) {
-                    $scope.stopSpin(false);
+                    $scope.stopSpin(false,'save new file failed, please try later');
                 }
             );
         } else {
             FormService.updateForm(fileNode.file, fileNode.file.id).then(
                 function (data) {
                     $scope.parseFileFormat(fileNode);
-                    $scope.stopSpin(true);
+                    $scope.stopSpin(true,'update file success');
                 },
                 function (err) {
-                    $scope.stopSpin(false);
+                    $scope.stopSpin(false,'update file failed, please try later');
                 }
             );
         }
@@ -465,10 +466,10 @@ app.controller('FolderQuestionController', ['$scope', 'QuestionService', 'Folder
             .then(
             function (data) {
                 $scope.questionNodeList = data;
-                $scope.stopSpin(true);
+                $scope.stopSpin(true,'load questions success');
             },
             function (err) {
-                $scope.stopSpin(false);
+                $scope.stopSpin(false,'load questions failed, please try later');
             }
         );
     };
@@ -480,11 +481,11 @@ app.controller('FolderQuestionController', ['$scope', 'QuestionService', 'Folder
             .then(
             function (data) {
                 questionNode.question = data;
-                $scope.stopSpin(true);
+                $scope.stopSpin(true,'loading ' + questionNode.name + ' success');
                 questionNode.editing = true;
             },
             function (err) {
-                $scope.stopSpin(false);
+                $scope.stopSpin(false,'loading '+ questionNode.name + ' failed, please try later');
             }
         );
     };
@@ -507,7 +508,7 @@ app.controller('FolderQuestionController', ['$scope', 'QuestionService', 'Folder
                 );
             },
             function (er) {
-                $scope.stopSpin(false);
+                $scope.stopSpin(false,'save question ' + question.name+' failed');
             }
         );
     };
@@ -522,17 +523,17 @@ app.controller('FolderQuestionController', ['$scope', 'QuestionService', 'Folder
                 FolderService.updateFolder(questionNode.id, questionNode)
                     .then(
                     function (data1) {
-                        $scope.stopSpin(true);
+                        $scope.stopSpin(true,'update question '+questionNode.name+' success');
                         $scope.loadAllQuestionNodes();
                     },
                     function (err) {
-                        $scope.stopSpin(false);
+                        $scope.stopSpin(false,'update question '+questionNode.name+' failed');
                         $scope.loadAllQuestionNodes();
                     }
                 );
             },
             function (err) {
-                $scope.stopSpin(false);
+                $scope.stopSpin(false,'update question '+questionNode.name+' failed');
                 $scope.loadAllQuestionNodes();
             }
         );
@@ -550,11 +551,11 @@ app.controller('FolderQuestionController', ['$scope', 'QuestionService', 'Folder
             $scope.startSpin();
             FolderService.deleteSelectFolders(selected).then(
                 function (data) {
-                    $scope.stopSpin(true);
+                    $scope.stopSpin(true,'delete questions success');
                     $scope.loadFolderTree();
                 },
                 function (err) {
-                    $scope.stopSpin(false);
+                    $scope.stopSpin(false,'delete questions failed, please try later');
                     $scope.loadFolderTree();
                 }
             );
