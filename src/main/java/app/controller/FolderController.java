@@ -205,4 +205,11 @@ public class FolderController {
         }
         return new ResponseEntity<>(workFlowFolderNode, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/folder/getQuestionDataByFolderId/{folderId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Question> getQuestionDataBasedOnQuestionNodeId(@PathVariable String folderId) {
+        Folder folder = folderService.get(folderId);
+        Question question = questionService.get(Integer.valueOf(folder.getData_id()));
+        return new ResponseEntity<>(question, HttpStatus.OK);
+    }
 }

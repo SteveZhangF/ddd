@@ -4,6 +4,18 @@ app.factory('QuestionService', ['$http', '$q', function ($http, $q) {
 
     return {
 
+        getQuestionDataByFolderNodeId:function(id){
+            return $http.get('/folder/getQuestionDataByFolderId/'+id)
+                .then(
+                function (response) {
+                    return response.data;
+                },
+                function (err) {
+                    return $q.reject(err);
+                }
+            );
+        },
+
         fetchOneQuestion: function (id) {
           return $http.get('/question/'+id)
               .then(

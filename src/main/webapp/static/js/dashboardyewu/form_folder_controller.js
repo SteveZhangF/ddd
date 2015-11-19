@@ -9,7 +9,7 @@ app.controller('FormFolderTreeController', ['$scope', '$filter', 'FolderService'
             url: 'dashboard/folder_files.html'
         }, {name: 'Questions', url: 'dashboard/folder_questions.html'}, {
             name: 'Flows',
-            url: 'dashboard/workflow2.html'
+            url: 'dashboard/folder_flow.html'
         }], selectedMenu: {}
     };
 

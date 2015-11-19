@@ -23,7 +23,6 @@
                                 ng-mousedown="menuNodes.droppedNode = normalNode" title="{{normalNode.name}}"
                                 class="list-group-item menu-item {{'normal-node-'+normalNode.type}}" draggable>
                             <a title="{{normalNode.name}}">{{normalNode.name}}</a>
-                            {{normalNode}}
                         </li>
                     </ul>
                 </div>
@@ -33,12 +32,12 @@
                     Please input to search the questions
                     <input class="form-control" ng-model="query">
                     <hr>
-                    <ul class="list-group">
+                    <ul class="list-group" style="max-height: 400px;min-height: 400px" scrollable>
                         <li ng-mousedown="menuNodes.droppedNode = question" ng-mouseout="hidePreviewQuestion()"
-                            ng-mouseover='showPreviewQuestion($event,question.data)'
+                            ng-mouseover='showPreviewQuestion($event,question)'
                             ng-repeat="question in menuNodes.questionNodes | filter:query"
                             class="list-group-item menu-item {{'question-node-'+question.type}}" draggable><a
-                                title="{{question.data.description}}">{{question.name}}</a></li>
+                                >{{question.name}}</a></li>
                     </ul>
                 </div>
             </div>

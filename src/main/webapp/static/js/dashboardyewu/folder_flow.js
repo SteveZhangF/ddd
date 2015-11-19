@@ -136,15 +136,14 @@ app.controller('FolderFlowController', ['$scope', 'QuestionService', 'WorkFlowSe
         $scope.hoverCode.x = x;
         $scope.hoverCode.y = y;
         $scope.hoverCode.show = "true";
-        var questionId = questionNode.data_id;
-        QuestionService.fetchOneQuestion(questionId)
+        var questionNodeId = questionNode.folderNodeId;
+        QuestionService.getQuestionDataByFolderNodeId(questionNodeId)
             .then(
             function (data) {
-                $scope.menuNodes.previewNode = question;
-                //TODO
+                $scope.menuNodes.previewNode = data;
+                //TODO loading
             }
         );
-        $scope.menuNodes.previewNode = question;
     };
 
     $scope.hidePreviewQuestion = function () {
@@ -157,11 +156,11 @@ app.controller('FolderFlowController', ['$scope', 'QuestionService', 'WorkFlowSe
         data: {id: 1, name: 'end', description: 'end node'}
     }];
 // super node
-    function node(id, name, type, data, x, y) {
+    function node(id, name, type, folderNodeId, x, y) {
         this.id = id;
         this.name = name;
         this.type = type;
-        this.data = data;
+        this.folderNodeId = folderNodeId;
         this.x = x;
         this.y = y;
         this.nexts = [];
@@ -179,8 +178,8 @@ app.controller('FolderFlowController', ['$scope', 'QuestionService', 'WorkFlowSe
         target_node.prev = this.id;
     };
 
-    function NormalNode(id, name, type, data, x, y) {
-        node.call(this, id, name, type, data, x, y);
+    function NormalNode(id, name, type, folderNodeId, x, y) {
+        node.call(this, id, name, type, folderNodeId, x, y);
     };
 
     NormalNode.prototype = new node();
@@ -194,8 +193,8 @@ app.controller('FolderFlowController', ['$scope', 'QuestionService', 'WorkFlowSe
     //
     //};
 
-    function QuestionNode(id, name, type, data, x, y) {
-        node.call(this, id, name, type, data, x, y);
+    function QuestionNode(id, name, type, folderNodeId, x, y) {
+        node.call(this, id, name, type, folderNodeId, x, y);
     }
 
     QuestionNode.prototype = new node();
@@ -205,9 +204,8 @@ app.controller('FolderFlowController', ['$scope', 'QuestionService', 'WorkFlowSe
 
     };
 
-    QuestionNode.prototype.connect = function (target_node, success, fail) {
-        this.data.options.push({name: 'not null', value: 'NOTNULL'});
-        var self = this;
+    var showQuestionConnectDialog = function (self,target_node,success,fail) {
+
         var connectDialog = ngDialog.open({
             template: 'connect-editor.html',
             scope: $scope,
@@ -231,6 +229,38 @@ app.controller('FolderFlowController', ['$scope', 'QuestionService', 'WorkFlowSe
             }
         });
         $scope.connectingSourceNode = {selectedOption: "", node: self, targetNode: target_node}
+    }
+
+    QuestionNode.prototype.connect = function (target_node, success, fail) {
+        var self = this;
+        if(self.data){
+            if(! self.data.options){
+                self.data.options=[];
+            }
+            self.data.options.push({name: 'not null', value: 'NOTNULL'});
+            showQuestionConnectDialog(self,target_node,success,fail);
+        }else{
+            $scope.startSpin();
+            QuestionService.getQuestionDataByFolderNodeId(this.folderNodeId)
+                .then(
+                function (data) {
+                    self.data = data;
+                    if(! self.data.options){
+                        self.data.options=[];
+                    }
+                    self.data.options.push({name: 'not null', value: 'NOTNULL'});
+                    $scope.stopSpin(true);
+                    showQuestionConnectDialog(self,target_node,success,fail);
+                },
+                function (err) {
+                    $scope.stopSpin(false,'error when connecting, please try later');
+                    fail();
+                }
+            );
+        }
+
+
+
     };
 
     $scope.menuNodes = {normalNodes: [], questionNodes: [], droppedNode: new node(), previewNode: new node()};
@@ -239,10 +269,9 @@ app.controller('FolderFlowController', ['$scope', 'QuestionService', 'WorkFlowSe
         console.log('init menu');
         $scope.menuNodes.normalNodes.length = 0;
         for (var i = 0; i < menu.length; i++) {
-            var nodez = new NormalNode('menu_normal_node_' + i, menu[i].name, menu[i].type, {
-                id: menu[i].data.id,
-                description: menu[i].data.description
-            }, 0, 0);
+            var nodez = new NormalNode('menu_normal_node_' + i, menu[i].name, menu[i].type, i
+            // 这个i代表了start 和 end
+            , 0, 0);
             $scope.menuNodes.normalNodes.push(nodez);
         }
 
@@ -250,12 +279,7 @@ app.controller('FolderFlowController', ['$scope', 'QuestionService', 'WorkFlowSe
 
             $scope.menuNodes.questionNodes.length = 0;
             for (var i = 0; i < response.length; i++) {
-                var nodez = new QuestionNode('menu_question_node_' + i, response[i].name, 'Question', {
-                    id: response[i].id,
-                    description: response[i].description,
-                    name: response[i].name,
-                    data_id:response[i].data_id// question id
-                }, 0, 0);
+                var nodez = new QuestionNode('menu_question_node_' + i, response[i].name, 'Question', response[i].id, 0, 0);
                 $scope.menuNodes.questionNodes.push(nodez);
             }
             $scope.stopSpin(true,'success to load questions');
@@ -424,7 +448,6 @@ app.directive('plumbMenuItem', function () {
         replace: true,
         controller: 'FolderFlowController',
         link: function (scope, element, attrs) {
-            console.log("Add plumbing for the 'menu-item' element");
 
             // jsPlumb uses the containment from the underlying library, in our case that is jQuery.
             var jsplumbInstance = jsPlumb.getInstance();
@@ -469,7 +492,7 @@ app.directive('plumbConnect', function () {
                 //anchor: "AutoDefault",
                 connector: ["Flowchart", {stub: [10, 30], gap: 10, cornerRadius: 5, alwaysRespectStubs: true}],  //连接线的样式种类有[Bezier],[Flowchart],[StateMachine ],[Straight ]
                 isTarget: false,	//是否可以放置（连线终点）
-                maxConnections: 1,	// 设置连接点最多可以连接几条线
+                maxConnections: 10,	// 设置连接点最多可以连接几条线
                 connectorOverlays: [["Arrow", {width: 10, length: 10, location: 0.5}]]
 
             });
@@ -529,7 +552,6 @@ app.directive('droppable', function ($compile) {
 
                     // if dragged item has class menu-item and dropped div has class drop-container, add module
                     if (dragEl.hasClass('menu-item') && dropEl.hasClass('drop-container')) {
-                        console.log(event);
                         var x = event.pageX;
                         var y = event.pageY;
 
@@ -549,7 +571,6 @@ app.directive('draggable', function () {
         restrict: 'A',
         //The link function is responsible for registering DOM listeners as well as updating the DOM.
         link: function (scope, element, attrs) {
-            console.log("Let draggable item snap back to previous position");
             element.draggable({
                 // let it go back to its original position
                 revert: true,

@@ -23,17 +23,17 @@ import java.util.List;
 @Entity
 public class WorkFlowNode {
 
-    public WorkFlowNode(Data data,List<Next> nexts){
-        this.data = data;
+    public WorkFlowNode(List<Next> nexts) {
         this.nexts = nexts;
     }
 
-    public WorkFlowNode(){}
+    public WorkFlowNode() {
+    }
 
     @Id
     @GeneratedValue(generator = "idGenerator")
     @GenericGenerator(name = "idGenerator", strategy = "uuid")
-    private  String id;
+    private String id;
 
     private String name;
     private String type;
@@ -41,9 +41,15 @@ public class WorkFlowNode {
     private String y;
 
 
+    private String folderNodeId;// 代表question的folder id
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private Data data = new Data();
+    public String getFolderNodeId() {
+        return folderNodeId;
+    }
+
+    public void setFolderNodeId(String folderNodeId) {
+        this.folderNodeId = folderNodeId;
+    }
 
     @OneToMany(cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -65,14 +71,6 @@ public class WorkFlowNode {
 
     public void setNexts(List<Next> nexts) {
         this.nexts = nexts;
-    }
-
-    public Data getData() {
-        return data;
-    }
-
-    public void setData(Data data) {
-        this.data = data;
     }
 
     public String getId() {

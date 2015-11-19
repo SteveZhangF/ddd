@@ -62,29 +62,25 @@ public class WorkFlowController {
     @RequestMapping(value = "/workflow/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WorkFlow> updateFormTable(@PathVariable("id") String id, @RequestBody WorkFlow workFlow) {
         WorkFlow flow = workFlowService.get(id);
-        if(flow!=null){
+        if (flow != null) {
             flow.setDescription(workFlow.getDescription());
             flow.setName(workFlow.getName());
             flow.setType(workFlow.getType());
             workFlowService.update(flow);
             return new ResponseEntity<>(HttpStatus.OK);
-        }else{
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @Autowired
     UserWorkFlowService userWorkFlowService;
-    @RequestMapping(value="/workflow/detail/{id}",method = RequestMethod.PUT,produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<WorkFlow> updateWorkFlowDetail(@PathVariable("id") String id,@RequestBody WorkFlow worfFlow){
-        try{
-            workFlowService.update(worfFlow);
-            userWorkFlowService.deleteUWFbyWF(worfFlow.getId());
-            return new ResponseEntity<>(HttpStatus.OK);
-        }catch (Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-        }
+
+    @RequestMapping(value = "/workflow/detail/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<WorkFlow> updateWorkFlowDetail(@PathVariable("id") String id, @RequestBody WorkFlow worfFlow) {
+        workFlowService.update(worfFlow);
+//        userWorkFlowService.deleteUWFbyWF(worfFlow.getId());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //------------------- Delete a wf --------------------------------------------------------
