@@ -252,10 +252,10 @@ img {
  }
 @-webkit-keyframes x-spin-down {
     0% {
-        -webkit-transform: rotateY(180deg);
+        -webkit-transform: rotateY(-180deg);
     }
     20% {
-        -webkit-transform: rotateY(90deg);
+        -webkit-transform: rotateY(-90deg);
     }
     100% {
         -webkit-transform: rotateY(0deg);

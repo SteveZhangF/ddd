@@ -15,7 +15,7 @@
     <ol class="breadcrumb">
         <li><a href="{{selectedMenu.selectedParentMenu.href}}">{{selectedMenu.selectedParentMenu.name}}</a></li>
         <li><a href="{{selectedMenu.selectedChildMenu.href}}">{{selectedMenu.selectedChildMenu.name}}</a></li>
-        <li><a ng-click="notification_error = true">Show Error</a></li>
+
     </ol>
     <growl-notifications><growl-notification ng-show="notification_error" class="growl-error fading ng-scope"><a href="javascript:;" class="close"><i class="fa fa-times"></i></a>Has Error</growl-notification>
 

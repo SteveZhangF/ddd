@@ -1,11 +1,11 @@
 'use strict';
 
-var app = angular.module('dashboardApp', ['ngRoute', 'ui.bootstrap', 'ngDialog', 'ui.bootstrap.contextMenu', 'customizedDirective', 'angularBootstrapNavTree', 'virtualList', 'smart-table', 'froala', 'angularSpinner', 'angularjs-dropdown-multiselect']);
+var app = angular.module('dashboardApp', ['ngRoute', 'ui.bootstrap', 'ngDialog', 'customizedDirective', 'smart-table', 'froala', 'angularSpinner', 'angularjs-dropdown-multiselect']);
 
 // add an interceptor to add the token to the request head
-var debug = true;
+var debug = false;
 var redirect = function ($location) {
-    if(!debug){
+    if (!debug) {
         $location.path('/login');
     }
 };
