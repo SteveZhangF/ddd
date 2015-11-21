@@ -310,9 +310,11 @@ app.controller('UserDocumentCompanyQuestionControllerForTree', ['$scope', 'UserW
             if($scope.folderTree.currentNode.dataType==='Folder'){
                 $scope.startSpin();
                 var folderId = $scope.folderTree.currentNode.id;
+                // will return the folder node which represent to the workflow and the data_id is the real work flow id
                 UserWorkFlowService.getFlowIdByFolderId(folderId)
                     .then(
                     function (data) {
+                        $scope.currentWorkFlow = data;
                         userWorkFlow.workFlowId = data.data_id;
                         UserWorkFlowService.getCurrentNodeByWorkFlowIdAndUserIdAndOeId(userWorkFlow)
                             .then(
@@ -341,6 +343,7 @@ app.controller('UserDocumentCompanyQuestionControllerForTree', ['$scope', 'UserW
                 $scope.currentNode = response;
                 if($scope.currentNode.folderNodeId == 1){
                     //todo end node
+
                 } else
                 if($scope.currentNode.folderNodeId == 0){
                     //todo start node

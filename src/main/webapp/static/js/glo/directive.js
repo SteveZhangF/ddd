@@ -3,6 +3,36 @@
     'use strict';
 
     angular.module('customizedDirective', [])
+        .directive('username', function ($q, $timeout) {
+            return {
+                link: function (scope, elm, attrs, ctrl) {
+                    var usernames = ['Jim', 'John', 'Jill', 'Jackie'];
+
+                    ctrl.$asyncValidators.username = function (modelValue, viewValue) {
+
+                        if (ctrl.$isEmpty(modelValue)) {
+                            // consider empty model valid
+                            return $q.when();
+                        }
+
+                        var def = $q.defer();
+
+                        $timeout(function () {
+                            // Mock a delayed response
+                            if (usernames.indexOf(modelValue) === -1) {
+                                // The username is available
+                                def.resolve();
+                            } else {
+                                def.reject();
+                            }
+
+                        }, 2000);
+
+                        return def.promise;
+                    };
+                }
+            };
+        })
         .directive('treeModel', ['$compile', function ($compile) {
             return {
                 restrict: 'A',
@@ -37,12 +67,12 @@
                         '<i class="normal" data-ng-hide="!node.' + isLeaf + '"></i> ' +
                         '<span data-ng-class="node.selected" data-ng-click="' + treeId + '.selectNodeLabel(node)">{{node.' + nodeLabel + '}}</span>' +
 
-                        '<div data-ng-show="'+nodeShowProgress+'" class=\"progress\" style=\"margin-bottom: 0;height: 10px\">' +
+                        '<div data-ng-show="' + nodeShowProgress + '" class=\"progress\" style=\"margin-bottom: 0;height: 10px\">' +
                         '<div class = "progress-bar" role = "progressbar" style="width:' +
                         '{{node.' + progress + '}}'
                         + '\"></div></div >' +
 
-                        '<div data-ng-hide="node.collapsed" data-node-is-leaf="'+isLeaf+'" data-node-show-progress="'+nodeShowProgress+'" data-tree-id="' + treeId + '" data-tree-model="node.' + nodeChildren + '" data-node-id=' + nodeId + ' data-node-label=' + nodeLabel + ' data-node-children=' + nodeChildren + '></div>' +
+                        '<div data-ng-hide="node.collapsed" data-node-is-leaf="' + isLeaf + '" data-node-show-progress="' + nodeShowProgress + '" data-tree-id="' + treeId + '" data-tree-model="node.' + nodeChildren + '" data-node-id=' + nodeId + ' data-node-label=' + nodeLabel + ' data-node-children=' + nodeChildren + '></div>' +
                         '</li>' +
                         '</ul>';
 
@@ -139,14 +169,18 @@
                     });
                 }
             }
-        }]).directive('scrollable',[function () {
-            return{
-                restrict:'A',
-                link: function (scope,element,attributes) {
-                    element.css('overflow','scroll');
+        }]).directive('scrollable', [function () {
+            return {
+                restrict: 'A',
+                link: function (scope, element, attributes) {
+                    element.css('overflow', 'scroll');
                 }
             }
-        }]).directive('setClassWhenAtTop', function ($window) {
+        }])
+
+        //a directive to fix the position of the element to the center of screen when
+        //scroll
+        .directive('setClassWhenAtTop', function ($window) {
             var $win = angular.element($window); // wrap window object as jQuery object
 
             return {
@@ -171,6 +205,7 @@
                 }
             };
         })
+        //preview the picture
         .directive('ngThumb', ['$window', '$http', function ($window, $http) {
             var helper = {
                 support: !!($window.FileReader && $window.CanvasRenderingContext2D),
@@ -530,5 +565,120 @@
             };
         }])
 
-})(angular);
 
+// Source: src/timeline-directive.js
+    /**
+     * @ngdoc directive
+     * @name customizedDirective
+     * @restrict AE
+     *
+     * @description
+     * Primary container for displaying a vertical set of timeline events.
+     */
+        .directive('timelineBadge', function () {
+            return {
+                require: '^timelineEvent',
+                restrict: 'AE',
+                transclude: true,
+                template: '<div ng-transclude class="timeline-badge"></div>'
+            };
+        })
+        .directive('timeline', function () {
+            return {
+                restrict: 'AE',
+                transclude: true,
+                template: '<ul class="timeline" ng-transclude></ul>'
+            };
+        })
+
+// Source: src/timeline-event-directive.js
+    /**
+     * @ngdoc directive
+     * @name customizedDirective.directive:timeline
+     * @restrict AE
+     *
+     * @description
+     * Represents an event occuring at a point in time, displayed on the left or the right
+     * of the timeline line.
+     *
+     * You typically embed a `timeline-badge` and `timeline-panel` element within a `timeline-event`.
+     */
+        .directive('timelineEvent', function () {
+            return {
+                restrict: 'AE',
+                transclude: true,
+                scope: {
+                    index:'@',
+                    nowStep:'='
+                },
+                template: '<li ng-transclude></li>',
+                link: function (scope, element, attr,timeline) {
+                    scope.$watch('nowStep', function () {
+                        if(scope.index != scope.nowStep){
+                            console.log(scope.index);
+                            angular.element(element).children('li').addClass('bounce-in-up');
+                            angular.element(element).children('li').removeClass('bounce-in-down');
+                        }else{
+                            angular.element(element).children('li').addClass('bounce-in-down');
+                            angular.element(element).children('li').removeClass('bounce-in-up');
+                        }
+                    })
+                }
+            };
+        })
+
+// Source: src/timeline-footer-directive.js
+    /**
+     * @ngdoc directive
+     * @name customizedDirective.directive:timeline-footer
+     * @restrict AE
+     *
+     * @description
+     * Optional element to add a footer section to the `timeline-panel` for links or other actions.
+     */
+        .directive('timelineFooter', function () {
+            return {
+                require: '^timelinePanel',
+                restrict: 'AE',
+                transclude: true,
+                template: '<div class="timeline-footer" ng-transclude></div>'
+            };
+        })
+
+// Source: src/timeline-heading-directive.js
+    /**
+     * @ngdoc directive
+     * @name customizedDirective.directive:timeline-heading
+     * @restrict AE
+     *
+     * @description
+     * Optional element to show the heading for a `timeline-panel`.
+     */
+        .directive('timelineHeading', function () {
+            return {
+                require: '^timelinePanel',
+                restrict: 'AE',
+                transclude: true,
+                template: '<div class="timeline-heading" ng-transclude></div>'
+            };
+        })
+
+// Source: src/timeline-panel-directive.js
+    /**
+     * @ngdoc directive
+     * @name customizedDirective.directive:timeline-panel
+     * @restrict AE
+     *
+     * @description
+     * An panel inside the `timeline-event` which shows detailed information about the event.
+     */
+        .directive('timelinePanel', function () {
+            return {
+                require: '^timeline',
+                restrict: 'AE',
+                transclude: true,
+                template: '<div class="timeline-panel" ng-transclude></div>'
+            };
+        });
+
+})(angular);

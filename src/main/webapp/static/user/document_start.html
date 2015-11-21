@@ -1,33 +1,62 @@
-<!--
-  ~ Copyright (c) 2015. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
-  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
-  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
-  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
-  -->
-<div ng-controller="UserDocumentStartController" class="row">
-    <div class="well">
-        Hi, Welcome to start your documentary!
-        <p>
-        {{nowFlow.description}}
-        </p>
-        <p>Click next when you finish</p>
-        <div class="row">
-            <nav>
-                <ul class="pager">
-                    <li class="previous {{flowIndex==0?'disabled':''}}"><a
-                            ng-click="prev()"
-                            href=""><span
-                            aria-hidden="true">&larr;</span> Prev</a></li>
-                    <li class="next {{flowIndex==flows.length-1?'disabled':''}}"><a
-                            ng-click="next()"
-                            href="">Next <span
-                            aria-hidden="true">&rarr;</span></a></li>
-                </ul>
-            </nav>
+<div ng-controller="UserDocumentStartController">
+    <div class="row">
+        <div class="col-md-8 panel panel-default" id="container">
+
+            <div id="container-child" class="panel-body" ng-include="eventsAll[flowIndex].url">
+            </div>
+            <div class="panel-footer ">
+                <button class="btn btn-default pull-right" ng-click="goNextStep()">Next</button>
+                <button class="btn btn-default" ng-click="goPrevStep()">prev</button>
+
+            </div>
+
+        </div>
+        <div class="col-md-4" id="steps">
+                <timeline>
+                    <div id="test" timeline-event index="{{$index}}" now-step="flowIndex"
+                         ng-repeat="event in eventsAll">
+                        <timeline-badge class="{{event.badgeClass}}">
+                            <i class="glyphicon {{event.badgeIconClass}}"></i>
+                        </timeline-badge>
+                        <timeline-panel class="{{event.badgeClass}}">
+                            <timeline-heading>
+                                <h4>{{event.title}} +++ {{'bounce-in'+Math.abs($index - flowIndex)}}</h4>
+                            </timeline-heading>
+                            <p>{{event.content}}</p>
+                        </timeline-panel>
+                    </div>
+                </timeline>
         </div>
     </div>
-    <div ng-include="nowFlow.url">
-    </div>
+
 </div>
 
+<style>
+    #tzest {
+        top: 1px;
+        background: red;
+        width: 10px;
+        height: 30px;
+    }
+
+    #container {
+        height: 600px;
+    }
+
+    #steps {
+        height: 600px;
+        overflow-y: hidden;
+        overflow-x: hidden;
+    }
+
+    #container > div#container-child {
+        height: 533px;
+        overflow-y: auto;
+        overflow-x: auto;
+    }
+    .panel-default > .panel-footer {
+        color: #333;
+        background-color: #fff;
+        border-color: #ddd;
+    }
+</style>

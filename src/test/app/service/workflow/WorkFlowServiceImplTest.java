@@ -82,7 +82,6 @@ public class WorkFlowServiceImplTest extends TestCase {
         for(WorkFlowNode flowNode:workFlow.getNodes()){
             System.out.print("===========");
             System.out.println(flowNode.getName());
-            System.out.println(flowNode.getData().getId());
             System.out.println(flowNode.getType());
             System.out.println(flowNode.getNexts().size());
             System.out.println("===========");

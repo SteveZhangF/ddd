@@ -25,14 +25,57 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = UserFormServiceImplTestContextConfiguration.class, loader = AnnotationConfigContextLoader.class)
 
+class tes{
+    public static void main(String[] arg){
+//        Integer x = new Integer(0);
+
+//        switch(x)
+//        {
+//            default:
+//                System.out.println("Hello");
+//        }
+        class Horse
+        {
+            public String name; /* Line 7 */
+            public Horse(String s)
+            {
+                name = s;
+            }
+        } /* class Horse ends */
+        Object obj = new Horse("Zippo"); /* Line 13 */
+        Horse h = (Horse) obj; /* Line 14 */
+        System.out.println(h.name);
+    }
+}
+
 public class FolderServiceImplTest {
+
 
     @Autowired
     FolderService folderService;
-
+    public static void stringReplace (String text)
+    {
+        text = text.replace ('j' , 'c'); /* Line 5 */
+    }
+    public static void bufferReplace (StringBuffer text)
+    {
+        text = text.append ("c");  /* Line 9 */
+    }
     @Test
     public void testGetFoldersForTree() throws Exception {
-        System.out.println(folderService.loadAll().size());
+//        System.out.println(folderService.loadAll().size());
+        float f1[ ], f2[ ];
+        f1 = new float[10];
+        f2 = f1;
+        System.out.println("f2[0] = " + f2[0]);
+//        Double d = Math.random();
+//        System.out.println(d);
+//        String textString = new String ("java");
+//        StringBuffer textBuffer = new StringBuffer ("java"); /* Line 14 */
+//        stringReplace(textString);
+//        bufferReplace(textBuffer);
+//        System.out.println (textString + textBuffer);
+
     }
 
     @Test

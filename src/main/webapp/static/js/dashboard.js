@@ -3,7 +3,7 @@
 var app = angular.module('dashboardApp', ['ngRoute', 'ui.bootstrap', 'ngDialog', 'ui.bootstrap.contextMenu', 'customizedDirective', 'angularBootstrapNavTree', 'virtualList', 'smart-table', 'froala', 'angularSpinner', 'angularjs-dropdown-multiselect']);
 
 // add an interceptor to add the token to the request head
-var debug = false;
+var debug = true;
 var redirect = function ($location) {
     if(!debug){
         $location.path('/login');
@@ -81,15 +81,6 @@ app.config(['$routeProvider', function ($routeProvider) {
     }).when("/users", {
         templateUrl: "dashboard/user_list.html",
         resolve: resolve
-    }).when("/forms", {
-        templateUrl: "dashboard/form_list.html",
-        resolve: resolve
-    }).when("/workflows", {
-        templateUrl: "dashboard/workflow.html",
-        resolve:resolve
-    }).when("/questions", {
-        templateUrl: "dashboard/question_list.html",
-        resolve:resolve
     })
         .when("/table_forms", {
             templateUrl: "dashboard/table_form_list.html",

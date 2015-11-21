@@ -17,8 +17,6 @@ app.controller('DashBoardNavController', ['$scope', function ($scope) {
             {name: "Users",href:"#/users"},
            // {name:"Forms",href:"#/forms"},
             {name:"Form Folders",href:'#/form_folders'},
-            {name:"Questions Sequences",href:"#/workflows"},
-          //  {name:"Questions",href:"#/questions"},
             {name:"Table Forms",href:"#/table_forms"}
 
         ]

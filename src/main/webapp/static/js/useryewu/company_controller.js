@@ -40,7 +40,7 @@ app.controller("UserCompanyNavController", ['$scope', function ($scope) {
 }])
 ;
 
-app.controller('UserCompanyController', ['$scope', 'CompanyService', 'LoginService', 'usSpinnerService', function ($scope, CompanyService, LoginService, usSpinnerService) {
+app.controller('UserCompanyController', ['$scope', '$rootScope','CompanyService', 'LoginService', 'usSpinnerService', function ($scope, $rootScope,CompanyService, LoginService, usSpinnerService) {
 
     /**
      * spinner start
@@ -87,19 +87,31 @@ app.controller('UserCompanyController', ['$scope', 'CompanyService', 'LoginServi
         $scope.loadingCompany();
     });
 
+    $scope.company={uuid:''};
     //update company information
-    $scope.save = function () {
+    $scope.save = function (cb) {
         $scope.startSpin();
+
         CompanyService.updateCompany($scope.company, $scope.company.uuid).then(function (response) {
             $scope.companyError.hasError.error = false;
             $scope.companyError.hasError.success = true;
             $scope.companyError.msg = "Success!";
             $scope.stopSpin();
+            if(typeof(cb)==='function'){
+                cb();
+            }
         }, function (err) {
             $scope.companyError.hasError.error = true;
             $scope.companyError.hasError.success = false;
             $scope.companyError.msg = "Error while updating company, please try it later!";
             $scope.stopSpin();
+            if(typeof(cb)==='function'){
+                cb();
+            }
         });
     };
+    
+    $scope.nextStep = function () {
+        $rootScope.$broadcast('main-flow-saved',{step:1,func:$scope.save});
+    }
 }]);

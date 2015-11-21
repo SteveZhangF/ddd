@@ -113,9 +113,10 @@ div[data-tree-model] li .selected {
                 <div class="panel-heading">{{folderTree.currentNode.name}}</div>
                 <div class="panel-body">
                     <div ng-repeat="question in folderTree.currentNode.editingQuestions" class="well">
-                        <h4>{{question.description}}
+                        <h4>{{question.name}}
                         </h4>
                         <hr>
+                        {{question.description}}
                         <div id="node-data-content">
                             <div ng-switch="question.type">
                                 <select class="form-control" ng-switch-when="select" ng-model="question.value">

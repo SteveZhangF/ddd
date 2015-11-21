@@ -1,7 +1,12 @@
 app.controller('FormFolderTreeController', ['$scope', '$filter', 'FolderService', 'FormService', 'usSpinnerService', '$timeout', function ($scope, $filter, FolderService, FormService, usSpinnerService, $timeout) {
-    $scope.folders = [];
 
+
+
+
+
+    $scope.folders = [{"id":"0","description":"I am a root folder, please don't delete me!","createTime":1447836224000,"updateTime":1447894246000,"name":"Root","level":0,"leaf":false,"parent_id":null,"data_id":"0","dataType":"Folder","deleted":false,"children":[{"id":"40288085511a511601511a95544b0000","description":"dsa","createTime":1447849973000,"updateTime":1447888279000,"name":"asd","level":1,"leaf":true,"parent_id":"0","data_id":"17","dataType":"File","deleted":false,"children":[]},{"id":"40288085511ad3e801511cb919790000","description":"d","createTime":1447885871000,"updateTime":1447888282000,"name":"d","level":1,"leaf":true,"parent_id":"0","data_id":"18","dataType":"File","deleted":false,"children":[]},{"id":"40288085511cbdaf01511cc05f240000","description":"this is asdffffd folder","createTime":1447886348000,"updateTime":1447986846000,"name":"asdffffd","level":1,"leaf":false,"parent_id":"0","data_id":"0","dataType":"Folder","deleted":false,"children":[{"id":"40288085511cc5c301511cdf03c70000","description":"","createTime":1447888356000,"updateTime":1447951787000,"name":"testcreattime","level":2,"leaf":true,"parent_id":"40288085511cbdaf01511cc05f240000","data_id":"19","dataType":"File","deleted":false,"children":[]},{"id":"40288085511d2d8101511d2eb7cc0000","description":"ddd","createTime":1447893580000,"updateTime":1447894160000,"name":"dddd","level":2,"leaf":false,"parent_id":"40288085511cbdaf01511cc05f240000","data_id":"0","dataType":"Folder","deleted":false,"children":[]},{"id":"40288085511d2d8101511d2ecf580001","description":"sssddd","createTime":1447893586000,"updateTime":1447893586000,"name":"ddddwww","level":2,"leaf":false,"parent_id":"40288085511cbdaf01511cc05f240000","data_id":"0","dataType":"Folder","deleted":false,"children":[]},{"id":"40288085511d2d8101511d2ee0b90002","description":"sssdddqqw","createTime":1447893590000,"updateTime":1447893674000,"name":"ddddwwwaaq","level":2,"leaf":false,"parent_id":"40288085511cbdaf01511cc05f240000","data_id":"0","dataType":"Folder","deleted":false,"children":[]}]}]}];
     $scope.menu = {};
+    $scope.thisFolder = {"id":"40288085511cbdaf01511cc05f240000","description":"this is asdffffd folder","createTime":1447886348000,"updateTime":1447986846000,"name":"asdffffd","level":1,"leaf":false,"parent_id":"0","data_id":"0","dataType":"Folder","deleted":false,"children":[{"id":"40288085511cc5c301511cdf03c70000","description":"","createTime":1447888356000,"updateTime":1447951787000,"name":"testcreattime","level":2,"leaf":true,"parent_id":"40288085511cbdaf01511cc05f240000","data_id":"19","dataType":"File","deleted":false,"children":[]},{"id":"40288085511d2d8101511d2eb7cc0000","description":"ddd","createTime":1447893580000,"updateTime":1447894160000,"name":"dddd","level":2,"leaf":false,"parent_id":"40288085511cbdaf01511cc05f240000","data_id":"0","dataType":"Folder","deleted":false,"children":[]},{"id":"40288085511d2d8101511d2ecf580001","description":"sssddd","createTime":1447893586000,"updateTime":1447893586000,"name":"ddddwww","level":2,"leaf":false,"parent_id":"40288085511cbdaf01511cc05f240000","data_id":"0","dataType":"Folder","deleted":false,"children":[]},{"id":"40288085511d2d8101511d2ee0b90002","description":"sssdddqqw","createTime":1447893590000,"updateTime":1447893674000,"name":"ddddwwwaaq","level":2,"leaf":false,"parent_id":"40288085511cbdaf01511cc05f240000","data_id":"0","dataType":"Folder","deleted":false,"children":[]}]}
 
     var folderMenu = {
         all: [{name: 'Edit', url: 'dashboard/folder_edit.html', selected: true}, {
@@ -10,7 +15,10 @@ app.controller('FormFolderTreeController', ['$scope', '$filter', 'FolderService'
         }, {name: 'Questions', url: 'dashboard/folder_questions.html'}, {
             name: 'Flows',
             url: 'dashboard/folder_flow.html'
-        }], selectedMenu: {}
+        },
+            {name:'Customized Element',url:'dashboard/folder_customized_element.html'}
+
+        ], selectedMenu: {}
     };
 
     var fileMenu = {
@@ -57,8 +65,6 @@ app.controller('FormFolderTreeController', ['$scope', '$filter', 'FolderService'
             $scope.loadFolder($scope.modelTree.currentNode);
         }
     }, false);
-
-    $scope.thisFolder = {};
 
     $scope.loadFolderTree = function () {
         $scope.startSpin();

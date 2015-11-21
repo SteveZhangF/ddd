@@ -1,4 +1,5 @@
-app.controller("UserDocumentStartController", ['$scope', function ($scope) {
+app.controller("UserDocumentStartController", ['$scope', '$timeout', function ($scope, $timeout) {
+
     $scope.flows = [
         {
             name: "company information",
@@ -6,10 +7,6 @@ app.controller("UserDocumentStartController", ['$scope', function ($scope) {
             url: "user/company_edit.html"
         },
 
-        {
-            name: 'employment configuration',
-            description: 'Next, we are going to config some fields for the employment information'
-        },
         {
             name: 'employment statuses',
             description: 'Try to add some employment statuses for your company, such as Full Time, Part Time.etc ',
@@ -31,26 +28,88 @@ app.controller("UserDocumentStartController", ['$scope', function ($scope) {
             url: 'user/document_company_question.html'
         },
         {
-            name:'logs',
-            description:'Next we will go to config the logs',
-            url:'user/records_config.html'
-        },{
-            name:'Done',
-            description:'Congratulations! you have finished all the questions and settings, Now you can click \'View Document\' to view all the generated documents'
+            name: 'logs',
+            description: 'Next we will go to config the logs',
+            url: 'user/records_config.html'
+        }, {
+            name: 'Done',
+            description: 'Congratulations! you have finished all the questions and settings, Now you can click \'View Document\' to view all the generated documents'
         }
 
     ];
+
+    $scope.eventShowing = {prev: {}, now: {}, next: {}};
+
+    $scope.eventsAll = [];
+
+    angular.forEach($scope.flows, function (item) {
+        var event = {badgeClass: 'info', badgeIconClass: 'glyphicon-check'};
+        event.title = item.name;
+        event.content = item.description;
+        event.url = item.url;
+        $scope.eventsAll.push(event);
+    });
+//main-flow-saved',{step:1}
+
+    $scope.$on('main-flow-saved', function (event, args) {
+        console.log(args);
+        var func = args.func;
+        var stepNow = $scope.eventsAll[args.step - 1];
+        if (typeof args.func === 'function') {
+            args.func($scope.next);
+        }
+    });
+
+    $scope.Math = window.Math;
     $scope.flowIndex = 0;
-    $scope.nowFlow = $scope.flows[$scope.flowIndex];
-    $scope.next = function () {
-        $scope.flowIndex = $scope.flowIndex + 1;
-        console.log($scope.flowIndex);
-        $scope.nowFlow = $scope.flows[$scope.flowIndex];
+    $scope.prevFlowIndex = -1;
+    $scope.Y_offset = 0;
+    $scope.goNextStep = function () {
+        if ($scope.flowIndex < $scope.eventsAll.length - 1) {
+            $scope.Y_offset += ($(angular.element('ul.timeline').children()[$scope.flowIndex]).height() +20)       * (-1);
+            var css3transition = dom.cssName("transition");
+            $(angular.element('ul.timeline').children())
+                .css(css3transition, 'all 1s ease-in').css('transform', 'translate(0px,' + $scope.Y_offset + 'px)')
+            $scope.prevFlowIndex = $scope.flowIndex;
+
+            $scope.flowIndex++;
+        }
     };
-    $scope.prev = function () {
-        $scope.flowIndex = $scope.flowIndex - 1;
-        $scope.nowFlow = $scope.flows[$scope.flowIndex];
+
+    var dom = function (s) {
+        return document.getElementById(s)
     };
+
+    dom.cssName = function (name) {
+        var prefixes = ['', '-ms-', '-moz-', '-webkit-', '-khtml-', '-o-'],
+            rcap = /-([a-z])/g, capfn = function ($0, $1) {
+                return $1.toUpperCase();
+            };
+        dom.cssName = function (name, target, test) {
+            target = target || document.documentElement.style;
+            for (var i = 0, l = prefixes.length; i < l; i++) {
+                test = (prefixes[i] + name).replace(rcap, capfn);
+                if (test in target) {
+                    return test;
+                }
+            }
+            return null;
+        };
+        return dom.cssName(name);
+    };
+
+    $scope.goPrevStep = function () {
+        if ($scope.flowIndex > 0) {
+            var offset = $(angular.element('ul.timeline').children()[$scope.flowIndex-1]).height()+20
+            console.log(offset);
+            $scope.Y_offset += offset;
+            $(angular.element('ul.timeline').children()).css('transform', 'translate(0px,' + $scope.Y_offset + 'px)');
+            angular.element('ul.timeline').children().y += 100;
+            $scope.prevFlowIndex = $scope.flowIndex;
+            $scope.flowIndex--;
+        }
+    };
+    //$scope.next();
 }]);
 
 app.controller('UserDocumentCompanyQuestionController', ['$scope', 'UserWorkFlowService', 'LoginService', 'UserQuestionService', 'EmployeeService', 'FileUploader', function ($scope, UserWorkFlowService, LoginService, UserQuestionService, EmployeeService, FileUploader) {
@@ -121,9 +180,9 @@ app.controller('UserDocumentCompanyQuestionController', ['$scope', 'UserWorkFlow
                 break;
             }
         }
-        if(next==''){
+        if (next == '') {
             $scope.finish();
-        }else{
+        } else {
             $scope.goToNode(next);
         }
     };
@@ -146,10 +205,10 @@ app.controller('UserDocumentCompanyQuestionController', ['$scope', 'UserWorkFlow
     $scope.finish = function () {
         var node_id = $scope.workFlows_currentNode[$scope.workFlows[$scope.currentWorkFlowIndex]];
         $scope.goToNode(node_id);
-        if(!!node_id){
+        if (!!node_id) {
             $scope.getCurrentNode(node_id);
             $scope.currentWorkFlowIndex++;
-        }else{
+        } else {
             $scope.question_finish = true;
         }
         console.log($scope.currentWorkFlowIndex + "Finish");
