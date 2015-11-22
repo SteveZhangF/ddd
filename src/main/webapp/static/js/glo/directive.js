@@ -3,6 +3,32 @@
     'use strict';
 
     angular.module('customizedDirective', [])
+        .directive('plusDiv', function ($q, $timeout) {
+            return {
+                restrict: 'AE',
+                replace: 'true',
+                scope: {
+                    mouseClickEvent: '=',
+                    mouseClickParam:'='
+                },
+                template: '<div class="plus plus-mouse-out" id="plus" ng-mouseover="mouseOver()" ng-click="mouseClick()" ng-mouseleave="mouseOut()"></div>',
+                link: function (scope, elm, attrs) {
+                    scope.mouseOver = function () {
+                        elm.addClass('plus-mouse-over');
+                        elm.removeClass('plus-mouse-out');
+                    }
+                    scope.mouseOut = function () {
+                        elm.removeClass('plus-mouse-over');
+                        elm.addClass('plus-mouse-out');
+                    }
+                    scope.mouseClick = function () {
+                        if (typeof (scope.mouseClickEvent) === "function") {
+                            scope.mouseClickEvent(scope.mouseClickParam);
+                        }
+                    }
+                }
+            };
+        })
         .directive('username', function ($q, $timeout) {
             return {
                 link: function (scope, elm, attrs, ctrl) {
@@ -608,17 +634,17 @@
                 restrict: 'AE',
                 transclude: true,
                 scope: {
-                    index:'@',
-                    nowStep:'='
+                    index: '@',
+                    nowStep: '='
                 },
                 template: '<li ng-transclude></li>',
-                link: function (scope, element, attr,timeline) {
+                link: function (scope, element, attr, timeline) {
                     scope.$watch('nowStep', function () {
-                        if(scope.index != scope.nowStep){
+                        if (scope.index != scope.nowStep) {
                             console.log(scope.index);
                             angular.element(element).children('li').addClass('bounce-in-up');
                             angular.element(element).children('li').removeClass('bounce-in-down');
-                        }else{
+                        } else {
                             angular.element(element).children('li').addClass('bounce-in-down');
                             angular.element(element).children('li').removeClass('bounce-in-up');
                         }

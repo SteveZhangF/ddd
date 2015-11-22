@@ -5697,6 +5697,11 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:hover, a.list-g
 .panel-default > .panel-footer + .panel-collapse > .panel-body {
     border-bottom-color: #ddd
 }
+.panel-footer {
+    color: #333;
+    background-color: #fff;
+    border-color: #ddd;
+}
 
 .panel-primary > .panel-heading {
     color: #fff;

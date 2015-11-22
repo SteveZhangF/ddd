@@ -38,6 +38,8 @@ public class CustomizedElement {
     @Column(name = "id", nullable = false)
     private String id;
     private String name;
+    @Lob
+    @Column(columnDefinition = "BLOB")
     private String description;
     private Timestamp createTime;
     private Timestamp updateTime;

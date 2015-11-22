@@ -47,7 +47,7 @@ public class Question {
 
     @Lob
     @Column(columnDefinition = "BLOB")
-    private String content;// how to the question looks like
+    private String content;// how the question looks like
 
     @OneToMany(cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)

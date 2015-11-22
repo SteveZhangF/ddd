@@ -5,7 +5,8 @@ app.controller('UserConfigController', ['$scope', function ($scope) {
         {name: 'Account Config', url: 'user/account_config.html', selected: true},
         {name: 'Job Titles', url: 'user/job_title_config.html', selected: false},
         {name: 'Employment Status', url: 'user/job_employment_status_config.html', selected: false},
-        {name: 'Records', url: 'user/records_config.html', selected: false}
+        {name: 'Records', url: 'user/records_config.html', selected: false},
+        {name: 'Equipment', url: 'user/customized_element_menu.html', selected: false}
     ];
     $scope.selectedMenu = $scope.menus[0];
     $scope.menuSelect = function (menu) {

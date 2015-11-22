@@ -1,0 +1,44 @@
+.plus {
+
+    position: absolute;
+
+    width: 150px;
+    height: 150px;
+
+    top: 50%;
+    left: 50%;
+
+    margin-left: -75px;
+    margin-top: -75px;
+
+    border: silver 1px dashed
+
+}
+
+.plus::before, .plus::after {
+
+    position: absolute;
+
+    background-color: silver;
+
+    content: ""
+
+}
+
+.plus::before {
+
+    width: 75px;
+    height: 25px;
+    top: 62.5px;
+    left: 37.5px;
+
+}
+
+.plus::after {
+
+    width: 25px;
+    height: 75px;
+    left: 62.5px;
+    top: 37.5px;
+
+}

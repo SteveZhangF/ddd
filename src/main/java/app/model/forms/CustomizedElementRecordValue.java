@@ -13,20 +13,21 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
 /**
- * Created by steve on 11/21/15.
+ * Created by steve on 11/22/15.
  */
 @Entity
-public class CustomizedElementField {
+@Table
+public class CustomizedElementRecordValue {
     @Id
     @GeneratedValue(generator = "idGenerator")
     @GenericGenerator(name = "idGenerator", strategy = "uuid")
     @Column(name = "id", nullable = false)
     private String id;
-    private String name;
+    @ManyToOne
+    private CustomizedElementField customizedElementField;
     @Lob
     @Column(columnDefinition = "BLOB")
-    private String description;
-    private CustomizedElementFieldType type;
+    private String value;
 
     public String getId() {
         return id;
@@ -36,30 +37,19 @@ public class CustomizedElementField {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public CustomizedElementField getCustomizedElementField() {
+        return customizedElementField;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCustomizedElementField(CustomizedElementField customizedElementField) {
+        this.customizedElementField = customizedElementField;
     }
 
-    public String getDescription() {
-        return description;
+    public String getValue() {
+        return value;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public CustomizedElementFieldType getType() {
-        return type;
-    }
-
-    public void setType(CustomizedElementFieldType type) {
-        this.type = type;
-    }
-    enum CustomizedElementFieldType {
-        String, Number, Date
+    public void setValue(String value) {
+        this.value = value;
     }
 }
