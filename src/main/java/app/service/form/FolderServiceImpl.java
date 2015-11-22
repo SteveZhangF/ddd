@@ -85,7 +85,7 @@ public class FolderServiceImpl extends BaseGenericServiceImpl<Folder, String> im
             if (child.getDataType() == null) {
                 child.setDataType(Folder.FolderDataType.Folder);
             }
-            if (child.getDataType().equals(Folder.FolderDataType.Question) || child.getDataType().equals(Folder.FolderDataType.WorkFlow))
+            if (child.getDataType().equals(Folder.FolderDataType.CustomizedElement)||child.getDataType().equals(Folder.FolderDataType.Question) || child.getDataType().equals(Folder.FolderDataType.WorkFlow))
                 continue;
             children.add(getAllFoldersForTree(child.getId()));
         }
