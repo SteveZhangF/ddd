@@ -137,6 +137,6 @@ public class Folder {
     }
 
     public enum FolderDataType{
-        Question,WorkFlow,File,Folder
+        Question,WorkFlow,File,Folder,CustomizedElement
     }
 }

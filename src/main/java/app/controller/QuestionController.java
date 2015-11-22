@@ -37,7 +37,6 @@ public class QuestionController {
             questionService.setPluginId(question);
         }catch (Exception e){
             e.printStackTrace();
-            return  new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
         return new ResponseEntity<>(question,HttpStatus.OK);
     }

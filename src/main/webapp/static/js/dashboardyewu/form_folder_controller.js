@@ -730,7 +730,8 @@ app.factory('FolderService', ['$http', '$q', function ($http, $q) {
                     return $q.reject(err);
                 }
             );
-        }
+        },
+
     };
 
 }]);

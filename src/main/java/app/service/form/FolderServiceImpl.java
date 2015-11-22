@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by steve on 11/16/15.
@@ -178,6 +179,15 @@ public class FolderServiceImpl extends BaseGenericServiceImpl<Folder, String> im
         List<Folder> list = folderDao.getListbyParams(map);
         if (list.size() == 0) return null;
         else
-        return folderDao.getListbyParams(map).get(0);
+            return folderDao.getListbyParams(map).get(0);
+    }
+
+    @Override
+    public List<Folder> listCustomizedNodeBasedOnFolderId(String id) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("parent_id", id);
+        map.put("dataType", Folder.FolderDataType.CustomizedElement);
+        map.put("deleted", false);
+        return folderDao.getListbyParams(map);
     }
 }

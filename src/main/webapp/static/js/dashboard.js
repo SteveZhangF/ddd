@@ -3,7 +3,7 @@
 var app = angular.module('dashboardApp', ['ngRoute', 'ui.bootstrap', 'ngDialog', 'customizedDirective', 'smart-table', 'froala', 'angularSpinner', 'angularjs-dropdown-multiselect']);
 
 // add an interceptor to add the token to the request head
-var debug = false;
+var debug = true;
 var redirect = function ($location) {
     if (!debug) {
         $location.path('/login');
