@@ -7,7 +7,7 @@
     </ul>
 
     <!-- Tab panes -->
-    <div class="tab-content" ng-init="loadCustomizedElementMenus">
+    <div class="tab-content" ng-init="loadCustomizedElementMenus()">
         <div role="tabpanel" class="tab-pane active"
              id="editor">
             <div class="conter-wrapper ng-scope">
@@ -42,7 +42,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="panel-footer">
+                            <div class="panel-footer" ng-show="col.editing">
                                 <button class="btn btn-info" ng-click="saveRecord(col)">Save</button>
                                 <button class="btn btn-default" ng-click="col.editing = false">Cancel</button>
                             </div>
