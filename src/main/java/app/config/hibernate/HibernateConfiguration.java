@@ -70,7 +70,7 @@ public class HibernateConfiguration {
             basicDataSource.setPassword(password);
             basicDataSource.setInitialSize(8);
             basicDataSource.setMaxIdle(20);
-            basicDataSource.setMinIdle(0);
+            basicDataSource.setMinIdle(5);
 //            <property name="hibernate.dbcp.initialSize">8</property>
 //            <property name="hibernate.dbcp.maxActive">20</property>
 //            <property name="hibernate.dbcp.maxIdle">20</property>
