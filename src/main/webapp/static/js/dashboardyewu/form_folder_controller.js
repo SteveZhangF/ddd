@@ -558,11 +558,13 @@ app.controller('FolderQuestionController', ['$scope', 'QuestionService', 'Folder
             FolderService.deleteSelectFolders(selected).then(
                 function (data) {
                     $scope.stopSpin(true, 'delete questions success');
-                    $scope.loadFolderTree();
+                    $scope.loadAllQuestionNodes();
+
                 },
                 function (err) {
                     $scope.stopSpin(false, 'delete questions failed, please try later');
-                    $scope.loadFolderTree();
+                    $scope.loadAllQuestionNodes();
+
                 }
             );
         }
@@ -661,6 +663,10 @@ app.factory('FolderService', ['$http', '$q', function ($http, $q) {
                     return $q.reject(errResponse);
                 }
             );
+        },
+
+        updateQuestion: function (id,question) {
+
         },
 
         deleteSelectFolders: function (ids) {
