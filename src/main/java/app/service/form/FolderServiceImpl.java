@@ -126,6 +126,7 @@ public class FolderServiceImpl extends BaseGenericServiceImpl<Folder, String> im
     public Folder addSubFolder(Folder folder, Folder parent) {
         folder.setLeaf(false);
         folder.setDataType(Folder.FolderDataType.Folder);
+        folder.setData_id("0");
         folder.setLevel(parent.getLevel() + 1);
         folder.setParent_id(parent.getId());
         save(folder);

@@ -17,6 +17,17 @@ app.factory('LogInData', function () {
 });
 
 
+
+
+
+
+
+
+
+
+
+
+
 // add an interceptor to add the token to the request head
 app.config(['$httpProvider', function ($httpProvider) {
     $httpProvider.interceptors.push(['$q', '$location', '$window', function ($q, $location, $window) {
