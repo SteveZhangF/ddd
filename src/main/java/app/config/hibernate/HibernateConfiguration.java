@@ -1,7 +1,7 @@
 package app.config.hibernate;
 
 
-import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -38,6 +38,7 @@ public class HibernateConfiguration {
     }
 
     String env;
+
     @Bean
     public DataSource dataSource() throws URISyntaxException {
 //        DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -47,15 +48,19 @@ public class HibernateConfiguration {
 //        dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
         env = System.getenv("CLEARDB_DATABASE_URL");
         if (env == null) {
-            DriverManagerDataSource dataSource = new DriverManagerDataSource();
-            dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
-            dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
-            dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
-            dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
-            return dataSource;
+
+
+            BasicDataSource basicDataSource = new BasicDataSource();
+
+
+            basicDataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
+            basicDataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
+            basicDataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
+            basicDataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
+            basicDataSource.setInitialSize(8);
+            return basicDataSource;
         } else {
             URI dbUri = new URI(env);
-            System.out.println(dbUri);
             String username = dbUri.getUserInfo().split(":")[0];
             String password = dbUri.getUserInfo().split(":")[1];
             String dbUrl = "jdbc:mysql://" + dbUri.getHost() + dbUri.getPath();
@@ -63,6 +68,10 @@ public class HibernateConfiguration {
             basicDataSource.setUrl(dbUrl);
             basicDataSource.setUsername(username);
             basicDataSource.setPassword(password);
+            basicDataSource.setInitialSize(8);
+            basicDataSource.setMaxIdle(20);
+            basicDataSource.setMinIdle(0);
+            basicDataSource.setMaxWaitMillis(30000);
             return basicDataSource;
         }
 
@@ -70,21 +79,19 @@ public class HibernateConfiguration {
 
     private Properties hibernateProperties() {
         Properties properties = new Properties();
-        if(env==null){
+        if (env == null) {
             properties.put("hibernate.dialect", environment.getRequiredProperty("hibernate.dialect"));
         }
 //        properties.put("hibernate.show_sql", environment.getRequiredProperty("hibernate.show_sql"));
 //        properties.put("hibernate.format_sql", environment.getRequiredProperty("hibernate.format_sql"));
 
-        //  properties.put("hibernate.hdm2ddl.auto", environment.getRequiredProperty("hibernate.hdm2ddl.auto"));
+//        <property name="hibernate.dbcp.initialSize">8</property>
+//        <property name="hibernate.dbcp.maxActive">20</property>
+//        <property name="hibernate.dbcp.maxIdle">20</property>
+//        <property name="hibernate.dbcp.minIdle">0</property>
+
+
         properties.put("hibernate.hbm2ddl.auto", "update");
-//        <beans:prop key="maxwait">10000</beans:prop>
-//        <beans:prop key="maxidle">25</beans:prop>
-//        <beans:prop key="minidle">5</beans:prop>*
-        properties.put("maxwait",10000);
-        properties.put("maxidle",25);
-        properties.put("minidle",5);
-//        System.out.println(environment.getRequiredProperty("hibernate.hdm2ddl.auto"));
         return properties;
     }
 
