@@ -78,6 +78,12 @@ public class HibernateConfiguration {
 
         //  properties.put("hibernate.hdm2ddl.auto", environment.getRequiredProperty("hibernate.hdm2ddl.auto"));
         properties.put("hibernate.hbm2ddl.auto", "update");
+//        <beans:prop key="maxwait">10000</beans:prop>
+//        <beans:prop key="maxidle">25</beans:prop>
+//        <beans:prop key="minidle">5</beans:prop>*
+        properties.put("maxwait",10000);
+        properties.put("maxidle",25);
+        properties.put("minidle",5);
 //        System.out.println(environment.getRequiredProperty("hibernate.hdm2ddl.auto"));
         return properties;
     }
