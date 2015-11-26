@@ -381,11 +381,11 @@ app.controller('UserDocumentCompanyQuestionControllerForTree', ['$scope', 'UserF
         var finish = 0;
         var normal = 0;
         for (var i = 0; i < nodes.length; i++) {
-            if (node[i].record.value && node[i].record.value != '') {
-                finish = finish + 1;
-            }
             if (nodes[i].type == 'Normal') {
                 normal = normal + 1;
+            }else
+            if (nodes[i].record.value && nodes[i].record.value != '') {
+                finish = finish + 1;
             }
         }
         return finish / (nodes.length - normal);
