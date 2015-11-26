@@ -8,6 +8,7 @@
 
 package app.controller;
 
+import app.message.Message;
 import app.model.wordflow.WorkFlow;
 import app.service.userworkflow.UserWorkFlowService;
 import app.service.workflow.WorkFlowService;
@@ -73,14 +74,15 @@ public class WorkFlowController {
         }
     }
 
-    @Autowired
-    UserWorkFlowService userWorkFlowService;
 
-    @RequestMapping(value = "/workflow/detail/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<WorkFlow> updateWorkFlowDetail(@PathVariable("id") String id, @RequestBody WorkFlow worfFlow) {
+    @RequestMapping(value = "/admin/workflow/detail/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Message> updateWorkFlowDetail(@PathVariable("id") String id, @RequestBody WorkFlow worfFlow) {
+        if(workFlowService.get(id)==null){
+            return new ResponseEntity<>(Message.getFailMsg("flow not found"),HttpStatus.OK);
+        }
         workFlowService.update(worfFlow);
-        userWorkFlowService.deleteUWFbyWF(worfFlow.getId());
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(Message.getSuccessMsg("flow not found",worfFlow),HttpStatus.OK);
+
     }
 
     //------------------- Delete a wf --------------------------------------------------------

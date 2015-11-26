@@ -1,4 +1,4 @@
-<div ng-controller="FolderFlowController">
+<div ng-controller="FileFlowController as controller">
 
     <ul class="nav nav-tabs ">
         <li class="{{toolbarShowing==0?'active':''}}">
@@ -10,8 +10,8 @@
         <li><a ng-click="saveFlow()">Save</a></li>
         <li><a ng-click="resetFlow()">Cancel</a></li>
     </ul>
-    <div id="container" class="row">
-        <div id="tool-bar" class="col-md-2" ng-init="initMenu()">
+    <div id="container" class="row" cg-busy="flowEditPromise">
+        <div id="tool-bar" class="col-md-2">
             <hover-code hover-coder="hoverCode">
                 <preview-question question="menuNodes.previewNode"></preview-question>
             </hover-code>
@@ -44,9 +44,9 @@
         </div>
 
         <div id="item-container" class="col-md-10  drop-container" droppable>
-            {{schema}}
-            <div plumb-item class="item" ng-repeat="module in schema.all" node-id="{{module.id}}"
-                 ng-dblclick="removeNode(module)" ng-style="{ 'left':module.x, 'top':module.y }">
+            {{controller.schema}}
+            <div schema="controller.schema" plumb-item class="item" ng-repeat="module in controller.schema.all" node-id="{{module.id}}"
+                 ng-dblclick="removeNode(module,controller.schema.all)" ng-style="{ 'left':module.x, 'top':module.y }">
                 <div class="title">{{module.name}}</div>
                 {{module.data.description}}
                 <div plumb-connect class="connect"></div>
@@ -57,7 +57,7 @@
     <script type="text/ng-template" id="connect-editor.html">
         <form>
             <select class="form-control" ng-model="connectingSourceNode.selectedOption">
-                <option ng-repeat="option in connectingSourceNode.node.data.options" value="{{option.value}}">
+                <option ng-repeat="option in connectingSourceNode.node.data.options" value="{{option.name}}">
                     {{option.name}}
                 </option>
             </select>

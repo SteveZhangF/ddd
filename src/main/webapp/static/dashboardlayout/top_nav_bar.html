@@ -10,16 +10,22 @@
 
 
         <ul class="nav navbar-nav pull-right" ng-controller="LoginController">
-            <li><a href="#/login"  ng-show="!isLoginedIn()" ><span>Login</span></a></li>
-            <li><a href="" ng-click="logout()" ng-show="isLoginedIn()" ><span>Log out</span></a></li>
+            <li><a href="#/login" ng-show="!isLoginedIn()"><span>Login</span></a></li>
+            <li><a href="" ng-click="logout()" ng-show="isLoginedIn()"><span>Log out</span></a></li>
         </ul>
     </nav>
 </div>
 
+<growl-notifications ng-controller="MessageController">
+
+    <growl-notification class=" fade-in ng-scope" ng-class="{'growl-error':msg.title=='FAIL','growl-info':msg.title=='SUCCESS'}" ng-repeat="msg in messages"><a href="javascript:;"
+                                                                            class="close"><i
+            class="fa fa-times"></i></a>{{msg.description}}
+    </growl-notification>
+
+</growl-notifications><!-- end navbar -->
+
 <!-- end navbar -->
-
-
-
 
 
 

@@ -1,5 +1,6 @@
 package app.controller;
 
+import app.message.Message;
 import app.model.report.Question;
 import app.model.report.Record;
 import app.service.form.FormService;
@@ -43,7 +44,7 @@ public class UserFormController {
 
     // return the records which related to the given question id based on userid, oeid(companyid)
     @RequestMapping(value = "/user/form/record/{user_id}/{oe_id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Record>> getFormContentWithRecord(@PathVariable("user_id") int user_id,
+    public ResponseEntity<Message> getFormContentWithRecord(@PathVariable("user_id") int user_id,
                                                                  @PathVariable("oe_id") String oe_id, @RequestBody String[] questionids) {
         List<Record> records = new ArrayList<>();
         for (String qid : questionids) {
@@ -56,7 +57,7 @@ public class UserFormController {
                 records.add(list.get(0));
             }
         }
-        return new ResponseEntity<>(records, HttpStatus.OK);
+        return new ResponseEntity<>(Message.getSuccessMsg("Load records success",records), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/user/form/questions/{form_id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

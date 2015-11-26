@@ -302,5 +302,4 @@ app.controller('UserDocumentCompanyQuestionController', ['$scope', 'UserWorkFlow
         height: '100%',
         width: '100%'
     };
-
 }]);

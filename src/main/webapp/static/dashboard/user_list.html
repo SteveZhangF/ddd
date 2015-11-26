@@ -2,17 +2,14 @@
     <div class="panel panel-primary">
         <div class="panel-heading">
             <span class="lead">User List </span>
-            <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="user-list-spinner"></span>
         </div>
         <div class="panel-body">
-            <div class="alert alert-danger" role="alert" ng-show="errorMsg.hasError && errorMsg.isError">{{errorMsg.msg}}</div>
-            <div class="alert alert-success" role="alert" ng-show="errorMsg.hasError && !errorMsg.isError">{{errorMsg.msg}}!</div>
-            <div class="well">
+            <div cg-busy="userListPromise" class="well">
                 <table st-table="usersDisplay" st-safe-src="users" class="table table-striped">
                     <thead>
                     <tr>
                         <th><label>
-                            <input type="checkbox" ng-model="selectedAll" ng-click="selectAll()">
+                            <input type="checkbox" ng-model="selectedAllUsers" ng-click="selectAllUsers()">
                         </label></th>
                         <th st-sort="{{$index}}">Index</th>
                         <th st-sort="ssoId">Name</th>
@@ -26,7 +23,7 @@
                     <tbody>
                     <tr ng-repeat-start="x in usersDisplay">
                         <td><label>
-                            <input type="checkbox" ng-model="x.selected" ng-change="select()">
+                            <input type="checkbox" ng-model="x.selected" ng-change="selectUser()">
                         </label></td>
                         <td>{{ $index + 1 }}</td>
                         <td><a href="" ng-click="editUser(x)">{{x.ssoId}}</a></td>

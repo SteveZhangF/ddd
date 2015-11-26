@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('clientApp', ['ngRoute', 'ui.bootstrap',  'angularFileUpload', 'customizedDirective', 'smart-table', 'ngDialog', 'angularSpinner']);
+var app = angular.module('clientApp', ['ngRoute', 'ui.bootstrap','ngAnimate' , 'angularFileUpload', 'customizedDirective', 'smart-table', 'ngDialog', 'angularSpinner','cgBusy']);
 var debug = false;
 var redirect = function ($location) {
     console.log('debug:true');
@@ -15,19 +15,6 @@ app.factory('LogInData', function () {
         userInfo: null
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
 // add an interceptor to add the token to the request head
 app.config(['$httpProvider', function ($httpProvider) {
     $httpProvider.interceptors.push(['$q', '$location', '$window', function ($q, $location, $window) {
@@ -216,3 +203,56 @@ app.directive('ngAutocomplete', function ($parse) {
         }
     };
 });
+
+
+// used to handle all the recieved message from server, and show the related tusi
+app.service('MessageService', ['$rootScope',
+    function ($rootScope) {
+        return {
+            handleMsg: function (message) {
+                $rootScope.$broadcast('message-received', message);
+                return message.content;
+            },
+            handleServerErr: function (err) {
+                $rootScope.$broadcast('server-error-received', err);
+            }
+        }
+    }]);
+app.controller("MessageController", ['$scope', '$interval', function ($scope, $interval) {
+    $scope.$on('message-received', function (event, args) {
+        addMessage(args);
+    });
+    $scope.$on('server-error-received', function (event, args) {
+        addError(args);
+    });
+
+    $scope.messages = [];
+    var msg = {
+        title: "",
+        description: '',
+        content: {}
+    };
+    var error = {
+        status: '',
+        statusText: ''
+
+    };
+    var addMessage = function (msg) {
+        $scope.messages.push(msg);
+    };
+    var addError = function (error) {
+        console.log('00000');
+        var msgError = {
+            title: 'FAIL',
+            description: "Server Error "+error.status +  " -x> " + error.statusText
+        };
+        $scope.messages.push(msgError);
+        console.log(msgError)
+    };
+
+    $interval(function () {
+        if($scope.messages.length>0){
+            $scope.messages.splice(0,1);
+        }
+    }, 2000);
+}]);

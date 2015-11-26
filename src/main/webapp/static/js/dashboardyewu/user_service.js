@@ -5,29 +5,18 @@ app.factory('UserService', ['$http', '$q', function ($http, $q) {
     return {
 
         fetchAllUsers: function () {
-            return $http.get('/user/')
+            return $http.get('/admin/user/')
                 .then(
                 function (response) {
                     return response.data;
                 },
                 function (errResponse) {
-                    console.error('Error while fetching users');
                     return $q.reject(errResponse);
                 }
             );
         },
-        updateUserWorkflow : function (id,workflows) {
-            return $http.post('/user/'+id,workflows).then(
-                function (response) {
-                    alert("success");
-                },
-                function (errResponse) {
-                    alert("failed, please try later");
-                }
-            );
-        },
         createUser: function (user) {
-            return $http.post('/user/', user)
+            return $http.post('/admin/user/', user)
                 .then(
                 function (response) {
                     return response.data;
@@ -40,7 +29,7 @@ app.factory('UserService', ['$http', '$q', function ($http, $q) {
         },
 
         updateUser: function (user, id) {
-            return $http.put('/user/' + id, user)
+            return $http.put('/admin/user/' + id, user)
                 .then(
                 function (response) {
                     return response.data;
@@ -50,20 +39,20 @@ app.factory('UserService', ['$http', '$q', function ($http, $q) {
                     return $q.reject(errResponse);
                 }
             );
-        },
-
-        deleteUser: function (id) {
-            return $http.delete('/user/' + id)
-                .then(
-                function (response) {
-                    return response.data;
-                },
-                function (errResponse) {
-                    console.error('Error while deleting user');
-                    return $q.reject(errResponse);
-                }
-            );
         }
+
+        //deleteUser: function (id) {
+        //    return $http.delete('/user/' + id)
+        //        .then(
+        //        function (response) {
+        //            return response.data;
+        //        },
+        //        function (errResponse) {
+        //            console.error('Error while deleting user');
+        //            return $q.reject(errResponse);
+        //        }
+        //    );
+        //}
 
     };
 

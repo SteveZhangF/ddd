@@ -4,27 +4,27 @@
         top: 0;
     }
 </style>
-<div ng-controller="FileController">
+<div ng-controller="FileController" cg-busy="fileEditPromise">
 
     <div class="well">
         <div class="row">
             <label class="col-md-3">Name:
-                <input type="text" class="form-control" ng-model="editingFileNode.file.form_name">
+                <input type="text" class="form-control" ng-model="editingFileNode.name_">
             </label>
 
             <label class="col-md-3">Create Time:
                 <input type="text" class="form-control"
-                       value="{{editingFileNode.file.createTime | date:'yyyy-MM-dd HH:mm'}}" disabled>
+                       value="{{editingFileNode.createTime | date:'yyyy-MM-dd HH:mm'}}" disabled>
             </label>
 
             <label class="col-md-3">Last Update Time:
                 <input type="text" class="form-control"
-                       value="{{editingFileNode.file.updateTime | date:'yyyy-MM-dd HH:mm'}}" disabled>
+                       value="{{editingFileNode.updateTime | date:'yyyy-MM-dd HH:mm'}}" disabled>
             </label>
         </div>
         <div class="row">
             <label class="col-md-9">Description:
-                <textarea class="form-control" ng-model="editingFileNode.file.form_desc"></textarea>
+                <textarea class="form-control" ng-model="editingFileNode.description_"></textarea>
             </label>
         </div>
         <div class="row">
@@ -44,7 +44,7 @@
 
                 </div>
                 <hr>
-                <div class="list-group " style="width: 100%;max-height: 200px;min-height: 200px" scrollable>
+                <div cg-busy="questionsForFilePromise" class="list-group " style="width: 100%;max-height: 200px;min-height: 200px" scrollable>
                     <a href="" title="{{q.description}}" class="list-group-item " ng-class="q.selected?'active':''"
                        ng-repeat="q in questionsForFile | filter:search:strict" ng-click="selectQuestionForFile(q)">{{q.name}}</a>
                 </div>

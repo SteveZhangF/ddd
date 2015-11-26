@@ -55,12 +55,8 @@ div[data-tree-model] li .selected {
     padding: 1px 5px;
 }
 </style>
-
-
-<div ng-controller="DocumentViewTreeController" class="row">
-
-
-    <div class="well col-md-2">
+<div ng-controller="DocumentViewTreeController" class="row fade-in">
+    <div class="well col-md-2" cg-busy="userFolderTreePromise">
         <div
                 data-angular-treeview="true"
                 data-tree-id="folderTree"
@@ -73,24 +69,17 @@ div[data-tree-model] li .selected {
         </div>
     </div>
     <div class="col-md-10">
-        <div class="alert alert-success" ng-show="errorMsg.hasMsg && !errorMsg.isError">Success</div>
-        <div class="alert alert-danger" ng-show="errorMsg.hasMsg && errorMsg.isError">Fail! please try later</div>
-        <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="user-document-view-spinner"></span>
-
 
         <!--folder viewer-->
-        <div id="folder_view" ng-if="folderTree.currentNode.dataType=='Folder'">
-            <div ng-include="'user/document_company_question.html'"></div>
+        <div cg-busy="userViewFlowPromise" id="folder_view" ng-if="folderTree.currentNode.type=='FOLDER'">
+            <div ng-include="'user/document_company_question.html'" class="fade-in"></div>
         </div>
         <!--folder viewer end-->
 
-
-
-
         <!--file viewer-->
-        <div id="file_view" ng-if="folderTree.currentNode.dataType=='File'">
+        <div id="file_view" cg-busy="userViewFilePromise" class="fade-in" ng-if="folderTree.currentNode.type=='FILE'">
             <!--file preview-->
-            <div class="panel panel-primary" ng-if="!folderTree.currentNode.isEditing">
+            <div class="panel panel-primary fade-in" ng-if="!folderTree.currentNode.isEditing">
                 <div class="panel-heading">
                     <div class="row">
                         {{folderTree.currentNode.name}}
@@ -109,33 +98,28 @@ div[data-tree-model] li .selected {
                 </div>
             </div>
             <!--file editor-->
-            <div class="panel panel-primary" ng-if="folderTree.currentNode.isEditing">
-                <div class="panel-heading">{{folderTree.currentNode.name}}</div>
-                <div class="panel-body">
-                    <div ng-repeat="question in folderTree.currentNode.editingQuestions" class="well">
-                        <h4>{{question.name}}
-                        </h4>
-                        <hr>
+            <div ng-if="folderTree.currentNode.isEditing" cg-busy="questionAllPromise">
+                <div class="topToolBar"><button ng-click="saveAllQuestionValue(folderTree.currentNode.questions)" class="btn btn-default btn-sm">Save All</button></div>
+                <div cg-busy="folderTree.currentNode.questions[{{$index}}].promise" class="questionCard panel fade-in col-md-3"  ng-repeat="question in folderTree.currentNode.questions" >
+                    <div class="panel-heading">{{question.name}}</div>
+                    <div class="panel-body">
                         {{question.description}}
                         <div id="node-data-content">
-                            <div ng-switch="question.type">
+                            <div ng-switch="question.questionType">
                                 <select class="form-control" ng-switch-when="select" ng-model="question.value">
-                                    <option ng-repeat="opt in question.options" value="{{opt.value}}">{{opt.name}}
+                                    <option ng-repeat="opt in question.options" value="{{opt.name}}">{{opt.name}}
                                     </option>
                                 </select>
-                                <input class="form-control" ng-switch-when="text" type="text" ng-model="question.value">
+                                <input class="form-control" ng-switch-when="text" type="text"
+                                       ng-model="question.value">
                             <textarea class="form-control" ng-switch-when="textarea"
                                       ng-model="question.value"></textarea>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <button class="btn btn-sm btn-primary pull-right"
-                                    ng-click="saveQuestionValue(folderTree.currentNode.editingQuestions)">
-                                Save
-                            </button>
-                            <button class="btn btn-sm btn-danger pull-right" ng-click="cancelEditForm()">Cancel</button>
+                    <div class="panel-footer">
+                        <div class="panel-footer-buttons">
+                            <button class="btn btn-default btn sm" ng-click="saveQuestionValue(question)">Save</button>
                         </div>
                     </div>
                 </div>

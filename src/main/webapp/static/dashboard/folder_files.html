@@ -1,5 +1,4 @@
-
-<div ng-if="thisFolder.showFileEditor" >
+<div ng-if="thisFolder.showFileEditor">
     <div ng-include="'dashboard/folder_edit_file.html'"></div>
 </div>
 <div class="well" ng-if="!thisFolder.showFileEditor">
@@ -8,7 +7,7 @@
         <button class="btn btn-danger btn-sm" ng-click="deleteSelectedFolderOrFile()">Delete</button>
         <button class="btn btn-default pull-right btn-sm" ng-click="editFile()">Create New Form</button>
     </div>
-    <div ng-show="newFolder.editing">
+    <div ng-show="newFolder.editing" cg-busy="newFolderPromise">
         <label>Name:
         </label>
         <input ng-model="newFolder.name" class="form-control">
@@ -23,63 +22,68 @@
     </div>
 
     <hr>
-    <table st-table="childrenDisplay" st-safe-src="thisFolder.children" class="table table-striped">
-        <thead>
-        <tr>
-            <th><label>
-                <input type="checkbox" ng-model="thisFolder.selectedAllFolderOrFile" ng-click="selectAllFolderOrFile()">
-            </label></th>
-            <th st-sort="{{$index}}">Index</th>
-            <th st-sort="fileType">Type</th>
-            <th st-sort="name">Name</th>
-            <th st-sort="createTime">Create Time</th>
-            <th st-sort="updateTime">Update Time</th>
-            <th>
-                <select ng-model="itemPerPage" >
-                    <option selected>5</option>
-                    <option>10</option>
-                </select>Per page
-            </th>
-        </tr>
-        <tr>
-            <th colspan="5"><input st-search="" class="form-control" placeholder="search ..." type="text"/></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat-start="x in childrenDisplay">
-            <td><label>
-                <input type="checkbox" ng-model="x.selected" ng-change="selectFolderOrFile()">
-            </label></td>
-            <td>{{ $index + 1 }}</td>
-            <td>{{x.leaf?"File":"Folder"}}</td>
-            <td><a href="" ng-click="editFileOrFolder(x)">{{x.name}}</a></td>
-            <td>{{x.createTime  | date:'yyyy-MM-dd HH:mm'}}</td>
-            <td>{{x.updateTime  | date:'yyyy-MM-dd HH:mm'}}</td>
-        </tr>
-        <tr ng-repeat-end ng-show="x.editing">
-            <td colspan="5">
-                <form class="form-horizontal">
-                    <div>
-                        <label>Name:
-                        </label>
-                        <input ng-model="x.name" class="form-control">
-                        <label>Description:
-                        </label>
-                        <textarea ng-model="x.description" class="form-control"></textarea>
-                        <hr>
-                        <button class="btn btn-default" ng-click="saveFolder(x)">Save</button>
-                        <button class="btn btn-warning" ng-click="loadFolder({id:x.parent_id})">Cancel</button>
+    <div cg-busy="fileTablePromise">
+        <table st-table="childrenDisplay" st-safe-src="thisFolder.children" class="table table-striped">
+            <thead>
+            <tr>
+                <th><label>
+                    <input type="checkbox" ng-model="thisFolder.selectedAllFolderOrFile"
+                           ng-click="selectAllFolderOrFile()">
+                </label></th>
+                <th st-sort="{{$index}}">Index</th>
+                <th st-sort="fileType">Type</th>
+                <th st-sort="name">Name</th>
+                <th st-sort="createTime">Create Time</th>
+                <th st-sort="updateTime">Update Time</th>
+                <th>
+                    <select ng-model="itemPerPage">
+                        <option selected>5</option>
+                        <option>10</option>
+                    </select>Per page
+                </th>
+            </tr>
+            <tr>
+                <th colspan="5"><input st-search="" class="form-control" placeholder="search ..." type="text"/></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat-start="x in childrenDisplay" >
+                <td><label>
+                    <input type="checkbox" ng-model="x.selected" ng-change="selectFolderOrFile()">
+                </label></td>
+                <td>{{ $index + 1 }}</td>
+                <td>{{x.leaf?"File":"Folder"}}</td>
+                <td><a href="" ng-click="editFileOrFolder(x)">{{x.name}}</a></td>
+                <td>{{x.createTime | date:'yyyy-MM-dd HH:mm'}}</td>
+                <td>{{x.updateTime | date:'yyyy-MM-dd HH:mm'}}</td>
+            </tr>
+            <tr ng-repeat-end ng-show="x.editing">
+                <td colspan="5">
+                    <div cg-busy="updateFolderPromise">
+                        <form class="form-horizontal">
+                            <div>
+                                <label>Name:
+                                </label>
+                                <input ng-model="x.name_" class="form-control">
+                                <label>Description:
+                                </label>
+                                <textarea ng-model="x.description_" class="form-control"></textarea>
+                                <hr>
+                                <button class="btn btn-default" ng-click="saveFolder(x)">Save</button>
+                                <button class="btn btn-warning" ng-click="x.editing=false">Cancel</button>
+                            </div>
+                        </form>
                     </div>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-        <tfoot>
-        <tr>
-            <td colspan="8" class="text-center">
-                <div st-pagination="" st-items-by-page="itemPerPage" st-displayed-pages="7"></div>
-            </td>
-        </tr>
-        </tfoot>
-    </table>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="8" class="text-center">
+                    <div st-pagination="" st-items-by-page="itemPerPage" st-displayed-pages="7"></div>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
 </div>

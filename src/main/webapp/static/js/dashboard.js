@@ -1,9 +1,9 @@
 'use strict';
 
-var app = angular.module('dashboardApp', ['ngRoute', 'ui.bootstrap', 'ngDialog', 'customizedDirective', 'smart-table', 'froala', 'angularSpinner', 'angularjs-dropdown-multiselect']);
+var app = angular.module('dashboardApp', ['ngRoute','ngAnimate', 'ui.bootstrap', 'ngDialog', 'customizedDirective', 'cgBusy','smart-table', 'froala', 'angularSpinner', 'angularjs-dropdown-multiselect']);
 
 // add an interceptor to add the token to the request head
-var debug = false;
+var debug = true;
 var redirect = function ($location) {
     if (!debug) {
         $location.path('/login');
@@ -108,25 +108,55 @@ app.filter('checkmark', function () {
     };
 });
 
-app.controller('DropdownCtrlz', function ($scope, $log) {
-    $scope.status = {
-        isopen: false
+
+// used to handle all the recieved message from server, and show the related tusi
+app.service('MessageService', ['$rootScope',
+    function ($rootScope) {
+        return {
+            handleMsg: function (message) {
+                $rootScope.$broadcast('message-received', message);
+                return message.content;
+            },
+            handleServerErr: function (err) {
+                $rootScope.$broadcast('server-error-received', err);
+            }
+        }
+    }]);
+app.controller("MessageController", ['$scope', '$interval', function ($scope, $interval) {
+    $scope.$on('message-received', function (event, args) {
+        addMessage(args);
+    });
+    $scope.$on('server-error-received', function (event, args) {
+        addError(args);
+    });
+
+    $scope.messages = [];
+    var msg = {
+        title: "",
+        description: '',
+        content: {}
+    };
+    var error = {
+        status: '',
+        statusText: ''
+
+    };
+    var addMessage = function (msg) {
+        $scope.messages.push(msg);
+    };
+    var addError = function (error) {
+        console.log('00000');
+        var msgError = {
+            title: 'FAIL',
+            description: "Server Error "+error.status +  " -x> " + error.statusText
+        };
+        $scope.messages.push(msgError);
+        console.log(msgError)
     };
 
-    $scope.toggled = function (open) {
-        $log.log('Dropdown is now: ', open);
-    };
-
-    $scope.toggleDropdown = function ($event) {
-        $event.preventDefault();
-        $event.stopPropagation();
-        $scope.status.isopen = !$scope.status.isopen;
-    };
-});
-
-app.controller('flowDesignerController', function ($scope) {
-    $scope.datajson = [{id: '1', label: 'dddd'}];
-    return {}
-});
-
-
+    $interval(function () {
+        if($scope.messages.length>0){
+            $scope.messages.splice(0,1);
+        }
+    }, 2000);
+}]);

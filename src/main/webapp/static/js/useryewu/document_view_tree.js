@@ -3,37 +3,10 @@
 app.controller('DocumentViewTreeController',
     ['$scope', '$filter', 'UserFormService', 'LoginService',
         'EmployeeService', 'RecordService', 'UserWorkFlowService',
-        'usSpinnerService', 'UserFolderService', 'UserFormRecordService',
+        'MessageService', 'UserFolderService', 'UserFormRecordService', '$timeout',
         function ($scope, $filter, UserFormService, LoginService,
                   EmployeeService, RecordService, UserWorkFlowService,
-                  usSpinnerService, UserFolderService, UserFormRecordService) {
-            /**
-             * spinner start
-             * */
-
-            $scope.errorMsg = {hasMsg: false, isError: false};
-            $scope.spinneractive = false;
-            $scope.startSpin = function () {
-                if (!$scope.spinneractive) {
-                    $scope.errorMsg.hasMsg = true;
-                    usSpinnerService.spin('user-document-view-spinner');
-                    $scope.spinneractive = true;
-
-                    $scope.errorMsg.hasMsg = false;
-                }
-            };
-            $scope.stopSpin = function (flag) {
-                if ($scope.spinneractive) {
-                    usSpinnerService.stop('user-document-view-spinner');
-                    $scope.errorMsg.hasMsg = true;
-                    $scope.errorMsg.isError = !flag;
-                    $scope.spinneractive = false;
-                }
-            };
-
-            /**
-             * spanner end
-             * */
+                  MessageService, UserFolderService, UserFormRecordService, $timeout) {
 
 
             $scope.folders = [];
@@ -45,10 +18,10 @@ app.controller('DocumentViewTreeController',
             }, false);
 
             var nodeSelected = function (node) {
-                if (node.dataType == "File") {
+                if (node.type == "FILE") {
                     $scope.FormChoose(node);
                 }
-                if (node.dataType == "Folder") {
+                if (node.type == "FOLDER") {
                     $scope.FolderChoose(node);
                 }
 
@@ -57,19 +30,24 @@ app.controller('DocumentViewTreeController',
 
             $scope.getFolderTree = function () {
                 var userId = LoginService.getUserInfo().userId;
-                $scope.startSpin();
-                UserFolderService.getUserFolders(userId).then(
+                $scope.userFolderTreePromise = UserFolderService.getUserFolders(userId).then(
                     function (data) {
-                        $scope.folders = data;
-                        $scope.stopSpin(true);
+                        var folders = MessageService.handleMsg(data);
+                        if (folders) {
+                            $scope.folders = folders;
+                        }
                     },
                     function (err) {
-                        $scope.stopSpin(false);
+                        MessageService.handleServerErr(err);
                     }
                 );
             };
 
-            $scope.getFolderTree();
+            //load the folder tree when document ready
+            $timeout(function () {
+                $scope.getFolderTree();
+            });
+
 
             // when choose a folder
             $scope.FolderChoose = function (node) {
@@ -81,52 +59,94 @@ app.controller('DocumentViewTreeController',
             $scope.FormChoose = function (f, callBack) {
                 $scope.viewForm = true;
                 $scope.viewTableForm = false;
+                $scope.getFullFormWhichWithRecord(f);
+            };
+
+
+            $scope.loadFile = function (file, fun) {
+                $scope.userViewFilePromise = UserFolderService.getUserFile(file.id).then(
+                    function (data) {
+                        var orgForm = MessageService.handleMsg(data);
+                        if (orgForm) {
+                            angular.copy(file, orgForm);
+                            if (typeof (fun) === "function") {
+                                fun(file);
+                            }
+                        }
+
+                    },
+                    function (err) {
+                        MessageService.handleServerErr(err);
+                    });
+            };
+
+            $scope.loadRecord = function (file, fun) {
+                var questions = file.questions;//get all questions for form
+                var questionIds = [];
+                angular.forEach(questions, function (q) {
+                    questionIds.push(q.id);
+                });
+                //get all records
                 var userId = LoginService.getUserInfo().userId;
                 var oeId = LoginService.getUserInfo().companyId;
-                $scope.getFullFormWhichWithRecord(f.data_id, oeId, userId);
+                $scope.userViewFilePromise = UserFormRecordService.getFormRecords(userId, oeId, questionIds)
+                    .then(function (resp) {
+                        var records = MessageService.handleMsg(resp);
+                        if (records) {
+                            file.records = records;
+                            if (typeof(fun) == "function") {
+                                fun(file);
+                            }
+                        }
+                    },
+                    function (err) {
+                        MessageService.handleServerErr(err);
+                    });
+            };
+
+            $scope.viewFile = function (file) {
+                $scope.loadRecord(file, function () {
+                    var formElement = angular.element(file.content.replace(/{-/gi, '').replace(/-}/gi, ''));
+                    var records = file.records;
+                    for (var j = 0; j < records.length; j++) {
+                        var record = records[j];
+                        var record_question_id = record.questionId;
+                        var questionElement = angular.element(formElement.find("plugin[question_id='" + record_question_id + "']"));
+                        var span = angular.element("<span></span>");
+                        span.text(record.value);
+                        questionElement.replaceWith(span);
+                    }
+                    angular.element('#form_container').html('').append(formElement);
+                    $scope.showPDF();
+                });
+            };
+
+            $scope.editFile = function (file) {
+                $scope.loadRecord(file, function () {
+                    $scope.folderTree.currentNode.isEditing = true;
+                    var records = file.records;
+                    for (var j = 0; j < records.length; j++) {
+                        var record = records[j];
+                        var record_question_id = record.questionId;
+                        for (var k = 0; k < $scope.folderTree.currentNode.questions.length; k++) {
+                            if ($scope.folderTree.currentNode.questions[k].id == record_question_id) {
+                                $scope.folderTree.currentNode.questions[k].value = record.value;
+                                break;
+                            }
+                        }
+                    }
+                })
             };
 
             // 读取form内容， 找到里面的question id， 然后 goto －－－> UserFormRecordService.getFormRecords
             // 获取所有question的record，
             // 用record替换 form内容中的question
-            $scope.getFullFormWhichWithRecord = function (form_id, oe_id, user_id) {
-                var orgForm = null;
-                $scope.startSpin();
-                UserFormService.getOneForm(form_id).then(
-                    function (data) {
-                        orgForm = data;
-                        var formElement = angular.element(orgForm.content.replace(/{-/gi, '').replace(/-}/gi, ''));
-                        var questions = formElement.find('plugin');
-                        var questionIds = [];
-                        for (var i = 0; i < questions.length; i++) {
-                            var qId = angular.element(questions[i]).attr('id');
-                            questionIds.push(qId);
-                        }
-
-                        UserFormRecordService.getFormRecords(user_id, oe_id, questionIds)
-                            .then(function (records) {
-                                for (var j = 0; j < records.length; j++) {
-                                    var record = records[j];
-                                    var record_question_id = record.questionId;
-                                    var questionElement = angular.element(formElement.find("plugin[id='" + record_question_id + "']"));
-                                    var span = angular.element("<span></span>");
-                                    span.text(record.value);
-                                    questionElement.replaceWith(span);
-                                }
-                                angular.element('#form_container').html('').append(formElement);
-                                $scope.showPDF();
-                                $scope.stopSpin(true);
-                            },
-                            function (err) {
-                                $scope.stopSpin(false);
-                            });
-
-                    },
-                    function (err) {
-                        $scope.stopSpin(false);
-                    });
-
-
+            $scope.getFullFormWhichWithRecord = function (file) {
+                if (file.questions == null || file.content == null || !file.records) {
+                    $scope.loadFile(file, $scope.viewFile);
+                } else {
+                    $scope.viewFile(file);
+                }
             };
 
             $scope.showPDF = function () {
@@ -164,46 +184,12 @@ app.controller('DocumentViewTreeController',
 
             $scope.editNode = function (node) {
                 // if the node is a file, then show the pdf of the file, when click edit on the file, then list all the related question of this file
-                if (node.leaf) {
-                    $scope.folderTree.currentNode.editingQuestions = [];
-                    $scope.startSpin();
-                    UserFormRecordService.getAllQuestions(node.data_id)
-                        .then(
-                        function (data) {
-                            $scope.folderTree.currentNode.editingQuestions = data;
-
-                            var userId = LoginService.getUserInfo().userId;
-                            var oeId = LoginService.getUserInfo().companyId;
-
-                            var questionIds = [];
-                            for (var i = 0; i < data.length; i++) {
-                                var qId = data[i].id;
-                                questionIds.push(qId);
-                            }
-
-                            UserFormRecordService.getFormRecords(userId, oeId, questionIds)
-                                .then(function (records) {
-                                    $scope.folderTree.currentNode.isEditing = true;
-                                    for (var j = 0; j < records.length; j++) {
-                                        var record = records[j];
-                                        var record_question_id = record.questionId;
-                                        for (var k = 0; k < $scope.folderTree.currentNode.editingQuestions.length; k++) {
-                                            if ($scope.folderTree.currentNode.editingQuestions[k].id == record_question_id) {
-                                                $scope.folderTree.currentNode.editingQuestions[k].value = record.value;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                    $scope.stopSpin(true);
-                                },
-                                function (err) {
-                                    $scope.stopSpin(false);
-                                });
-                        },
-                        function (err) {
-                            $scope.stopSpin(false);
-                        }
-                    );
+                if (node.type === "FILE") {
+                    if (!node.questions || node.questions.length == 0) {
+                        $scope.loadFile(node, $scope.editFile);
+                    } else {
+                        $scope.editFile(node);
+                    }
                 } else {
                     // if the node is a folder, then show the question flow of this folder
 
@@ -215,7 +201,8 @@ app.controller('DocumentViewTreeController',
                 this.userId = user_id;
                 this.value = value;
             };
-            $scope.saveQuestionValue = function (questions) {
+            $scope.saveAllQuestionValue = function (questions) {
+
                 var userId = LoginService.getUserInfo().userId;
                 var oeId = LoginService.getUserInfo().companyId;
                 var records = [];
@@ -223,18 +210,39 @@ app.controller('DocumentViewTreeController',
                     var record = new Record(questions[i].id, oeId, userId, questions[i].value);
                     records.push(record);
                 }
-                $scope.startSpin();
-                UserFormRecordService.saveQuestionValues(records).then(
+                $scope.questionAllPromise = UserFormRecordService.saveQuestionValues(records).then(
                     function (data) {
-                        $scope.stopSpin(true);
                         $scope.folderTree.currentNode.isEditing = false;
-                        $scope.FormChoose($scope.folderTree.currentNode);
                     },
                     function (err) {
-                        $scope.stopSpin(false);
+                        MessageService.handleServerErr(err);
+                    }
+                );
+
+
+            };
+
+            $scope.saveQuestionValue = function (question) {
+                var questions = [];
+                questions.push(question);
+
+                var userId = LoginService.getUserInfo().userId;
+                var oeId = LoginService.getUserInfo().companyId;
+                var records = [];
+                for (var i = 0; i < questions.length; i++) {
+                    var record = new Record(questions[i].id, oeId, userId, questions[i].value);
+                    records.push(record);
+                }
+                question.promise = UserFormRecordService.saveQuestionValues(records).then(
+                    function (data) {
+
+                    },
+                    function (err) {
                     }
                 );
             };
+
+
             $scope.printPdf = function () {
                 var pdf = new jsPDF('p', 'pt', 'a4');
                 var source = $('#form_container').get(0);
@@ -272,104 +280,228 @@ app.controller('DocumentViewTreeController',
 
         }]);
 
-app.controller('UserDocumentCompanyQuestionControllerForTree', ['$scope', 'UserWorkFlowService', 'LoginService', 'UserQuestionService', 'EmployeeService', 'FileUploader', function ($scope, UserWorkFlowService, LoginService, UserQuestionService, EmployeeService, FileUploader) {
+app.controller('UserDocumentCompanyQuestionControllerForTree', ['$scope', 'UserFolderService', 'UserFormRecordService', 'LoginService', 'UserQuestionService', 'EmployeeService', 'FileUploader', 'MessageService', function ($scope, UserFolderService, UserFormRecordService, LoginService, UserQuestionService, EmployeeService, FileUploader, MessageService) {
     $scope.currentNode = {};
 
     $scope.currentWorkFlow = {};
 
     $scope.currentWorkFlowIndex = 0;
 
-    //UserWorkFlowService.fetchAllWorkFlow(LoginService.getUserInfo().userId).then(
-    //    function (response) {
-    //        $scope.workFlows = Object.keys(response);
-    //        $scope.workFlows_currentNode = response;
-    //        var node_id = $scope.workFlows_currentNode[$scope.workFlows[$scope.currentWorkFlowIndex]];
-    //        $scope.getCurrentNode(node_id);
-    //        $scope.currentWorkFlowIndex++;
-    //    },
-    //    function (errResponse) {
-    //
-    //    }
-    //);
-    //private String workFlowId;
-    //private String currentNode;
-    //private String type;
-    //private int user_id;
-    //private String oe_id;
     var UserWorkFlow = function (userId, workFlowId, currentNode, oeId) {
         this.user_id = userId;
         this.workFlowId = workFlowId;
         this.currentNode = currentNode;
         this.oe_id = oeId;
     };
+
     var userWorkFlow = new UserWorkFlow(LoginService.getUserInfo().userId, 0, 0, LoginService.getUserInfo().companyId);
 
 
     $scope.$watch('folderTree.currentNode', function (newObj, oldObj) {
         if ($scope.folderTree && angular.isObject($scope.folderTree.currentNode)) {
-            if($scope.folderTree.currentNode.dataType==='Folder'){
-                $scope.startSpin();
+            if ($scope.folderTree.currentNode.type === 'FOLDER') {
                 var folderId = $scope.folderTree.currentNode.id;
                 // will return the folder node which represent to the workflow and the data_id is the real work flow id
-                UserWorkFlowService.getFlowIdByFolderId(folderId)
+                $scope.userViewFlowPromise = UserFolderService.getUserWorkFlowByFolderId(folderId)
                     .then(
                     function (data) {
-                        $scope.currentWorkFlow = data;
-                        userWorkFlow.workFlowId = data.data_id;
-                        UserWorkFlowService.getCurrentNodeByWorkFlowIdAndUserIdAndOeId(userWorkFlow)
-                            .then(
-                            function (workFlowNode) {
-                                console.log(workFlowNode);
-                                $scope.getCurrentNode(workFlowNode.id);
-                                $scope.stopSpin(true);
-                            },
-                            function (err) {
-                                $scope.stopSpin(false);
-                            }
-                        );
+                        var flow = MessageService.handleMsg(data);
+                        if (flow) {
+                            $scope.currentWorkFlow = flow;
+                            initFlow($scope.currentWorkFlow);
+
+                        }
                     },
-                    function(err){
-                        $scope.stopSpin(false);
+                    function (err) {
+                        MessageService.handleServerErr(err);
                     }
                 );
             }
         }
     }, false);
 
-    $scope.getCurrentNode = function (node_id) {
-        $scope.startSpin();
-        UserWorkFlowService.getCurrentNode(node_id).then(
-            function (response) {
-                $scope.currentNode = response;
-                if($scope.currentNode.folderNodeId == 1){
-                    //todo end node
+    $scope.loadQuestion = function (node) {
+        if (!node.question) {
+            if (node.type == "Question") {
+                UserFolderService.getUserQuestion(node.folderNodeId)
+                    .then(
+                    function (data) {
+                        node.record = new Record(node.folderNodeId, LoginService.getUserInfo().companyId, LoginService.getUserInfo().userId, '');
+                        var q = MessageService.handleMsg(data);
+                        if (q) {
+                            node.question = q;
+                            loadValue(node);
+                            $scope.showQuestion = true;
+                        }
+                    },
+                    function (err) {
+                        MessageService.handleServerErr(err);
+                        $scope.showQuestion = true;
+                    }
+                );
+            } else {
+                $scope.showQuestion = true;
+            }
+        } else {
+            $scope.showQuestion = true;
+        }
+    };
 
-                } else
-                if($scope.currentNode.folderNodeId == 0){
-                    //todo start node
-                } else
-                if($scope.currentNode.folderNodeId){
-                    $scope.getCurrentData($scope.currentNode.folderNodeId);
+    var initFlow = function (flow) {
+        $scope.nodesAll = [];
+        var start_id = flow.startNode_id;
+        var nodes = flow.nodes;
+        var startNode = getNodeById(start_id, nodes);
+        generateLinkedFlow(startNode, nodes);
+        flow.startNode = startNode;
+        $scope.showQuestion = true;
+    };
+
+    var generateLinkedFlow = function (node, nodes) {
+        if (node) {
+            node.title = node.name;
+            $scope.nodesAll.push(node);
+            if (node.nexts.length > 0) {
+                var nextId = node.nexts[0]._then;
+                node.next = getNodeById(nextId, nodes);
+                generateLinkedFlow(node.next, nodes);
+            }
+        }
+    };
+
+    var getNodeById = function (id, nodes) {
+        for (var i = nodes.length - 1; i >= 0; i--) {
+            if (nodes[i].id === id) {
+                return nodes[i];
+            }
+        }
+    };
+
+    $scope.calComplete = function (nodes) {
+        var finish = 0;
+        var normal = 0;
+        for (var i = 0; i < nodes.length; i++) {
+            if (node[i].record.value && node[i].record.value != '') {
+                finish = finish + 1;
+            }
+            if (nodes[i].type == 'Normal') {
+                normal = normal + 1;
+            }
+        }
+        return finish / (nodes.length - normal);
+    };
+    
+    var savePercentOfFlow = function () {
+
+    };
+
+    var saveValue = function (node, success) {
+        $scope.showQuestion = false;
+        if (node.type == "Question") {
+            var records = [];
+            records.push(node.record);
+            UserFormRecordService.saveQuestionValues(records).then(
+                function (data) {
+                    var percent = $scope.calComplete($scope.nodesAll);
+
+                    console.log(percent);
+                    
+
+                    if (typeof (success) == "function") {
+                        success();
+                    }
+                },
+                function (err) {
+                    MessageService.handleServerErr(err);
                 }
-                $scope.stopSpin(true);
-                $scope.question_finish = false;
-            },
-            function (errResponse) {
-                $scope.stopSpin(false);
+            );
+        } else {
+            if (typeof (success) == "function") {
+                success();
             }
-        );
+        }
     };
 
-    $scope.getCurrentData = function (dataId) {
-        UserQuestionService.getQuestionByFolderNodeId(dataId).then(function (response) {
-                $scope.nodeData = response;
+    var loadValue = function (node) {
+        if (node.type == "Question") {
+            var questionIds = [];
+            questionIds.push(node.folderNodeId);
+            UserFormRecordService.getFormRecords(LoginService.getUserInfo().userId, LoginService.getUserInfo().companyId, questionIds)
+                .then(function (resp) {
+                    var records = MessageService.handleMsg(resp);
+                    if (records && records.length > 0) {
+                        node.record.value = records[0].value;
 
-                $scope.getRecord();
-            },
-            function (errResponse) {
-            }
-        );
+                    }
+                },
+                function (err) {
+                    MessageService.handleServerErr(err);
+                });
+        }
     };
+
+////////// flow controller
+    $scope.Math = window.Math;
+    $scope.flowIndex = 0;
+    $scope.prevFlowIndex = -1;
+    $scope.Y_offset = 0;
+    $scope.goNextStep = function () {
+        saveValue($scope.nodesAll[$scope.flowIndex], function () {
+            if ($scope.flowIndex < $scope.nodesAll.length - 1) {
+                //TODO
+                $scope.Y_offset += ($(angular.element('ul.timeline').children()[$scope.flowIndex]).height() + 20) * (-1);
+                var css3transition = dom.cssName("transition");
+                $(angular.element('ul.timeline').children())
+                    .css(css3transition, 'all 1s ease-in').css('transform', 'translate(0px,' + $scope.Y_offset + 'px)')
+                $scope.prevFlowIndex = $scope.flowIndex;
+
+                $scope.flowIndex++;
+                $scope.loadQuestion($scope.nodesAll[$scope.flowIndex]);
+            } else {
+                $scope.showQuestion = true;
+            }
+        })
+    };
+    $scope.goPrevStep = function () {
+        saveValue($scope.nodesAll[$scope.flowIndex], function () {
+            if ($scope.flowIndex > 0) {
+                var offset = $(angular.element('ul.timeline').children()[$scope.flowIndex - 1]).height() + 20
+                console.log(offset);
+                $scope.Y_offset += offset;
+                $(angular.element('ul.timeline').children()).css('transform', 'translate(0px,' + $scope.Y_offset + 'px)');
+                angular.element('ul.timeline').children().y += 100;
+                $scope.prevFlowIndex = $scope.flowIndex;
+                $scope.flowIndex--;
+                $scope.loadQuestion($scope.nodesAll[$scope.flowIndex]);
+            } else {
+                $scope.showQuestion = true;
+            }
+        });
+    };
+
+    var dom = function (s) {
+        return document.getElementById(s)
+    };
+
+    dom.cssName = function (name) {
+        var prefixes = ['', '-ms-', '-moz-', '-webkit-', '-khtml-', '-o-'],
+            rcap = /-([a-z])/g, capfn = function ($0, $1) {
+                return $1.toUpperCase();
+            };
+        dom.cssName = function (name, target, test) {
+            target = target || document.documentElement.style;
+            for (var i = 0, l = prefixes.length; i < l; i++) {
+                test = (prefixes[i] + name).replace(rcap, capfn);
+                if (test in target) {
+                    return test;
+                }
+            }
+            return null;
+        };
+        return dom.cssName(name);
+    };
+
+////// flow controller end
 
 
     var Record = function (questionId, oe_id, user_id, value) {
@@ -377,49 +509,6 @@ app.controller('UserDocumentCompanyQuestionControllerForTree', ['$scope', 'UserW
         this.oeId = oe_id;
         this.userId = user_id;
         this.value = value;
-    };
-    $scope.record = new Record();
-
-    $scope.goNext = function () {
-        //userWorkFlow.currentNode = $scope.currentNode.nexts[0]._then;
-        var value = $scope.record.value;
-        var next = '';
-        for (var i = 0; i < $scope.currentNode.nexts.length; i++) {
-            if ($scope.currentNode.nexts[i]._if == "NOTNULL" || $scope.currentNode.nexts[i]._if == '') {
-                next = $scope.currentNode.nexts[i]._then;
-                break;
-            }
-            if (value == $scope.currentNode.nexts[i]._if) {
-                next = $scope.currentNode.nexts[i]._then;
-                break;
-            }
-        }
-        if (next == '') {
-            $scope.finish();
-        } else {
-            $scope.goToNode(next);
-        }
-    };
-    $scope.goPrev = function () {
-        var prev = $scope.currentNode.prev;
-        $scope.question_finish = false;
-        $scope.goToNode(prev);
-    };
-
-    $scope.goToNode = function (next) {
-        UserWorkFlowService.submitRecord($scope.record).then(
-            function (response) {
-                $scope.getCurrentNode(next);
-            },
-            function (errResponse) {
-                console.log(errResponse);
-            }
-        );
-    };
-
-    $scope.finish = function () {
-        $scope.question_finish = true;
-        console.log($scope.currentWorkFlowIndex + "Finish");
     };
 
     $scope.getRecord = function () {
@@ -476,39 +565,40 @@ app.controller('UserDocumentCompanyQuestionControllerForTree', ['$scope', 'UserW
     $scope.nodeData = {};
 
 
-    /**
-     *  customized uploader
-     * */
-    var contractUploader = $scope.contractUploader = new FileUploader({
-        url: '/upload/',
-        formData: [{type: 'customized'}, {userId: LoginService.getUserInfo().userId}]
-    });
+///**
+// *  customized uploader
+// * */
+//var contractUploader = $scope.contractUploader = new FileUploader({
+//    url: '/upload/',
+//    formData: [{type: 'customized'}, {userId: LoginService.getUserInfo().userId}]
+//});
+//
+//if (LoginService.getUserInfo().accessToken) {
+//    var token = LoginService.getUserInfo();
+//    if (token) {
+//        contractUploader.headers['X-AUTH-TOKEN'] = token.accessToken;
+//    }
+//} else {
+//    contractUploader.headers['X-AUTH-TOKEN'] = '0';
+//}
+//contractUploader.onAfterAddingFile = function (fileItem) {
+//    contractUploader.queue.length = 0;
+//    contractUploader.queue.push(fileItem);
+//    $scope.contractPreview.preview = true;
+//    $scope.contractPreview.file = fileItem._file;
+//    $scope.contractPreview.pdfCount = $scope.contractPreview.pdfCount + 1;
+//};
+//contractUploader.onSuccessItem = function (item, response, status, headers) {
+//    $scope.record.value = response;
+//};
+//
+//$scope.contractPreview = {
+//    preview: false,
+//    file: $scope.record.value,
+//    pdfCount: -1,
+//    height: '100%',
+//    width: '100%'
+//};
 
-    if (LoginService.getUserInfo().accessToken) {
-        var token = LoginService.getUserInfo();
-        if (token) {
-            contractUploader.headers['X-AUTH-TOKEN'] = token.accessToken;
-        }
-    } else {
-        contractUploader.headers['X-AUTH-TOKEN'] = '0';
-    }
-    contractUploader.onAfterAddingFile = function (fileItem) {
-        contractUploader.queue.length = 0;
-        contractUploader.queue.push(fileItem);
-        $scope.contractPreview.preview = true;
-        $scope.contractPreview.file = fileItem._file;
-        $scope.contractPreview.pdfCount = $scope.contractPreview.pdfCount + 1;
-    };
-    contractUploader.onSuccessItem = function (item, response, status, headers) {
-        $scope.record.value = response;
-    };
-
-    $scope.contractPreview = {
-        preview: false,
-        file: $scope.record.value,
-        pdfCount: -1,
-        height: '100%',
-        width: '100%'
-    };
-
-}]);
+}])
+;
