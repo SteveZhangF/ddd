@@ -517,13 +517,25 @@ app.controller('FileController', ['$scope', 'FolderService', 'filterFilter', '$t
         fileNode.content = content;
         var plugins = angular.element(content).find('plugin');
         var questions = [];
-        angular.forEach(plugins, function (plugin, i) {
+
+        for(var i=0;i<plugins.length;i++){
             var question = {id: ''};
-            question.id = plugin.getAttribute('question_id');
-            questions.push(question);
-        });
+            question.id = plugins[i].getAttribute('question_id');
+            if(!existQuestion(question,questions)){
+                questions.push(question);
+            }
+        }
         fileNode.questions = questions;
+
     };
+    var existQuestion = function (q,questions) {
+        for(var i=0;i<questions.length;i++){
+            if(questions[i].id== q.id){
+                return true;
+            }
+        }
+        return false;
+    }
     // save button clicked
     $scope.saveFile = function (fileNode) {
         parseFileFormat(fileNode);
