@@ -57,7 +57,7 @@ app.factory('WorkFlowService', ['$http', '$q', function ($http, $q) {
         },
 
         updateWorkFlowDetail: function (wf,id) {
-            return $http.put('/workflow/detail/'+id,wf)
+            return $http.put('/admin/workflow/detail/'+id,wf)
                 .then(function (response) {
                     return response.data
                 }, function (errResponse) {

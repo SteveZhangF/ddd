@@ -1,5 +1,7 @@
 package app.model.user;
 
+import app.model.files.FileElement;
+import app.model.files.FolderFileElement;
 import app.model.forms.Folder;
 import app.model.wordflow.workflowUser.UserWorkFlow;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -24,7 +26,7 @@ public class User {
     private String password;
     @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Folder> folders = new ArrayList<>();
+    private List<FolderFileElement> folders = new ArrayList<>();
 
 
     @ElementCollection(fetch=FetchType.EAGER)
@@ -113,11 +115,11 @@ public class User {
         this.companyId = companyId;
     }
 
-    public List<Folder> getFolders() {
+    public List<FolderFileElement> getFolders() {
         return folders;
     }
 
-    public void setFolders(List<Folder> folders) {
+    public void setFolders(List<FolderFileElement> folders) {
         this.folders = folders;
     }
 

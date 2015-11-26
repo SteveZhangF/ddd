@@ -1,105 +1,48 @@
 'use strict';
 
-app.controller('UserController', ['$scope', 'UserService', 'WorkFlowService', 'ngDialog','usSpinnerService','FolderService', function ($scope, UserService, WorkFlowService, ngDialog,usSpinnerService,FolderService) {
-    var self = this;
-
-    //$scope.user = {id: null, ssoId: '', companyId: '', email: "", state: "", userProfiles: []};
-    //$scope.users = [{
-    //    "id": 1,
-    //    "ssoId": "123",
-    //    "password": "",
-    //    "workFlowCurrentNode": {},
-    //    "companyId": "40288085509cd0ce01509cd374b20000",
-    //    "email": "s@s.c",
-    //    "state": "Active",
-    //    "userProfiles": [{"id": 3, "type": "USER"}, {"id": 3, "type": "ADMIN"}],
-    //    folders: []
-    //}, {
-    //    "id": 2,
-    //    "ssoId": "1111111",
-    //    "password": "1111111",
-    //    "workFlowCurrentNode": {},
-    //    "companyId": null,
-    //    "email": "z@k.c",
-    //    "state": "Active",
-    //    "userProfiles": [{"id": 3, "type": "USER"}],
-    //    folders: []
-    //}, {
-    //    "id": 3,
-    //    "ssoId": "2222222",
-    //    "password": "1111111",
-    //    "workFlowCurrentNode": {},
-    //    "companyId": "4028808550ea5bfa0150ea5eb5350000",
-    //    "email": "sdqfspd@live.com",
-    //    "state": "Active",
-    //    "userProfiles": [{"id": 3, "type": "USER"}],
-    //    folders: []
-    //}];
-
-
-
-    /**
-     * spinner start
-     * */
-
-    $scope.errorMsg = {hasMsg: false, isError: false};
-    $scope.spinneractive = false;
-    $scope.startSpin = function () {
-        if (!$scope.spinneractive) {
-            usSpinnerService.spin('user-list-spinner');
-            $scope.spinneractive = true;
-        }
-    };
-    $scope.stopSpin = function (flag,msg) {
-        if ($scope.spinneractive) {
-            usSpinnerService.stop('user-list-spinner');
-            $scope.errorMsg.hasMsg = true;
-            $scope.errorMsg.isError = !flag;
-            $scope.errorMsg.msg = msg;
-            $scope.spinneractive = false;
-        }
-    };
-
-//user-list-spinner
+app.controller('UserController', ['$scope', 'UserService', 'FolderService', 'MessageService',function ($scope, UserService,FolderService,MessageService) {
     $scope.loadAll = function () {
-        $scope.startSpin();
-        UserService.fetchAllUsers()
+        $scope.userListPromise = UserService.fetchAllUsers()
             .then(
             function (d) {
-                $scope.users = d;
-                $scope.loadFolders();
+                var users = MessageService.handleMsg(d);
+                if(users){
+                    $scope.users = users;
+                }
             },
             function (errResponse) {
-                $scope.stopSpin(false,"error while loading users,please try later");
-                console.error('Error while fetching users');
+                MessageService.handleServerErr(errResponse);
             }
         );
     };
 
     $scope.loadFolders = function () {
-        $scope.startSpin();
-        FolderService.getFolderForSelect().then(
+        $scope.userListPromise = FolderService.getFolderForSelect().then(
             function (response) {
-                $scope.folders = response;
-                $scope.stopSpin(true);
+                var folders = MessageService.handleMsg(response);
+                if(folders){
+                    $scope.folders = folders;
+                }
             },
             function (err) {
-                $scope.stopSpin(false,"error while loading folders,please try later");
+                MessageService.handleServerErr(err);
             }
         );
     };
 
 
     $scope.updateUser = function (user) {
-        $scope.startSpin();
-        UserService.updateUser(user, user.id)
+        $scope.userListPromise = UserService.updateUser(user, user.id)
             .then(
             function (data) {
-                $scope.stopSpin(true);
-                user.editing =false;
+                var userb = MessageService.handleMsg(data);
+                if(userb){
+                    user.editing = false;
+                    angular.copy(userb,user);
+                }
             },
             function (errResponse) {
-                $scope.stopSpin(false,"error while updating user, please try later");
+                MessageService.handleServerErr(errResponse);
             }
         );
     };
@@ -126,9 +69,24 @@ app.controller('UserController', ['$scope', 'UserService', 'WorkFlowService', 'n
 
     };
 
-    $scope.folders = [];
+    /**
+     * for check question in the table start
+     * */
+    $scope.selectUser = function () {
+        $scope.selectedAllUsers = $scope.users.every(function (itm) {
+            return itm.selected;
+        })
+    };
+    $scope.selectAllUsers = function () {
+        var toggleStatus = !$scope.selectedAllUsers;
+        angular.forEach($scope.users, function (itm) {
+            itm.selected = !toggleStatus;
+        });
+    };
 
+    $scope.folders = [];
     $scope.loadAll();
+    $scope.loadFolders();
 
 
 }]);

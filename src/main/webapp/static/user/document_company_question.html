@@ -1,107 +1,68 @@
-
 <div ng-controller="UserDocumentCompanyQuestionControllerForTree" class="">
-    <div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <div ng-switch="currentNode.folderNodeId">
-                    <h3 ng-switch-default>{{ nodeData.name}}</h3>
-                    <h3 ng-switch-when="1">Finished</h3>
-                    <h3 ng-switch-when="0"> {{currentWorkFlow.name}}</h3>
+    <div class="row">
+
+        <div class="col-md-9">
+
+            <div class="panel panel-default questionCard fade-in" ng-if="showQuestion">
+                <div class="panel-heading">
+                    {{nodesAll[flowIndex].name}}
                 </div>
+                <div class="panel-body">
+                    <p>{{nodesAll[flowIndex].question.description}}</p>
 
-            </div>
-            <div class="panel-body">
-
-
-                <div ng-switch="currentNode.folderNodeId">
-                    <!--start node -->
-                    <div ng-switch-when="0">
-                        {{currentWorkFlow.description}}
-                    </div>
-                    <!--end node-->
-                    <div ng-switch-when="1">
-                        <h4>You have finished these folder</h4>
-                    </div>
-
-                    <div id="node-data-content" ng-switch-default>
-                        <h4>{{ nodeData.description}}
-                        </h4>
+                    <div id="node-data-content">
                         <hr>
-                        <div ng-switch="nodeData.type">
-                            <select class="form-control" ng-switch-when="select" ng-model="record.value">
-                                <option ng-repeat="opt in nodeData.options" value="{{opt.value}}">{{opt.name}}</option>
+                        <div ng-switch="nodesAll[flowIndex].question.questionType">
+                            <select class="form-control" ng-switch-when="select"
+                                    ng-model="nodesAll[flowIndex].record.value">
+                                <option ng-repeat="opt in nodesAll[flowIndex].question.options" value="{{opt.name}}">
+                                    {{opt.name}}
+                                </option>
                             </select>
-                            <input class="form-control" ng-switch-when="text" type="text" ng-model="record.value">
-                            <textarea class="form-control" ng-switch-when="textarea" ng-model="record.value"></textarea>
-
-                            <div ng-switch-when="file">
-                                <div class="col-md-3">
-                                    <input type="file" nv-file-select=""
-                                           class="form-control input-sm"
-                                           uploader="contractUploader"/>
-
-                                    <p></p>
-
-                                    <div class="progress" style="margin-bottom: 0;height: 10px">
-                                        <div class="progress-bar" role="progressbar"
-                                             ng-style="{ 'width': contractUploader.queue[0].progress + '%'}"
-                                             style="color:black;height: 10px">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-2">
-                    <span ng-show="contractUploader.queue[0].isSuccess"><i
-                            class="glyphicon glyphicon-ok">success!</i></span>
-                                <span ng-show="contractUploader.queue[0].isCancel"><i
-                                        class="glyphicon glyphicon-ban-circle">canceled!</i></span>
-                    <span ng-show="contractUploader.queue[0].isError"><i class="glyphicon glyphicon-remove">failed! try
-                        later</i></span>
-                                    <button type="button" class="btn btn-success btn-xs"
-                                            ng-click="contractUploader.queue[0].upload()"
-                                            ng-disabled="!contractUploader.queue[0]||contractUploader.queue[0].isReady || contractUploader.queue[0].isUploading || contractUploader.queue[0].isSuccess">
-                                        <span class="glyphicon glyphicon-upload"></span> Upload
-                                    </button>
-                                    <button type="button" class="btn btn-warning btn-xs"
-                                            ng-click="contractUploader.queue[0].cancel()"
-                                            ng-disabled="!contractUploader.queue[0].isUploading">
-                                        <span class="glyphicon glyphicon-ban-circle"></span> Cancel
-                                    </button>
-                                    <button type="button" class="btn btn-danger btn-xs"
-                                            ng-disabled="!contractUploader.queue[0]"
-                                            ng-click="contractUploader.queue.length=0">
-                                        <span class="glyphicon glyphicon-trash"></span> Remove
-                                    </button>
-                                </div>
-                                <div pdf-preview="contractPreview"></div>
-                            </div>
-
-                            <label class="form-control" ng-switch-when="checkbox"
-                                   ng-repeat="opt in nodeData.options"><input
-                                    type="checkbox" ng-change="checkBoxValueChanged(opt.value)"
-                                    ng-model="record.values[$index]" value="{{opt.value}}">{{opt.name}}</label>
-
+                            <input class="form-control" ng-switch-when="text" type="text"
+                                   ng-model="nodesAll[flowIndex].record.value">
+                            <textarea class="form-control" ng-switch-when="textarea"
+                                      ng-model="nodesAll[flowIndex].record.value"></textarea>
                         </div>
                     </div>
                 </div>
+                <div class="panel-footer">
+                    <div class="panel-footer-buttons">
+                        <button class="btn btn-sm btn-default" ng-click="goPrevStep()">Prev</button>
+                        <button class="btn btn-sm btn-default" ng-click="goNextStep()">Next</button>
+                    </div>
+                </div>
             </div>
-            <div class="panel-footer">
-                <nav>
-                    <ul class="pager">
-                        <li class="previous {{currentNode.prev==''?'disabled':''}}"><a
-                                ng-click="currentNode.prev==''?'':goPrev()"
-                                href=""><span
-                                aria-hidden="true">&larr;</span> Prev</a></li>
-                        <li class="next" ng-if="!question_finish"><a
-                                ng-click="currentNode.nexts.length==0?finish():goNext()"
-                                href="">Next <span
-                                aria-hidden="true">&rarr;</span></a></li>
+        </div>
+        <div class="col-md-3 steps">
+            <timeline>
+                <div class="fade-in" id="test" timeline-event index="{{$index}}" now-step="flowIndex"
+                     ng-init="loadQuestion(node)"
+                     ng-repeat="node in nodesAll">
 
-                    </ul>
-                    <label ng-show='question_finish'>You have finished all the questions please go to next step</label>
-                </nav>
-            </div>
+
+                    <timeline-badge ng-show="node.type=='Normal'" class="info">
+                        <i class="glyphicon glyphicon-info-sign"></i>
+                    </timeline-badge>
+                    <timeline-panel ng-show="node.type=='Normal'"  class="info">
+                        <timeline-heading>
+                            <h4>{{node.name}}</h4>
+                        </timeline-heading>
+                        <p>{{node.question.description}}dd</p>
+                    </timeline-panel>
+
+
+                    <timeline-badge ng-show="node.type=='Question'" class="{{node.record.value && node.record.value!=''?'success':'danger'}}">
+                        <i class="glyphicon {{node.record.value && node.record.value!=''?'glyphicon-ok-circle':'glyphicon glyphicon-remove-circle'}}"></i>
+                    </timeline-badge>
+                    <timeline-panel ng-show="node.type=='Question'"  class="{{node.record.value && node.record.value!=''?'success':'danger'}}">
+                        <timeline-heading>
+                            <h4>{{node.name}}</h4>
+                        </timeline-heading>
+                        <p>{{node.question.description}}dd</p>
+                    </timeline-panel>
+                </div>
+            </timeline>
         </div>
     </div>
 </div>
-

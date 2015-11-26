@@ -1,9 +1,9 @@
 var app = angular.module('dashboardApp');
 
 
-app.controller('FolderCustomizedElementController', ['$scope', '$timeout', 'FolderService', 'FolderCustomizedElementService',
+app.controller('FolderCustomizedElementController', ['$scope', '$timeout', 'FolderService', 'FolderCustomizedElementService', 'MessageService',
 
-    function ($scope, $timeout, FolderService, FolderCustomizedElementService) {
+    function ($scope, $timeout, FolderService, FolderCustomizedElementService, MessageService) {
         $scope.fieldTypes = ["String", "Number", "Date"];
         $scope.addField = function (element, field) {
             if (!element.fields) {
@@ -26,35 +26,13 @@ app.controller('FolderCustomizedElementController', ['$scope', '$timeout', 'Fold
             FolderCustomizedElementService.listCustomizedElementByFolderId($scope.thisFolder.id)
                 .then(
                 function (data) {
-                    $scope.customizedElementList = data;
+                    var list = MessageService.handleMsg(data);
+                    if (list) {
+                        $scope.customizedElementList = list;
+                    }
                 },
                 function (err) {
-                    //test
-                    $scope.customizedElementList = [{
-                        "id": "40288083512f034b01512f04d6140002",
-                        "description": null,
-                        "createTime": 1448192825000,
-                        "updateTime": 1448192825000,
-                        "name": "eye wash station",
-                        "level": 2,
-                        "leaf": true,
-                        "parent_id": "40288085511cbdaf01511cc05f240000",
-                        "data_id": "40288083512f034b01512f04d5fb0000",
-                        "dataType": "CustomizedElement",
-                        "deleted": false
-                    }, {
-                        "id": "40288083512f034b01512f0640010005",
-                        "description": null,
-                        "createTime": 1448192918000,
-                        "updateTime": 1448192918000,
-                        "name": "dddd",
-                        "level": 2,
-                        "leaf": true,
-                        "parent_id": "40288085511cbdaf01511cc05f240000",
-                        "data_id": "40288083512f034b01512f063ff90003",
-                        "dataType": "CustomizedElement",
-                        "deleted": false
-                    }];
+                    MessageService.handleServerErr(err);
                 }
             );
         };
@@ -78,52 +56,44 @@ app.controller('FolderCustomizedElementController', ['$scope', '$timeout', 'Fold
             angular.forEach($scope.customizedElementList, function (itm) {
                 itm.selected = !toggleStatus;
             });
-            console.log();
         };
 
 
         $scope.editCustomizedElement = function (folderNode) {
+            folderNode.name_ = folderNode.name;
+            folderNode.description_ = folderNode.description;
             folderNode.editing = true;
-            FolderCustomizedElementService.getOneCustomizedElement(folderNode.data_id)
-                .then(
-                function (data) {
-                    folderNode.customizedElement = data;
-                },
-                function (err) {
-
-                }
-            );
-
         };
 
         $scope.saveElement = function (element) {
-            FolderCustomizedElementService.saveCustomizedElementToFolder($scope.thisFolder.id, element)
+            $scope.createCustomizedElementPromise = FolderCustomizedElementService.saveCustomizedElementToFolder($scope.thisFolder.id, element)
                 .then(
                 function (data) {
-                    console.log('save element to folder' + $scope.thisFolder.id + ' success');
-                    $scope.customizedElementList.push(data);
-                    element.editing = false;
+                    var element = MessageService.handleMsg(data);
+                    if (element) {
+                        $scope.loadCustomizedElementsInFolder();
+                    }
                 },
                 function (err) {
-                    console.log('save element to folder' + $scope.thisFolder.id + ' fail');
+                    MessageService.handleServerErr(err);
                 }
             );
         };
 
         $scope.updateElement = function (folderNode) {
-            FolderCustomizedElementService.updateCustomizedElementInFolder($scope.thisFolder.id, folderNode)
+            folderNode.name = folderNode.name_;
+            folderNode.description = folderNode.description_;
+
+            $scope.updateCustomizedElementPromise = FolderCustomizedElementService.updateCustomizedElementInFolder($scope.thisFolder.id, folderNode)
                 .then(
                 function (data) {
-                    folderNode.name = data.name;
-                    folderNode.description = data.description;
-                    folderNode.id = data.id;
-                    folderNode.createTime = data.createTime;
-                    folderNode.updateTime = data.updateTime;
-                    folderNode.editing = false;
-                    console.log('update element to folder' + $scope.thisFolder.id + ' success');
+                    var newE = MessageService.handleMsg(data);
+                    if(newE){
+                        angular.copy(newE,folderNode);
+                    }
                 },
                 function (err) {
-                    console.log('update element to folder' + $scope.thisFolder.id + ' fail');
+                    MessageService.handleServerErr(err);
                 }
             );
         };
@@ -141,13 +111,15 @@ app.controller('FolderCustomizedElementController', ['$scope', '$timeout', 'Fold
                     return;
                 }
 
-                FolderCustomizedElementService.deleteCustomizedElementInFolder($scope.thisFolder.id, selected).then(
+                $scope.customizedElementTablePromise = FolderCustomizedElementService.deleteCustomizedElementInFolder($scope.thisFolder.id, selected).then(
                     function (data) {
-                        $scope.customizedElementList = data;
-                        $scope.thisFolder.selectedAllCustomizedElements = false;
+                        var list = MessageService.handleMsg(data);
+                        if(list){
+                            $scope.customizedElementList = list.children;
+                        }
                     },
                     function (err) {
-
+                        MessageService.handleServerErr(err);
                     }
                 );
             }
@@ -159,7 +131,9 @@ app.factory('FolderCustomizedElementService', ['$http', '$q', function ($http, $
     return {
 
         deleteCustomizedElementInFolder: function (folderId, ids) {
-            return $http.post('/folder/' + folderId + '/customizedElement/delete/', ids)
+
+            // /admin/files/delete/{parentId}/{type}
+            return $http.post('/admin/files/delete/' + folderId + '/CUSTOMIZED_ELEMENT', ids)
                 .then(function (response) {
                     return response.data;
                 },
@@ -170,7 +144,7 @@ app.factory('FolderCustomizedElementService', ['$http', '$q', function ($http, $
         },
 
         updateCustomizedElementInFolder: function (folderId, folderNode) {
-            return $http.put('/folder/' + folderId + '/customizedElement/' + folderNode.id, folderNode.customizedElement)
+            return $http.put('/admin/files/folder/customizedElement/' + folderId, folderNode)
                 .then(
                 function (response) {
                     return response.data;
@@ -183,7 +157,8 @@ app.factory('FolderCustomizedElementService', ['$http', '$q', function ($http, $
 
         // list all the customized elements under folder which id is folderId
         listCustomizedElementByFolderId: function (folderId) {
-            return $http.get('/folder/' + folderId + '/customizedElement/').then(
+            ///admin/files/folder/getCustomizedElement/{folderId}
+            return $http.get('/admin/files/folder/getCustomizedElement/' + folderId).then(
                 function (response) {
                     return response.data;
                 },
@@ -194,7 +169,8 @@ app.factory('FolderCustomizedElementService', ['$http', '$q', function ($http, $
         },
 
         saveCustomizedElementToFolder: function (folderId, element) {
-            return $http.post('/folder/' + folderId + '/customizedElement/', element)
+            // /admin/files/folder/customizedElement/{parentId}
+            return $http.post('/admin/files/folder/customizedElement/' + folderId, element)
                 .then(
                 function (response) {
                     return response.data;

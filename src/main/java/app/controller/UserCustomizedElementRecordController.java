@@ -8,6 +8,8 @@
 
 package app.controller;
 
+import app.model.files.FileElement;
+import app.model.files.FolderFileElement;
 import app.model.forms.CustomizedElement;
 import app.model.forms.CustomizedElementRecord;
 import app.model.forms.CustomizedElementRecordValue;
@@ -46,9 +48,9 @@ public class UserCustomizedElementRecordController {
     @RequestMapping(value = "/user/{userId}/customizedElementMenu/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CustomizedElement>> loadCustomizedElementMenus(@PathVariable int userId) {
         User user = userService.get(userId);
-        List<Folder> folders = user.getFolders();
+        List<FolderFileElement> folders = user.getFolders();
         List<CustomizedElement> menus = new ArrayList<>();
-        for(Folder folder:folders){
+        for(FileElement folder:folders){
             List<Folder> customizedElementNodes = folderService.listCustomizedNodeBasedOnFolderId(folder.getId());
             for(Folder customizedElementNode : customizedElementNodes){
                 CustomizedElement customizedElement = customizedElementService.get(customizedElementNode.getData_id());

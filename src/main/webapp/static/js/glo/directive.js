@@ -79,7 +79,6 @@
                     var nodeShowProgress = attrs.nodeShowProgress || false;
 
                     var isLeaf = attrs.nodeIsLeaf || 'isLeaf';
-                    console.log(isLeaf);
 
                     var progress = attrs.progress || 'progress';
 
@@ -87,18 +86,18 @@
                     //tree template
                     var template =
                         '<ul>' +
-                        '<li data-ng-repeat="node in ' + treeModel + '">' +
+                        '<li  data-ng-repeat="node in ' + treeModel + '">' +
                         '<i class="collapsed" data-ng-show="!node.' + isLeaf + ' && node.collapsed" data-ng-click="' + treeId + '.selectNodeHead(node)"></i>' +
                         '<i class="expanded" data-ng-show="!node.' + isLeaf + ' && !node.collapsed" data-ng-click="' + treeId + '.selectNodeHead(node)"></i>' +
                         '<i class="normal" data-ng-hide="!node.' + isLeaf + '"></i> ' +
                         '<span data-ng-class="node.selected" data-ng-click="' + treeId + '.selectNodeLabel(node)">{{node.' + nodeLabel + '}}</span>' +
 
-                        '<div data-ng-show="' + nodeShowProgress + '" class=\"progress\" style=\"margin-bottom: 0;height: 10px\">' +
+                        '<div data-ng-if="' + nodeShowProgress + '" class=\"progress\" style=\"margin-bottom: 0;height: 10px\">' +
                         '<div class = "progress-bar" role = "progressbar" style="width:' +
                         '{{node.' + progress + '}}'
                         + '\"></div></div >' +
 
-                        '<div data-ng-hide="node.collapsed" data-node-is-leaf="' + isLeaf + '" data-node-show-progress="' + nodeShowProgress + '" data-tree-id="' + treeId + '" data-tree-model="node.' + nodeChildren + '" data-node-id=' + nodeId + ' data-node-label=' + nodeLabel + ' data-node-children=' + nodeChildren + '></div>' +
+                        '<div data-ng-hide="node.collapsed"  data-node-is-leaf="' + isLeaf + '" data-node-show-progress="' + nodeShowProgress + '" data-tree-id="' + treeId + '" data-tree-model="node.' + nodeChildren + '" data-node-id=' + nodeId + ' data-node-label=' + nodeLabel + ' data-node-children=' + nodeChildren + '></div>' +
                         '</li>' +
                         '</ul>';
 
@@ -199,7 +198,7 @@
             return {
                 restrict: 'A',
                 link: function (scope, element, attributes) {
-                    element.css('overflow', 'scroll');
+                    element.css('overflow', 'auto');
                 }
             }
         }])

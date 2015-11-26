@@ -1,5 +1,5 @@
 <div ng-controller="FolderCustomizedElementController">
-    <div ng-if="thisFolder.parent_id=='0'">
+    <div ng-if="thisFolder.level=='1'">
         <div class="well">
             <div class="row" ng-show = !newElement.editing>
                 <button class="btn btn-primary btn-sm" ng-click="newElement.editing=true">Add New Element</button>
@@ -7,7 +7,7 @@
             </div>
 
             <!--new question area-->
-            <div ng-if="newElement.editing">
+            <div ng-if="newElement.editing" cg-busy="createCustomizedElementPromise">
                 <form name="newElementForm" novalidate>
                     <div class="row"
                          ng-class="{ 'has-error' : newElementForm.name.$invalid && !newElementForm.name.$pristine }">
@@ -98,7 +98,7 @@
 
             <hr>
             <!--question list table-->
-            <table st-table="customizedElementListDisplay" st-safe-src="customizedElementList" class="table table-striped">
+            <table cg-busy="customizedElementTablePromise" st-table="customizedElementListDisplay" st-safe-src="customizedElementList" class="table table-striped">
                 <thead>
                 <tr>
                     <th><label>
@@ -132,13 +132,13 @@
                 <tr ng-repeat-end ng-show="x.editing">
                     <td colspan="5">
                         <form class="form-horizontal">
-                            <div>
+                            <div cg-busy="updateCustomizedElementPromise">
                                 <label>Name:
                                 </label>
-                                <input ng-model="x.customizedElement.name" class="form-control">
+                                <input ng-model="x.name_" class="form-control">
                                 <label>Description:
                                 </label>
-                                <textarea ng-model="x.customizedElement.description" class="form-control"></textarea>
+                                <textarea ng-model="x.description_" class="form-control"></textarea>
                                 <hr>
                                 <button class="btn btn-default" ng-click="updateElement(x)">Save</button>
                                 <button class="btn btn-warning" ng-click="loadCustomizedElementsInFolder()">Cancel</button>

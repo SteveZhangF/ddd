@@ -44,6 +44,10 @@ app.factory('UserFormRecordService',['$http','$q', function ($http,$q) {
                     return $q.reject(err);
                 }
             );
+        },
+        
+        saveFlowPercent: function (percent) {
+            
         }
     }
 
