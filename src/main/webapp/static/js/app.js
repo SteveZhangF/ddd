@@ -15,10 +15,6 @@ app.factory('LogInData', function () {
         userInfo: null
     }
 });
-<<<<<<< HEAD
-
-=======
->>>>>>> refactorFiles
 // add an interceptor to add the token to the request head
 app.config(['$httpProvider', function ($httpProvider) {
     $httpProvider.interceptors.push(['$q', '$location', '$window', function ($q, $location, $window) {
