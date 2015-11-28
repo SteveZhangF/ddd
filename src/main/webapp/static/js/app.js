@@ -98,9 +98,6 @@ app.config(['$routeProvider', function ($routeProvider) {
             resolve: resolve
         }).when("/register", {
             templateUrl: "user/register.html"
-        }).when("/employees", {
-            templateUrl: "user/employee_list.html",
-            resolve: resolve
         }).when("/view_employee", {
             templateUrl: "user/employee_edit.html",
             resolve: resolve
@@ -118,7 +115,7 @@ app.config(['$routeProvider', function ($routeProvider) {
             resolve: resolve
         })
         .when("/employee_list", {
-            templateUrl:"user/employee_list.html",
+            templateUrl:"user/employee_list_card_style.html",
             resolve:resolve
         })
         .when("/view_document",{

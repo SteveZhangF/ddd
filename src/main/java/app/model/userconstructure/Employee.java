@@ -36,19 +36,8 @@ public class Employee extends OrganizationElement {
     private String nationality;
     private String birthday;
 
-    /**
-     * job detail
-     */
-    @ManyToOne()
-    private JobTitle jobTitle;
-
-    @ManyToOne()
-    private EmploymentStatus employmentStatus;
-    private Date joinedDate;
     private Date startDate;
     private Date endDate;
-    private String contractDetail;
-
 
     public String getFirstName() {
         return firstName;
@@ -122,29 +111,6 @@ public class Employee extends OrganizationElement {
         this.birthday = birthday;
     }
 
-    public JobTitle getJobTitle() {
-        return jobTitle;
-    }
-
-    public void setJobTitle(JobTitle jobTitle) {
-        this.jobTitle = jobTitle;
-    }
-
-    public EmploymentStatus getEmploymentStatus() {
-        return employmentStatus;
-    }
-
-    public void setEmploymentStatus(EmploymentStatus employmentStatus) {
-        this.employmentStatus = employmentStatus;
-    }
-
-    public Date getJoinedDate() {
-        return joinedDate;
-    }
-
-    public void setJoinedDate(Date joinedDate) {
-        this.joinedDate = joinedDate;
-    }
 
     public Date getStartDate() {
         return startDate;
@@ -160,14 +126,6 @@ public class Employee extends OrganizationElement {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
-    }
-
-    public String getContractDetail() {
-        return contractDetail;
-    }
-
-    public void setContractDetail(String contractDetail) {
-        this.contractDetail = contractDetail;
     }
 
     public String getImagePath() {

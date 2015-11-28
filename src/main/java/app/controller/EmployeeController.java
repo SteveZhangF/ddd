@@ -8,8 +8,10 @@
 
 package app.controller;
 
+import app.message.Message;
 import app.model.userconstructure.Company;
 import app.model.userconstructure.Employee;
+import app.model.userfield.EmploymentStatus;
 import app.service.userconstructure.CompanyService;
 import app.service.userconstructure.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,58 +35,26 @@ public class EmployeeController {
 
     // get employees of a company by user id
 
-    @RequestMapping(value = "/employee/getbyUser/{userId}", method = RequestMethod.GET)
-    public ResponseEntity<List<Employee>> listEmployeebyUserId(@PathVariable("userId") int userId) {
+    @RequestMapping(value = "/user/{userId}/employee/", method = RequestMethod.GET)
+    public ResponseEntity<Message> listEmployeebyUserId(@PathVariable("userId") int userId) {
         List<Employee> employees = employeeService.getEmployeebyUserId(userId);
-        if (employees.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(employees, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/employee/getPersonDetail/{uuid}", method = RequestMethod.GET)
-    public ResponseEntity<Employee> getEmployeePersonDetailbyId(@PathVariable("uuid") String uuid){
-        Employee employee = employeeService.getEmployeePersonDetailbyId(uuid);
-        if(employee!=null){
-            return new ResponseEntity<>(employee,HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(Message.getSuccessMsg("Load employees success",employees), HttpStatus.OK);
     }
 
 
-    @RequestMapping(value = "/employee/getJobDetail/{uuid}", method = RequestMethod.GET)
-    public ResponseEntity<Employee> getEmployeeJobDetailbyId(@PathVariable("uuid") String uuid){
-        Employee employee = employeeService.getEmployeeJobDetailbyId(uuid);
-        if(employee!=null){
-            return new ResponseEntity<>(employee,HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-
-
-    @RequestMapping(value = "/employee/", method = RequestMethod.GET)
-    public ResponseEntity<List<Employee>> listAllDepartment() {
-        List<Employee> employees = employeeService.loadAll();
-        if (employees.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(employees, HttpStatus.OK);
-    }
-
-    //-------------------Retrieve Single Employee--------------------------------------------------------
-
-    @RequestMapping(value = "/employee/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Employee> getDepartment(@PathVariable("id") String id) {
+    /**
+     * load an employee
+     * */
+    @RequestMapping(value = "/user/{userId}/employee/{Id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Message> getEmployeeByUserIdAndId(@PathVariable("Id") String id,@PathVariable("userId") int userId) {
         Employee employee = employeeService.get(id);
-        System.out.println(employeeService);
         if (employee == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(Message.getFailMsg("No such employee"),HttpStatus.OK);
         }
-        // System.out.println(new ResponseEntity<Company>(company, HttpStatus.OK).toString()	);
-        return new ResponseEntity<>(employee, HttpStatus.OK);
+        if(employee.getUserId()!=userId){
+            return new ResponseEntity<>(Message.getFailMsg("No such employee in your company"),HttpStatus.OK);
+        }
+        return new ResponseEntity<>(Message.getSuccessMsg("Load employee success",employee), HttpStatus.OK);
     }
 
 
@@ -92,22 +62,24 @@ public class EmployeeController {
 
     @Autowired
     CompanyService companyService;
-    @RequestMapping(value = "/employee/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee, HttpServletResponse response) {
+    @RequestMapping(value = "/user/{userId}/employee/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Message> createEmployee(@RequestBody Employee employee, @PathVariable int userId) {
+        employee.setUserId(userId);
         employeeService.save(employee);
-        return new ResponseEntity<>(employee, HttpStatus.OK);
+        List<Employee> list = employeeService.getEmployeebyUserId(userId);
+        return new ResponseEntity<>(Message.getSuccessMsg("Add employee success",list), HttpStatus.OK);
     }
 
 
     //------------------- Update a Employee --------------------------------------------------------
 
-    @RequestMapping(value = "/employee/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Employee> updateDepartment(@PathVariable("id") String id, @RequestBody Employee employee) {
-        System.out.println("Updating employee ======> " + id);
+    @RequestMapping(value = "/user/{userId}/employee/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Message> updateDepartment(@PathVariable("id") String id,@PathVariable int userId, @RequestBody Employee employee) {
+        employee.setUserId(userId);
         employeeService.update(employee);
-        return new ResponseEntity<>(employee, HttpStatus.OK);
+        List<Employee> list = employeeService.getEmployeebyUserId(userId);
+        return new ResponseEntity<>(Message.getSuccessMsg("Update employee success",list), HttpStatus.OK);
     }
-
 
     //------------------- Delete a Employee --------------------------------------------------------
 

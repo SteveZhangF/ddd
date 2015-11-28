@@ -1,6 +1,103 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,400,300,600);
 
+.plus-mouse-over {
+    position: absolute;
 
+    width: 160px;
+    height: 160px;
+
+    top: 50%;
+    left: 50%;
+
+    margin-left: -80px;
+    margin-top: -80px;
+
+    border: silver 1px dashed
+}
+
+.plus-mouse-out {
+
+    position: absolute;
+
+    width: 150px;
+    height: 150px;
+
+    top: 50%;
+    left: 50%;
+
+    margin-left: -75px;
+    margin-top: -75px;
+
+    border: silver 1px dashed
+
+}
+
+.plus::before, .plus::after {
+
+    position: absolute;
+
+    background-color: silver;
+
+    content: ""
+
+}
+
+.plus::before {
+
+    width: 75px;
+    height: 25px;
+    top: 62.5px;
+    left: 37.5px;
+
+}
+
+.plus::after {
+
+    width: 25px;
+    height: 75px;
+    left: 62.5px;
+    top: 37.5px;
+
+}
+
+.customized-element-card {
+    height: 300px;
+}
+
+.customized-element-card .panel-body {
+    height: 184px;
+    overflow: auto;
+}
+
+.customized-element-card-mouse-over {
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.775)
+}
+.customized-element-card-selected {
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.775)
+}
+.customized-element-card-selected:before {
+    position: absolute;
+    top: 55px;
+    right: -15px;
+    display: inline-block;
+    border-top: 15px solid transparent;
+    border-left: 15px solid #ccc;
+    border-right: 0 solid #ccc;
+    border-bottom: 15px solid transparent;
+    content: " ";
+}
+
+.customized-element-card-selected:after {
+    position: absolute;
+    top: 56px;
+    right: -14px;
+    display: inline-block;
+    border-top: 14px solid transparent;
+    border-left: 14px solid #fff;
+    border-right: 0 solid #fff;
+    border-bottom: 14px solid transparent;
+    content: " ";
+}
 .steps {
     height: 600px;
     overflow-y: hidden;
@@ -18,41 +115,53 @@
     height: 60%
 }
 
-.panel-footer > .panel-footer-buttons{
-    float:right;
+.panel-footer > .panel-footer-buttons {
+    float: right;
 }
 
 /* The starting CSS styles for the enter animation */
 .fade-in.ng-enter {
-    transition:0.5s linear all;
-    opacity:0;
+    transition: 0.5s linear all;
+    opacity: 0;
 }
 
 /* The finishing CSS styles for the enter animation */
 .fade-in.ng-enter.ng-enter-active {
-    opacity:1;
+    opacity: 1;
 }
+
 .fade-in.ng-leave {
-    transition:0.5s linear all;
-    opacity:1;
+    transition: 0.5s linear all;
+    opacity: 1;
 }
+
 .fade-in.ng-leave.ng-leave-active {
-    opacity:0;
+    opacity: 0;
 }
+
 .fade-in.ng-leave {
     animation: my_fade_animation 0.5s linear;
     -webkit-animation: my_fade_animation 0.5s linear;
 }
 
 @keyframes my_fade_animation {
-    from { opacity:1; }
-    to { opacity:0; }
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
 }
 
 @-webkit-keyframes my_fade_animation {
-    from { opacity:1; }
-    to { opacity:0; }
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
 }
+
 html {
     font-family: sans-serif;
     -ms-text-size-adjust: 100%;
@@ -5750,6 +5859,7 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:hover, a.list-g
 .panel-default > .panel-footer + .panel-collapse > .panel-body {
     border-bottom-color: #ddd
 }
+
 .panel-footer {
     color: #333;
     background-color: #fff;

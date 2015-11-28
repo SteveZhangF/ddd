@@ -10,30 +10,9 @@ app.factory('EmployeeService', ['$http', '$q', function ($http, $q) {
 
     return {
 
-        getEmployeeJobDetail: function (uuid) {
-            return $http.get('/employee/getJobDetail/'+uuid).then(
-                function (response) {
-                    return response.data;
-                },
-                function (errResponse) {
-                    return $q.reject(errResponse);
-                }
-            );
-        },
-
-        getEmployeePersonDetail: function (uuid) {
-            return $http.get('/employee/getPersonDetail/'+uuid).then(
-                function (response) {
-                    return response.data;
-                },
-                function (errResponse) {
-                    return $q.reject(errResponse);
-                }
-            );
-        },
-
         getEmployeeByUserId: function (userId) {
-            return $http.get('/employee/getbyUser/'+userId).then(
+            ///user/{userId}/employee/
+            return $http.get('/user/'+userId+'/employee/').then(
                 function (response) {
                     return response.data;
                 },
@@ -43,53 +22,37 @@ app.factory('EmployeeService', ['$http', '$q', function ($http, $q) {
             );
         },
 
-        fetchAllEmployee: function () {
-            return $http.get('/employee/')
+        getEmployee: function (userId,id) {
+            return $http.get('/user/'+userId+'/employee/' + id)
                 .then(
                 function (response) {
                     return response.data;
                 },
                 function (errResponse) {
-                    console.error('Error while fetching employee');
                     return $q.reject(errResponse);
                 }
             );
         },
 
-        getEmployee: function (id) {
-            return $http.get('/employee/' + id)
+        createEmployee: function (userId,employee) {
+            return $http.post('/user/'+userId+'/employee/', employee)
                 .then(
                 function (response) {
                     return response.data;
                 },
                 function (errResponse) {
-                    console.error("Error whhile get Employee");
                     return $q.reject(errResponse);
                 }
             );
         },
 
-        createEmployee: function (employee) {
-            return $http.post('/employee/', employee)
+        updateEmployee: function (userId,employee, id) {
+            return $http.put('/user/'+userId+'/employee/' + id, employee)
                 .then(
                 function (response) {
                     return response.data;
                 },
                 function (errResponse) {
-                    console.error('Error while creating employee');
-                    return $q.reject(errResponse);
-                }
-            );
-        },
-
-        updateEmployee: function (employee, id) {
-            return $http.put('/employee/' + id, employee)
-                .then(
-                function (response) {
-                    return response.data;
-                },
-                function (errResponse) {
-                    console.error('Error while updating employee');
                     return $q.reject(errResponse);
                 }
             );

@@ -90,7 +90,7 @@ public class EmployeeServiceImpl extends BaseGenericServiceImpl<Employee, String
 //    private String contractDetail;
     @Override
     public Employee getEmployeeJobDetailbyId(String uuid) {
-        String[] fields = {"uuid","jobTitle", "employmentStatus", "joinedDate", "startDate", "endDate", "contractDetail" };
+        String[] fields = {"uuid",  "startDate", "endDate" };
         HashMap<String, Object> map = new HashMap<>();
         map.put("uuid", uuid);
         List<Employee> list = employeeDAO.getListbyFieldAndParams(fields, map);

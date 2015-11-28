@@ -704,6 +704,20 @@
                 transclude: true,
                 template: '<div class="timeline-panel" ng-transclude></div>'
             };
-        });
+        })
+    .directive('customizedElementCard',function(){
+            //,'box-shadow': '0 1px 6px rgba(0, 0, 0, 0.175)'
+            return {
+                link: function (scope, element, attr) {
+                    element.addClass('customized-element-card');
+                    element.hover(
+                        function() {
+                            $( this ).addClass('customized-element-card-mouse-over');
+                        }, function() {
+                            $( this ).removeClass('customized-element-card-mouse-over');
+                        });
+                }
+            }
+        })
 
 })(angular);
