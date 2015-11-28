@@ -93,7 +93,6 @@ app.controller('UserEmployeeController', ['$scope', 'EmployeeService', 'LoginSer
         } else {
             updateEmployee(employee);
         }
-        $scope.editing = false;
     };
 
     var createEmployee = function (employee) {
@@ -105,6 +104,7 @@ app.controller('UserEmployeeController', ['$scope', 'EmployeeService', 'LoginSer
                     $scope.employees = list;
                     newEmployee = {isNew:true};
                     $scope.employees.push(newEmployee);
+                    $scope.editing = false;
                 }
             },
             function (err) {
@@ -122,6 +122,7 @@ app.controller('UserEmployeeController', ['$scope', 'EmployeeService', 'LoginSer
                     $scope.employees = list;
                     newEmployee = {isNew:true};
                     $scope.employees.push(newEmployee);
+                    $scope.editing = false;
                 }
             },
             function (errData) {

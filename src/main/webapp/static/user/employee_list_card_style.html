@@ -1,5 +1,5 @@
 <div cg-busy="userEmployeeListPromise" ng-controller="UserEmployeeController" class="container">
-    
+
     <div class="container row">
         <div  ng-class="{'col-md-3':editing,'col-md-12':!editing}" id="card-parent" ng-style="{'overflow':'auto','height':'620px'}">
             <div ng-class="{'col-md-3':!editing,'col-md-12':editing}"  class="fade-in" ng-repeat="element in employees track by $index">
