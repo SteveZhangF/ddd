@@ -1,11 +1,10 @@
 'use strict';
 
 var app = angular.module('clientApp', ['ngRoute', 'ui.bootstrap','ngAnimate' , 'angularFileUpload', 'customizedDirective', 'smart-table', 'ngDialog', 'angularSpinner','cgBusy']);
-var debug = false;
+var debug = true;
 var redirect = function ($location) {
     console.log('debug:true');
     if (!debug) {
-
         $location.path('/login');
     }
 };
@@ -23,7 +22,6 @@ app.config(['$httpProvider', function ($httpProvider) {
                 config.headers = config.headers || {};
                 var path = $location.$$path;
                 if (path == '/register' || path == '/login' || path == '/') {
-
                 } else {
                     if ($window.sessionStorage["userInfo"]) {
                         var token = JSON.parse($window.sessionStorage["userInfo"]);
@@ -34,8 +32,6 @@ app.config(['$httpProvider', function ($httpProvider) {
                         redirect($location);
                     }
                 }
-
-
                 return config;
             },
             'responseError': function (response) {

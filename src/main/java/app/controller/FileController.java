@@ -62,6 +62,7 @@ public class FileController {
         FileElement fileElement = new FolderFileElement();
         fileElement.setName(folder.getName());
         fileElement.setDescription(folder.getDescription());
+        fileElement.setLevel(parent.getLevel()+1);
         fileElement.setDeleted(false);
         List<FileElement> list = fileService.getFileElementByNameParentIdType(parentId, fileElement.getName(), fileElement.getType());
         if (list.size() > 0) {
@@ -452,5 +453,69 @@ public class FileController {
         return new ResponseEntity<>(msg, HttpStatus.OK);
     }
 
+
+    /**
+     * create a employee field and add it to the parentId folder
+     */
+    @RequestMapping(value = "/admin/files/employee_field/{parentId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Message> createEmployeeField(@PathVariable String parentId, @RequestBody EmployeeFieldFileElement employeeFieldFileElement) {
+        if (employeeFieldFileElement.getName() == null || employeeFieldFileElement.getName().trim().equals("")) {
+            return new ResponseEntity<>(Message.getFailMsg("Name can not be null"), HttpStatus.OK);
+        }
+        FileElement parent = fileService.get(parentId);
+        if (parent == null) {
+            return new ResponseEntity<>(Message.getFailMsg("No such parent folder"), HttpStatus.OK);
+        }
+        if (!parent.getType().equals(FileElement.FileType.FOLDER)) {
+            return new ResponseEntity<>(Message.getFailMsg("parent is not a folder"), HttpStatus.OK);
+        }
+
+        employeeFieldFileElement.setDeleted(false);
+        employeeFieldFileElement.setLeaf(true);
+
+        List<FileElement> list = fileService.getFileElementByNameParentIdType(parentId, employeeFieldFileElement.getName(), employeeFieldFileElement.getType());
+        if (list.size() > 0) {
+            return new ResponseEntity<>(Message.getFailMsg("This Employee Field Already Exists in the same folder"), HttpStatus.OK);
+        }
+        employeeFieldFileElement.setParent_id(parentId);
+        fileService.save(employeeFieldFileElement);
+        Message msg = Message.getSuccessMsg("Create employee field " + employeeFieldFileElement.getName() + " Under " + parent.getName() + " Success!", employeeFieldFileElement);
+        return new ResponseEntity<>(msg, HttpStatus.OK);
+    }
+
+    /**
+     * update the employee field
+     */
+    @RequestMapping(value = "/admin/files/employee_field/{parentId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Message> updateEmployeeField(@PathVariable String parentId, @RequestBody EmployeeFieldFileElement employeeFieldFileElement) {
+
+        if (employeeFieldFileElement.getName() == null || employeeFieldFileElement.getName().trim().equals("")) {
+            return new ResponseEntity<>(Message.getFailMsg("Name can not be null"), HttpStatus.OK);
+        }
+
+        FileElement fileElement = fileService.get(employeeFieldFileElement.getId());
+        if (fileElement == null) {
+            return new ResponseEntity<>(Message.getFailMsg("Employee field not found"), HttpStatus.OK);
+        }
+
+        if (!employeeFieldFileElement.getName().equals(fileElement.getName())) {
+            List<FileElement> list = fileService.getFileElementByNameParentIdType(parentId, employeeFieldFileElement.getName(), fileElement.getType());
+            if (list.size() > 0) {
+                return new ResponseEntity<>(Message.getFailMsg("Employee Field Name Already Exists"), HttpStatus.OK);
+            }
+        }
+
+        FileElement parent = fileService.get(parentId);
+        if (parent == null) {
+            return new ResponseEntity<>(Message.getFailMsg("Parent folder is not existing"), HttpStatus.OK);
+        }
+        if (!parent.getType().equals(FileElement.FileType.FOLDER)) {
+            return new ResponseEntity<>(Message.getFailMsg("parent is not a folder"), HttpStatus.OK);
+        }
+
+        fileService.update(employeeFieldFileElement);
+        Message msg = Message.getSuccessMsg("Update question " + employeeFieldFileElement.getName() + " Success!", employeeFieldFileElement);
+        return new ResponseEntity<>(msg, HttpStatus.OK);
+    }
 }
 

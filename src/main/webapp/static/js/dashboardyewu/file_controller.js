@@ -4,14 +4,42 @@ app.controller('FileTreeController', ['$scope', '$filter', 'FolderService', '$ti
     $scope.thisFolder = {};
     $scope.treeFilter = {deleted: false, type: 'FOLDER'};
     var folderMenu = {
-        all: [{name: 'Edit', url: 'dashboard/folder_edit.html', selected: true}, {
-            name: "Files",
-            url: 'dashboard/folder_files.html'
-        }, {name: 'Questions', url: 'dashboard/folder_questions.html'}, {
-            name: 'Flows',
-            url: 'dashboard/folder_flow.html'
-        },
-            {name: 'Customized Element', url: 'dashboard/folder_customized_element.html'}
+        all: [
+            {
+                name: 'Edit', url: 'dashboard/folder_edit.html', selected: true
+            },
+            {
+                name: "Files",
+                url: 'dashboard/folder_files.html'
+            }, {name: 'Questions', url: 'dashboard/folder_questions.html'},
+            {
+                name: 'Flows',
+                url: 'dashboard/folder_flow.html'
+            }
+
+
+        ], selectedMenu: {}
+    };
+
+    var moduleMenu = {
+        all: [
+            {
+                name: 'Edit', url: 'dashboard/folder_edit.html', selected: true
+            },
+            {
+                name: "Files",
+                url: 'dashboard/folder_files.html'
+            }, {name: 'Questions', url: 'dashboard/folder_questions.html'},
+            {
+                name: 'Flows',
+                url: 'dashboard/folder_flow.html'
+            },
+            {
+                name: 'Customized Element', url: 'dashboard/folder_customized_element.html'
+            },
+            {
+                name: 'Employee Field', url: 'dashboard/folder_employee_field.html'
+            }
 
         ], selectedMenu: {}
     };
@@ -103,6 +131,8 @@ app.controller('FileTreeController', ['$scope', '$filter', 'FolderService', '$ti
             case 'FOLDER':
                 if (node.root) {
                     $scope.menu = angular.copy(rootFolderMenu);
+                } else if (node.level == 1) {
+                    $scope.menu = angular.copy(moduleMenu);
                 } else {
                     $scope.menu = angular.copy(folderMenu);
                 }
@@ -231,7 +261,7 @@ app.controller('FileTreeController', ['$scope', '$filter', 'FolderService', '$ti
                 }
             );
         } else {
-            $scope.editingFileNode = {isNew: true,  parent_id: $scope.thisFolder.id};
+            $scope.editingFileNode = {isNew: true, parent_id: $scope.thisFolder.id};
             $scope.thisFolder.showFileEditor = true;
         }
     };
@@ -518,19 +548,19 @@ app.controller('FileController', ['$scope', 'FolderService', 'filterFilter', '$t
         var plugins = angular.element(content).find('plugin');
         var questions = [];
 
-        for(var i=0;i<plugins.length;i++){
+        for (var i = 0; i < plugins.length; i++) {
             var question = {id: ''};
             question.id = plugins[i].getAttribute('question_id');
-            if(!existQuestion(question,questions)){
+            if (!existQuestion(question, questions)) {
                 questions.push(question);
             }
         }
         fileNode.questions = questions;
 
     };
-    var existQuestion = function (q,questions) {
-        for(var i=0;i<questions.length;i++){
-            if(questions[i].id== q.id){
+    var existQuestion = function (q, questions) {
+        for (var i = 0; i < questions.length; i++) {
+            if (questions[i].id == q.id) {
                 return true;
             }
         }
@@ -542,7 +572,7 @@ app.controller('FileController', ['$scope', 'FolderService', 'filterFilter', '$t
         console.log(fileNode);
         fileNode.name = fileNode.name_;
         fileNode.description = fileNode.description_;
-        if(fileNode.isNew){
+        if (fileNode.isNew) {
             $scope.fileEditPromise = FolderSerice.saveFile(fileNode.parent_id, fileNode)
                 .then(
                 function (data) {
@@ -557,24 +587,24 @@ app.controller('FileController', ['$scope', 'FolderService', 'filterFilter', '$t
                     MessageService.handleServerErr(err);
                 }
             );
-        }else{
+        } else {
             $scope.fileEditPromise = FolderSerice.updateFile(fileNode.parent_id, fileNode)
                 .then(
                 function (data) {
                     var file = MessageService.handleMsg(data);
                     if (file) {
-                        if($scope.thisFolder.id != file.id){
+                        if ($scope.thisFolder.id != file.id) {
                             //$scope.thisFolder.children.push(file);
                             $scope.thisFolder.showFileEditor = false;
                             $scope.editingFileNode = angular.copy(file);
                             angular.forEach($scope.thisFolder.children, function (c) {
-                                if(c.id==file.id){
-                                    angular.copy(file,c);
+                                if (c.id == file.id) {
+                                    angular.copy(file, c);
                                 }
                             })
-                        }else{
-                            angular.copy(file,$scope.thisFolder);
-                            $scope.thisFolder.selected='selected';
+                        } else {
+                            angular.copy(file, $scope.thisFolder);
+                            $scope.thisFolder.selected = 'selected';
                         }
                     }
                 },
@@ -802,7 +832,36 @@ app.factory('FolderService', ['$http', '$q', function ($http, $q) {
         },
 
         loadQuestionNodesBasedOnFolderId: function (parentId) {
-            return $http.get('/admin/files/folder/'+parentId+'/flow/getQuestions/' )
+            return $http.get('/admin/files/folder/' + parentId + '/flow/getQuestions/')
+                .then(
+                function (response) {
+                    return response.data;
+                },
+                function (err) {
+                    return $q.reject(err);
+                }
+            );
+        },
+
+        //employee field
+
+        /**
+         * create a question under parentId folder
+         * */
+        saveEmployeeField: function (parentId, employeeField) {
+            return $http.post('/admin/files/employee_field/' + parentId, employeeField)
+                .then(
+                function (response) {
+                    return response.data;
+                },
+                function (err) {
+                    return $q.reject(err);
+                }
+            );
+        },
+
+        updateEmployeeField: function (parentId, employeeField) {
+            return $http.put('/admin/files/employee_field/' + parentId, employeeField)
                 .then(
                 function (response) {
                     return response.data;
@@ -812,8 +871,6 @@ app.factory('FolderService', ['$http', '$q', function ($http, $q) {
                 }
             );
         }
-
-
     };
 
 }]);

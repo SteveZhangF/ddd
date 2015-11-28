@@ -137,7 +137,7 @@ public abstract class FileElement {
     }
 
     public enum FileType {
-        FILE, FOLDER, QUESTION,CUSTOMIZED_ELEMENT
+        FILE, FOLDER, QUESTION,CUSTOMIZED_ELEMENT,EMPLOYEE_FIELD
 
     }
 

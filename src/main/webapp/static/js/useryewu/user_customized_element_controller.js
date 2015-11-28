@@ -1,102 +1,88 @@
 'use strict';
 
-app.filter('customFilter', ['$filter', function ($filter) {
-    var filterFilter = $filter('filter');
-
-    return function (input) {
-        var out = [];
-        angular.forEach(input.values, function (value) {
-            var field = value.field;
-            angular.forEach(input.customizedElement.fields, function (orgField) {
-                if (field == orgField.id) {
-
-                }
-            });
-        });
-        return out;
-    }
-
-
-}])
-;
-app.controller('UserCustomizedElementController', ['$scope', '$filter', 'UserCustomizedElementRecordService', 'LoginService', function ($scope, $filter, UserCustomizedElementRecordService, LoginService) {
+app.controller('UserCustomizedElementController', ['$scope', '$filter', '$timeout', 'UserCustomizedElementRecordService', 'LoginService', 'MessageService', function ($scope, $filter, $timeout, UserCustomizedElementRecordService, LoginService, MessageService) {
     $scope.customizedElementsMenus = [];
     var userId = LoginService.getUserInfo().userId;
+    //    var addNew =
+    //    {
+    //        "customizedElement": $scope.selectedcustomizedElementMenu,
+    //        "values": [],
+    //        "userId": userId,
+    //        isNew: true
+    //    };
+    /**
+     * load all customized elements of user
+     * */
     $scope.loadCustomizedElementMenus = function () {
-
-        UserCustomizedElementRecordService.loadCustomizedElementMenus(userId)
+        $scope.userCustomizedElementsTabPromise = UserCustomizedElementRecordService.loadCustomizedElementMenus(userId)
             .then(
             function (data) {
-                $scope.customizedElementsMenus = data;
-                $scope.menuSelect(data[0]);
+
+                var menus = MessageService.handleMsg(data);
+                if (menus) {
+                    $scope.customizedElementsMenus = menus;
+                    $scope.menuSelect(menus[0]);
+                }
             },
             function (err) {
-
+                MessageService.handleServerErr(err);
             }
         );
     };
+    /**
+     * when document ready, then load all the customized elements menu
+     * */
+    $timeout(function () {
+        $scope.loadCustomizedElementMenus();
+    });
+
+
+    /**
+     * when select an element in customized elements menu, then load the specific records of this kind of element
+     * */
     $scope.menuSelect = function (menu) {
         angular.forEach($scope.customizedElementsMenus, function (itm) {
-            itm.selected = itm.name === menu.name;
+            itm.selected = itm.id === menu.id;
         });
         $scope.selectedcustomizedElementMenu = menu;
         $scope.listCustomizedElementRecordByUserIdAndElementId(userId, menu.id);
     };
 
+    // the selected customized element type
     $scope.selectedcustomizedElementMenu = {};
-    // param: id   id of selected customized element (menu) id
-    $scope.getElementRows = function (elementsOfSelectedCustomizedElementMenu) {
-        var n = elementsOfSelectedCustomizedElementMenu.length;
-        var rows = 0;
-        rows = ( n - n % 3) / 3;
-        var elements = [];
-        for (var r = 0; r < rows; r++) {
-            var col = [];
-            for (var c = 0; c < 3; c++) {
-                col.push(elementsOfSelectedCustomizedElementMenu[r * 3 + c]);
-            }
-            elements.push(col);
-        }
-        var lastCol = [];
-        for (var c = n % 3; c > 0; c--) {
-            lastCol.push(elementsOfSelectedCustomizedElementMenu[n - c]);
 
-        }
+    /**
+     * create a new element button to the list
+     * */
+    var addNewElementRecordButtonToAllElements = function (selectedElementType, allElements) {
         var addNew =
         {
-            "customizedElement": $scope.selectedcustomizedElementMenu,
+            "customizedElement": selectedElementType,
             "values": [],
             "userId": userId,
             isNew: true
         };
-        //{
-        //    customizedElementField: {
-        //        id:"40288083512f034b01512f04d6010001",
-        //            name:"name",
-        //            description:null,
-        //            type:"String"
-        //    },
-        //    value: "vasdad"
-        //}
-        for (var i = 0; i < $scope.selectedcustomizedElementMenu.fields.length; i++) {
+        for (var i = 0; i < selectedElementType.fields.length; i++) {
             addNew.values.push({
-                customizedElementField: $scope.selectedcustomizedElementMenu.fields[i],
+                customizedElementField: selectedElementType.fields[i],
                 value: ''
             });
         }
-        lastCol.push(addNew);
-        elements.push(lastCol);
-
-        return elements;
+        allElements.push(addNew);
     };
 
     $scope.listCustomizedElementRecordByUserIdAndElementId = function (userId, customizedElementId) {
-        UserCustomizedElementRecordService.listCustomizedElementRecordByUserIdAndElementId(userId, customizedElementId)
+        $scope.userCustomizedElementsTabContentPromise = UserCustomizedElementRecordService.listCustomizedElementRecordByUserIdAndElementId(userId, customizedElementId)
             .then(
             function (data) {
-                $scope.elementRows = $scope.getElementRows(data);
+                var allElement = MessageService.handleMsg(data);
+                if (allElement) {
+                    $scope.allElements = allElement;
+                    addNewElementRecordButtonToAllElements($scope.selectedcustomizedElementMenu, $scope.allElements);
+                }
             },
             function (err) {
+                MessageService.handleServerErr(err);
             }
         );
     };
@@ -104,27 +90,54 @@ app.controller('UserCustomizedElementController', ['$scope', '$filter', 'UserCus
     $scope.editRecord = function (r) {
         console.log(r);
         r.editing = true;
-    }
+    };
 
-    $scope.saveRecord = function (record) {
-        if (record.isNew) {
-            UserCustomizedElementRecordService.createCustomizedElementRecord(userId, record.customizedElement.id, record.values)
+    $scope.deleteRecord = function (r) {
+        var flag = confirm("Do you want to delete "+ r.customizedElement.name);
+        if(flag){
+            $scope.userCustomizedElementsTabContentPromise = UserCustomizedElementRecordService.deleteCustomizedElementRecord(userId, $scope.selectedcustomizedElementMenu.id, r.id)
                 .then(
                 function (data) {
-                    $scope.elementRows = $scope.getElementRows(data);
+                    var allElement = MessageService.handleMsg(data);
+                    if (allElement) {
+                        $scope.allElements = allElement;
+                        addNewElementRecordButtonToAllElements($scope.selectedcustomizedElementMenu, $scope.allElements);
+                    }
                 },
                 function (err) {
-
+                    MessageService.handleServerErr(err);
                 }
             );
-        }else{
-            UserCustomizedElementRecordService.updateCustomizedElementRecord(userId,record.customizedElement.id,record)
+        }
+
+    };
+    $scope.saveRecord = function (record) {
+        if (record.isNew) {
+            record.promise = UserCustomizedElementRecordService.createCustomizedElementRecord(userId, record.customizedElement.id, record.values)
                 .then(
                 function (data) {
-                    $scope.elementRows = $scope.getElementRows(data);
+                    var allElement = MessageService.handleMsg(data);
+                    if (allElement) {
+                        $scope.allElements = allElement;
+                        addNewElementRecordButtonToAllElements($scope.selectedcustomizedElementMenu, $scope.allElements);
+                    }
                 },
                 function (err) {
-
+                    MessageService.handleServerErr(err);
+                }
+            );
+        } else {
+            record.promise = UserCustomizedElementRecordService.updateCustomizedElementRecord(userId, record.customizedElement.id, record)
+                .then(
+                function (data) {
+                    var allElement = MessageService.handleMsg(data);
+                    if (allElement) {
+                        $scope.allElements = allElement;
+                        addNewElementRecordButtonToAllElements($scope.selectedcustomizedElementMenu, $scope.allElements);
+                    }
+                },
+                function (err) {
+                    MessageService.handleServerErr(err);
                 }
             );
         }
@@ -194,7 +207,19 @@ app.factory('UserCustomizedElementRecordService', ['$http', '$q', function ($htt
                     return $q.reject(errResponse);
                 }
             );
+        },
+        ///user/{userId}/customizedElementRecord/{customizedElementId}/{recordId}
+        deleteCustomizedElementRecord: function (userId, customizedElementId, recordId) {
+            return $http.delete('/user/' + userId + '/customizedElementRecord/' + customizedElementId + '/' + recordId).then(
+                function (response) {
+                    return response.data;
+                },
+                function (errResponse) {
+                    return $q.reject(errResponse);
+                }
+            );
         }
+
 
     }
 }]);

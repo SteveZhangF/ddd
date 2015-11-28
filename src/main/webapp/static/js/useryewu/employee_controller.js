@@ -7,42 +7,12 @@ app.controller('UserEmployeeController', ['$scope', 'EmployeeService', 'LoginSer
     $scope.itemPerPage = 5;
     $scope.isEditingEmployee = false;
 
-
-    /**
-     * spinner start
-     * */
-    $scope.spinneractive = false;
-    $scope.startSpin = function () {
-        if (!$scope.spinneractive) {
-            console.log('loading');
-            usSpinnerService.spin('employee-list-spinner');
-            $scope.spinneractive = true;
-        }
-    };
-    $scope.stopSpin = function () {
-        if ($scope.spinneractive) {
-            console.log('stoped');
-            usSpinnerService.stop('employee-list-spinner');
-            $scope.spinneractive = false;
-        }
-    };
-
-    /**
-     * spanner end
-     * */
-
-    $scope.employeeError = {hasError: false, msg: ''};
     $scope.loadAll = function () {
-        $scope.startSpin();
         EmployeeService.getEmployeeByUserId(LoginService.getUserInfo().userId).then(
             function (data) {
-                $scope.stopSpin();
                 $scope.employees = data;
-                $scope.employees_display = [].concat($scope.employees);
             }, function (err) {
-                $scope.stopSpin();
-                $scope.employeeError.hasError = true;
-                $scope.employeeError.msg = "Error while loading data, please try later!";
+
             }
         );
     };

@@ -1,53 +1,87 @@
-<div ng-controller="UserCustomizedElementController">
+<div cg-busy="userCustomizedElementsTabPromise" ng-controller="UserCustomizedElementController">
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" ng-class="{'active':menu.selected}" ng-repeat="menu in customizedElementsMenus"><a
                 href="" ng-click="menuSelect(menu)" aria-controls="editor" role="tab"
                 data-toggle="tab">{{menu.name}}</a></li>
     </ul>
-
     <!-- Tab panes -->
-    <div class="tab-content" ng-init="loadCustomizedElementMenus()">
-        <div role="tabpanel" class="tab-pane active"
+    <div class="tab-content">
+        <div cg-busy="userCustomizedElementsTabContentPromise" role="tabpanel" class="tab-pane active"
              id="editor">
-            <div class="conter-wrapper ng-scope">
-                <div class="row" ng-repeat="row in elementRows track by $index">
-                    <span ng-init="rowNumber = $index"></span>
-
-                    <div class="col-md-4 " ng-repeat="col in row track by col.id">
-                        <div class="customized-element-card panel panel-info">
-                            <div ng-init="colNumber = $index" class="panel-heading">{{rowNumber*3+colNumber+1}}
-                                <div class="pull-right">
-                                    <a class="close" href="" ><i class="fa fa-times"></i></a>
-                                    <a class="close" href="" ng-click="col.editing=true"><i class="fa fa-edit"></i></a>
-
-                                </div>
-                            </div>
-
-                            <div class="panel-body">
-                                <plus-div ng-if="!col.editing && col.isNew" mouse-click-event="editRecord"
-                                          mouse-click-param="col"></plus-div>
-                                <div ng-show="!col.editing &&!col.isNew">
-                                    <ul class="list-unstyled invoice-details">
-                                        <li ng-repeat="field in col.values"><strong>{{field.customizedElementField.name}}:</strong>{{field.value}}
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <div class="form-group" ng-show="col.editing" ng-repeat="field in col.values">
-                                    <label for="{{field.id}}" class="col-sm-2 control-label">{{field.customizedElementField.name}}</label>
-                                    <div class="col-md-10">
-
-                                        <input id="{{field.id}}" class="underline form-control" ng-show="col.editing" ng-model="field.value">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="panel-footer" ng-show="col.editing">
-                                <button class="btn btn-info" ng-click="saveRecord(col)">Save</button>
-                                <button class="btn btn-default" ng-click="col.editing = false">Cancel</button>
+            <div class="conter-wrapper">
+                <div class="col-md-3 fade-in" ng-repeat="element in allElements track by $index">
+                    <div class="customized-element-card panel panel-info" cg-busy="allElement[{{$index}}].promise">
+                        <div class="panel-heading">{{$index}}
+                            <div class="pull-right" ng-show="!element.isNew">
+                                <a class="close" href="" ng-click="deleteRecord(element)"><i class="fa fa-times"></i></a>
+                                <a class="close" href="" ng-click="editRecord(element)"><i class="fa fa-edit"></i></a>
                             </div>
                         </div>
+
+                        <div class="panel-body">
+                            <plus-div ng-if="!element.editing && element.isNew" mouse-click-event="editRecord"
+                                      mouse-click-param="element"></plus-div>
+                            <div ng-show="!element.editing &&!element.isNew">
+                                <ul class="list-unstyled invoice-details">
+                                    <li ng-repeat="field in element.values">
+                                        <strong>{{field.customizedElementField.name}}:</strong>{{field.value}}
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="form-group" ng-show="element.editing" ng-repeat="field in element.values">
+                                <label for="{{field.id}}" class="col-sm-2 control-label">{{field.customizedElementField.name}}</label>
+
+                                <div class="col-md-10">
+                                    <input id="{{field.id}}" class="underline form-control" ng-show="element.editing"
+                                           ng-model="field.value">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer" ng-show="element.editing">
+                            <button class="btn btn-info" ng-click="saveRecord(element)">Save</button>
+                            <button class="btn btn-default" ng-click="element.editing = false">Cancel</button>
+                        </div>
                     </div>
+
+
+                    <!--<span ng-init="rowNumber = $index"></span>-->
+
+                    <!--<div class="col-md-4 " ng-repeat="col in row track by col.id">-->
+                    <!--<div class="customized-element-card panel panel-info">-->
+                    <!--<div ng-init="colNumber = $index" class="panel-heading">{{rowNumber*3+colNumber+1}}-->
+                    <!--<div class="pull-right">-->
+                    <!--<a class="close" href="" ><i class="fa fa-times"></i></a>-->
+                    <!--<a class="close" href="" ng-click="col.editing=true"><i class="fa fa-edit"></i></a>-->
+
+                    <!--</div>-->
+                    <!--</div>-->
+
+                    <!--<div class="panel-body">-->
+                    <!--<plus-div ng-if="!col.editing && col.isNew" mouse-click-event="editRecord"-->
+                    <!--mouse-click-param="col"></plus-div>-->
+                    <!--<div ng-show="!col.editing &&!col.isNew">-->
+                    <!--<ul class="list-unstyled invoice-details">-->
+                    <!--<li ng-repeat="field in col.values"><strong>{{field.customizedElementField.name}}:</strong>{{field.value}}-->
+                    <!--</li>-->
+                    <!--</ul>-->
+                    <!--</div>-->
+
+                    <!--<div class="form-group" ng-show="col.editing" ng-repeat="field in col.values">-->
+                    <!--<label for="{{field.id}}" class="col-sm-2 control-label">{{field.customizedElementField.name}}</label>-->
+                    <!--<div class="col-md-10">-->
+
+                    <!--<input id="{{field.id}}" class="underline form-control" ng-show="col.editing" ng-model="field.value">-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="panel-footer" ng-show="col.editing">-->
+                    <!--<button class="btn btn-info" ng-click="saveRecord(col)">Save</button>-->
+                    <!--<button class="btn btn-default" ng-click="col.editing = false">Cancel</button>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--</div>-->
                 </div>
             </div>
         </div>
@@ -133,6 +167,6 @@
 
     .customized-element-card .panel-body {
         height: 184px;
-        overflow:auto;
+        overflow: auto;
     }
 </style>
