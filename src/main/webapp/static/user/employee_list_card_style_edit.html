@@ -1,6 +1,13 @@
-<div class="panel panel-default">
-    <div class="panel-heading"><span class="lead">Person Detail</span></div>
-    <div class="panel-body">
+<div class="panel panel-default" cg-busy="employeeEditPromise">
+    <div class="panel-heading"><span class="lead">Employee Information</span>
+
+        <div class="pull-right">
+            {{viewingReports}}
+            <button class="btn btn-default btn-sm" ng-show="!editedEmployee.viewingReports" ng-click="viewReports(editedEmployee)">View Report</button>
+            <button class="btn btn-default btn-sm" ng-show="editedEmployee.viewingReports" ng-click="editedEmployee.viewingReports=false">Edit</button>
+        </div>
+    </div>
+    <div class="panel-body" ng-if="!editedEmployee.viewingReports">
         <form name="employeeForm" class="css-form" novalidate>
             <!-- name -->
             <div class="row">
@@ -378,7 +385,38 @@
                 </div>
             </div>
             <hr>
-            <button class="btn btn-primary" ng-click="saveEmployee(editedEmployee)">Save</button>
+            <!--customized field-->
+            <div class="row" ng-repeat="field in customizedEmployeeFields">
+                <label class="col-md-3">{{field.name}}</label>
+
+                <div class="col-md-3" ng-switch="field.questionType">
+                    <input ng-switch-when="text" type="text" class="form-control" ng-model="field.value"/>
+                    <input ng-switch-when="file" type="file" class="form-control" ng-model="field.value"/>
+                    <select class="form-control" ng-switch-when="select"
+                            ng-options=" op.name as op.name for op in field.options " ng-model="field.value"></select>
+                    <textarea class="form-control" ng-switch-when="textarea" ng-model="field.value"></textarea>
+
+                    <p></p>
+                </div>
+            </div>
         </form>
+    </div>
+    <div class="panel-body" ng-if="editedEmployee.viewingReports">
+        <div class="row">
+            <div class="list-group col-md-2" scrollable>
+                <a ng-repeat="report in employeeReports" href="" class="list-group-item" ng-class="{'active':report.selected}" ng-click="selectAndShowReport(report)">
+                    <span class="badge">{{report.percent}}%</span>{{report.name}}
+                </a>
+            </div>
+            <div class="col-md-10">
+                <object id="pdf-object" style="width:100%;height: 100%" data="{{content}}"
+                type="application/pdf"></object>
+            </div>
+            <div id="form_container" style="display: none"></div>
+        </div>
+
+    </div>
+    <div class="panel-footer" ng-show="!editedEmployee.viewingReports">
+        <button class="btn btn-primary" ng-click="saveEmployee(editedEmployee)">Save</button>
     </div>
 </div>

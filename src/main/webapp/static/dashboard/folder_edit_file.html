@@ -23,6 +23,13 @@
             </label>
         </div>
         <div class="row">
+
+            <label class="col-md-3">Type:
+                <select class="form-control" ng-model="editingFileNode.fileType_" ng-change="loadQuestionsForFile()" ng-options="type for  type in fileTypes"></select>
+            </label>
+        </div>
+
+        <div class="row">
             <label class="col-md-9">Description:
                 <textarea class="form-control" ng-model="editingFileNode.description_"></textarea>
             </label>

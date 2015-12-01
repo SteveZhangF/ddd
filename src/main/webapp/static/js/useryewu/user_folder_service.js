@@ -49,6 +49,18 @@ app.factory('UserFolderService',['$http','$q', function ($http,$q) {
                     return $q.reject(errResponse);
                 }
             );
+        },
+
+        getUserEmployeeReports: function (userId) {
+            return $http.get('/user/folders/file/employee_reports/'+userId)
+                .then(
+                function (response) {
+                    return response.data;
+                },
+                function (errResponse) {
+                    return $q.reject(errResponse);
+                }
+            );
         }
 
     }

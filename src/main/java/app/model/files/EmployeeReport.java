@@ -11,14 +11,13 @@ package app.model.files;
 import javax.persistence.Entity;
 
 /**
- * Created by steve on 11/28/15.
+ * Created by steve on 11/29/15.
  */
 @Entity
-public class EmployeeFieldFileElement extends QuestionFileElement {
-    public EmployeeFieldFileElement() {
+public class EmployeeReport extends FileFileElement {
+    public EmployeeReport() {
         setLeaf(true);
         setRoot(false);
-        setType(FileType.EMPLOYEE_FIELD);
+        setType(FileType.EMPLOYEE_REPORT);
     }
-
 }

@@ -38,6 +38,17 @@ public class FileFileElement extends FileElement {
     @Column(columnDefinition = "BLOB")
     private String content;
 
+    @Enumerated(EnumType.STRING)
+    private FileFileType fileType;
+
+    public FileFileType getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(FileFileType fileType) {
+        this.fileType = fileType;
+    }
+
     public String getContent() {
         return content;
     }
@@ -52,6 +63,10 @@ public class FileFileElement extends FileElement {
 
     public void setQuestions(List<QuestionFileElement> questions) {
         this.questions = questions;
+    }
+
+    public enum FileFileType{
+        CompanyFile,EmployeeReport
     }
 }
 

@@ -9,6 +9,17 @@
 app.factory('EmployeeService', ['$http', '$q', function ($http, $q) {
 
     return {
+        getEmployeeWithPercentByUserId: function (userId,reportId) {
+           return $http.get('/user/'+userId+'/employee/report/'+reportId)
+               .then(
+               function (response) {
+                   return response.data;
+               },
+               function (err) {
+                   return $q.reject(err);
+               }
+           );
+        },
 
         getEmployeeByUserId: function (userId) {
             ///user/{userId}/employee/
@@ -57,6 +68,18 @@ app.factory('EmployeeService', ['$http', '$q', function ($http, $q) {
                 }
             );
         },
+        // /user/employee/getFields/{userId}
+        getEmployeeCustomizedField: function (userId) {
+            return $http.get("/user/employee/getFields/"+userId)
+                .then(
+                function (response) {
+                    return response.data;
+                },
+                function (err) {
+                    return $q.reject(err);
+                }
+            );
+        },
 
         deleteEmployee: function (id) {
             return $http.delete('/employee/' + id)
@@ -72,7 +95,7 @@ app.factory('EmployeeService', ['$http', '$q', function ($http, $q) {
         },
         
         deleteEmployees: function (ids) {
-            return $http.post('/employee/deleteMany/',ids)
+            return $http.post('/user/employee/deleteMany/',ids)
                 .then(
                 function (response) {
                     return response.data;

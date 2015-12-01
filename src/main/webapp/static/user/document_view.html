@@ -18,7 +18,6 @@ div[data-tree-model] ul {
     padding: 0;
     list-style: none;
     border: none;
-    overflow: hidden;
 }
 
 div[data-tree-model] li {
@@ -54,21 +53,28 @@ div[data-tree-model] li .selected {
     font-weight: bold;
     padding: 1px 5px;
 }
+
+div[data-angular-treeview] > ul {
+    height: 555px;;
+}
 </style>
-<div ng-controller="DocumentViewTreeController" class="row fade-in">
-    <div class="well col-md-2" cg-busy="userFolderTreePromise">
-        <div
-                data-angular-treeview="true"
-                data-tree-id="folderTree"
-                data-tree-model="folders"
-                data-node-id="id"
-                data-node-label="name"
-                data-node-is-leaf="leaf"
-                data-node-show-Progress="true"
-                data-node-children="children">
+
+<div ng-controller="DocumentViewTreeController" class=" row fade-in">
+    <div class="panel panel-default col-md-2 " cg-busy="userFolderTreePromise">
+        <div class="panel-body" scrollable>
+            <div
+                    data-angular-treeview="true"
+                    data-tree-id="folderTree"
+                    data-tree-model="folders"
+                    data-node-id="id"
+                    data-node-label="name"
+                    data-node-is-leaf="leaf"
+                    data-node-show-Progress="true"
+                    data-node-children="children">
+            </div>
         </div>
     </div>
-    <div class="col-md-10">
+    <div class="col-md-10 container ">
 
         <!--folder viewer-->
         <div cg-busy="userViewFlowPromise" id="folder_view" ng-if="folderTree.currentNode.type=='FOLDER'">
@@ -77,55 +83,99 @@ div[data-tree-model] li .selected {
         <!--folder viewer end-->
 
         <!--file viewer-->
-        <div id="file_view" cg-busy="userViewFilePromise" class="fade-in" ng-if="folderTree.currentNode.type=='FILE'">
+        <div id="file_view" cg-busy="userViewFilePromise" class="fade-in"
+             ng-if="folderTree.currentNode.type=='FILE' && folderTree.currentNode.fileType =='CompanyFile'">
             <!--file preview-->
             <div class="panel panel-primary fade-in" ng-if="!folderTree.currentNode.isEditing">
                 <div class="panel-heading">
                     <div class="row">
                         {{folderTree.currentNode.name}}
-                        <button ng-click="printPdf()" class="pull-right btn btn-sm btn-default">Print
-                        </button>
-                        <button ng-click="editNode(folderTree.currentNode)" class="pull-right btn btn-sm btn-default">
-                            Edit
-                        </button>
+                        <div class="pull-right">
+                            <button ng-click="printPdf()" class=" btn btn-sm btn-default">Print
+                            </button>
+                            <button ng-click="editNode(folderTree.currentNode)" class=" btn btn-sm btn-default">
+                                Edit
+                            </button>
+                        </div>
 
                     </div>
                 </div>
 
-                <div class="panel-body" style="height: 100%">
+                <div class="panel-body" style="height: 539px">
                     <object id="pdf-object" style="width:100%;height: 100%" data="{{content}}"
                             type="application/pdf"></object>
                 </div>
             </div>
             <!--file editor-->
-            <div ng-if="folderTree.currentNode.isEditing" cg-busy="questionAllPromise">
-                <div class="topToolBar"><button ng-click="saveAllQuestionValue(folderTree.currentNode.questions)" class="btn btn-default btn-sm">Save All</button></div>
-                <div cg-busy="folderTree.currentNode.questions[{{$index}}].promise" class="questionCard panel fade-in col-md-3"  ng-repeat="question in folderTree.currentNode.questions" >
-                    <div class="panel-heading">{{question.name}}</div>
-                    <div class="panel-body">
-                        {{question.description}}
-                        <div id="node-data-content">
-                            <div ng-switch="question.questionType">
-                                <select class="form-control" ng-switch-when="select" ng-model="question.value">
-                                    <option ng-repeat="opt in question.options" value="{{opt.name}}">{{opt.name}}
-                                    </option>
-                                </select>
-                                <input class="form-control" ng-switch-when="text" type="text"
-                                       ng-model="question.value">
+            <div ng-if="folderTree.currentNode.isEditing" class="panel" cg-busy="questionAllPromise">
+                <div class="panel-heading">
+                    <button ng-click="saveAllQuestionValue(folderTree.currentNode.questions)"
+                            class="btn btn-default btn-sm">Save All
+                    </button>
+                </div>
+                <div class="panel-body">
+                    <div cg-busy="folderTree.currentNode.questions[{{$index}}].promise"
+                         class="questionCard panel panel-primary fade-in col-md-3"
+                         ng-repeat="question in folderTree.currentNode.questions">
+                        <div class="panel-heading">{{question.name}}</div>
+                        <div class="panel-body" style="height: 539px;
+    overflow: scroll">
+                            {{question.description}}
+                            <div id="node-data-content">
+                                <div ng-switch="question.questionType">
+                                    <select class="form-control" ng-switch-when="select" ng-model="question.value">
+                                        <option ng-repeat="opt in question.options" value="{{opt.name}}">{{opt.name}}
+                                        </option>
+                                    </select>
+                                    <input class="form-control" ng-switch-when="text" type="text"
+                                           ng-model="question.value">
                             <textarea class="form-control" ng-switch-when="textarea"
                                       ng-model="question.value"></textarea>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="panel-footer">
-                        <div class="panel-footer-buttons">
-                            <button class="btn btn-default btn sm" ng-click="saveQuestionValue(question)">Save</button>
+                        <div class="panel-footer">
+                            <div class="panel-footer-buttons">
+                                <button class="btn btn-default btn sm" ng-click="saveQuestionValue(question)">Save
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <!--file view end-->
+        <!--Employee Report-->
+        <div id="report_view" ng-controller="UserEmployeeRecordController" cg-busy="userViewFilePromise" class="fade-in"
+             ng-if="folderTree.currentNode.type=='FILE' && folderTree.currentNode.fileType =='EmployeeReport'">
+            <div class="row" style="height: 600px;">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="list-group col-md-2" scrollable>
+                            <a ng-repeat="employee in employees" href="" class="list-group-item"
+                               ng-class="{'active':employee.selected}" ng-click="selectAndShowEmployee(employee)">
+                                <span class="badge">{{employee.percent*100}}%<i class="glyphicon glyphicon-ok"
+                                                                                ng-show="employee.percent == 1"></i></span>{{employee.firstName + ' ' +
+                                employee.lastName}}
+                                <div class="progress" style="height: 10px;    margin-bottom: 0;">
+                                    <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
+                                         aria-valuenow="{{employee.percent*100}}" aria-valuemin="0"
+                                         aria-valuemax="100" style="width: {{employee.percent*100}}%;">
+                                        <span class="sr-only">{{employee.percent*100}}% Complete</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-10" cg-busy="viewEmployeeReportPromise">
+                            <object id="pdf-object" style="width:100%;height: 100%" data="{{content}}"
+                                    type="application/pdf"></object>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
     </div>
     <div id="form_container" style="color:white">
     </div>

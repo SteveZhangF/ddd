@@ -517,5 +517,34 @@ public class FileController {
         Message msg = Message.getSuccessMsg("Update question " + employeeFieldFileElement.getName() + " Success!", employeeFieldFileElement);
         return new ResponseEntity<>(msg, HttpStatus.OK);
     }
+
+
+    /**
+     * create a employee field and add it to the parentId folder
+     */
+    @RequestMapping(value = "/admin/files/employee_report/{parentId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Message> getEmployeeReportOfFolder(@PathVariable String parentId) {
+        FileElement parent = fileService.get(parentId);
+        if (parent == null) {
+            return new ResponseEntity<>(Message.getFailMsg("No such parent folder"), HttpStatus.OK);
+        }
+        if (!parent.getType().equals(FileElement.FileType.FOLDER)) {
+            return new ResponseEntity<>(Message.getFailMsg("parent is not a folder"), HttpStatus.OK);
+        }
+        FileElement.FileType[] type = {FileElement.FileType.EMPLOYEE_REPORT};
+        List list = fileService.getChildrenByParentIdAndTypes(parentId, type, false);
+        if(list
+                .size()==0){
+            FileElement report = new EmployeeReport();
+            report.setParent_id(parentId);
+            report.setDeleted(false);
+            fileService.save(report);
+            return new ResponseEntity<>(Message.getSuccessMsg("Load employee report success",report),HttpStatus.OK);
+
+        }else{
+            return new ResponseEntity<>(Message.getSuccessMsg("Load employee report success",list.get(0)),HttpStatus.OK);
+        }
+    }
+
 }
 

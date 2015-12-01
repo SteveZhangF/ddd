@@ -1,68 +1,63 @@
-<div ng-controller="UserDocumentCompanyQuestionControllerForTree" class="">
-    <div class="row">
+<div ng-controller="UserDocumentCompanyQuestionControllerForTree" class="panel panel-primary">
+    <div class="panel-heading">
+        {{nodesAll[flowIndex].name}}
+    </div>
+    <div class="panel-body" ng-if="showQuestion">
+        <p>{{nodesAll[flowIndex].question.description}}</p>
 
-        <div class="col-md-9">
-
-            <div class="panel panel-default questionCard fade-in" ng-if="showQuestion">
-                <div class="panel-heading">
-                    {{nodesAll[flowIndex].name}}
-                </div>
-                <div class="panel-body">
-                    <p>{{nodesAll[flowIndex].question.description}}</p>
-
-                    <div id="node-data-content">
-                        <hr>
-                        <div ng-switch="nodesAll[flowIndex].question.questionType">
-                            <select class="form-control" ng-switch-when="select"
-                                    ng-model="nodesAll[flowIndex].record.value">
-                                <option ng-repeat="opt in nodesAll[flowIndex].question.options" value="{{opt.name}}">
-                                    {{opt.name}}
-                                </option>
-                            </select>
-                            <input class="form-control" ng-switch-when="text" type="text"
-                                   ng-model="nodesAll[flowIndex].record.value">
+        <div class="row">
+            <div id="node-data-content" class="col-md-9">
+                <hr>
+                <div ng-switch="nodesAll[flowIndex].question.questionType">
+                    <select class="form-control" ng-switch-when="select"
+                            ng-model="nodesAll[flowIndex].record.value">
+                        <option ng-repeat="opt in nodesAll[flowIndex].question.options" value="{{opt.name}}">
+                            {{opt.name}}
+                        </option>
+                    </select>
+                    <input class="form-control" ng-switch-when="text" type="text"
+                           ng-model="nodesAll[flowIndex].record.value">
                             <textarea class="form-control" ng-switch-when="textarea"
                                       ng-model="nodesAll[flowIndex].record.value"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-footer">
-                    <div class="panel-footer-buttons">
-                        <button class="btn btn-sm btn-default" ng-click="goPrevStep()">Prev</button>
-                        <button class="btn btn-sm btn-default" ng-click="goNextStep()">Next</button>
-                    </div>
                 </div>
             </div>
+
+            <div class="col-md-3 steps">
+                <timeline>
+                    <div class="fade-in" id="test" timeline-event index="{{$index}}" now-step="flowIndex"
+                         ng-init="loadQuestion(node)"
+                         ng-repeat="node in nodesAll">
+
+
+                        <timeline-badge ng-show="node.type=='Normal'" class="info">
+                            <i class="glyphicon glyphicon-info-sign"></i>
+                        </timeline-badge>
+                        <timeline-panel ng-show="node.type=='Normal'" class="info">
+                            <timeline-heading>
+                                <h4>{{node.name}}</h4>
+                            </timeline-heading>
+                            <p>{{node.question.description}}</p>
+                        </timeline-panel>
+
+
+                        <timeline-badge ng-show="node.type=='Question'"
+                                        class="{{node.record.value && node.record.value!=''?'success':'danger'}}">
+                            <i class="glyphicon {{node.record.value && node.record.value!=''?'glyphicon-ok-circle':'glyphicon glyphicon-remove-circle'}}"></i>
+                        </timeline-badge>
+                        <timeline-panel ng-show="node.type=='Question'"
+                                        class="{{node.record.value && node.record.value!=''?'success':'danger'}}">
+                            <timeline-heading>
+                                <h4>{{node.name}}</h4>
+                            </timeline-heading>
+                            <p>{{node.question.description}}dd</p>
+                        </timeline-panel>
+                    </div>
+                </timeline>
+            </div>
         </div>
-        <div class="col-md-3 steps">
-            <timeline>
-                <div class="fade-in" id="test" timeline-event index="{{$index}}" now-step="flowIndex"
-                     ng-init="loadQuestion(node)"
-                     ng-repeat="node in nodesAll">
-
-
-                    <timeline-badge ng-show="node.type=='Normal'" class="info">
-                        <i class="glyphicon glyphicon-info-sign"></i>
-                    </timeline-badge>
-                    <timeline-panel ng-show="node.type=='Normal'"  class="info">
-                        <timeline-heading>
-                            <h4>{{node.name}}</h4>
-                        </timeline-heading>
-                        <p>{{node.question.description}}dd</p>
-                    </timeline-panel>
-
-
-                    <timeline-badge ng-show="node.type=='Question'" class="{{node.record.value && node.record.value!=''?'success':'danger'}}">
-                        <i class="glyphicon {{node.record.value && node.record.value!=''?'glyphicon-ok-circle':'glyphicon glyphicon-remove-circle'}}"></i>
-                    </timeline-badge>
-                    <timeline-panel ng-show="node.type=='Question'"  class="{{node.record.value && node.record.value!=''?'success':'danger'}}">
-                        <timeline-heading>
-                            <h4>{{node.name}}</h4>
-                        </timeline-heading>
-                        <p>{{node.question.description}}dd</p>
-                    </timeline-panel>
-                </div>
-            </timeline>
-        </div>
+    </div>
+    <div class="panel-footer">
+            <button class="btn btn-sm btn-default" ng-click="goPrevStep()">Prev</button>
+            <button class="btn btn-sm btn-default pull-right" ng-click="goNextStep()">Next</button>
     </div>
 </div>

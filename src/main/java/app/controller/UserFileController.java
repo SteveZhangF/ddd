@@ -10,6 +10,7 @@ package app.controller;
 
 import app.message.Message;
 import app.model.files.FileElement;
+import app.model.files.FileFileElement;
 import app.model.files.FolderFileElement;
 import app.model.user.User;
 import app.model.wordflow.WorkFlow;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -84,10 +86,33 @@ public class UserFileController {
             }
             return new ResponseEntity<>(Message.getSuccessMsg("load flow for " + element.getName() + " successfully", flow), HttpStatus.OK);
 
-        }else{
+        } else {
             return new ResponseEntity<>(Message.getFailMsg("No such folder found"), HttpStatus.OK);
         }
 
+    }
+
+    /**
+     * get customized employee fields of userId
+     */
+    @RequestMapping(value = "/user/folders/file/employee_reports/{userId}", method = RequestMethod.GET)
+    public ResponseEntity<Message> getUserEmployeeReports(@PathVariable int userId) {
+        User user = userService.get(userId);
+        if (user == null) {
+            return new ResponseEntity<>(Message.getFailMsg("Load User Failed"), HttpStatus.OK);
+        }
+        FileElement.FileType[] type = {FileElement.FileType.FILE};
+        List<FolderFileElement> folders = user.getFolders();
+        List<FileElement> result = new ArrayList<>();
+        for (FolderFileElement folder : folders) {
+            List<FileElement> list = fileService.getChildrenByParentIdAndTypes(folder.getId(), type, false);
+            for (FileElement fileElement : list) {
+                if (((FileFileElement) fileElement).getFileType().equals(FileFileElement.FileFileType.EmployeeReport)) {
+                    result.add(fileElement);
+                }
+            }
+        }
+        return new ResponseEntity<>(Message.getSuccessMsg("Load fields success!", result), HttpStatus.OK);
     }
 
 

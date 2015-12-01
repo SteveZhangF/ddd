@@ -22,4 +22,6 @@ public interface EmployeeService extends IBaseGenericService<Employee,String> {
     Employee getEmployeePersonDetailbyId(String uuid);
 
     Employee getEmployeeJobDetailbyId(String uuid);
+
+    List<Employee> getListWithRecordsforListByUserId(int userid);
 }

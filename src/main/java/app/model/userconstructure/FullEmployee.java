@@ -6,19 +6,26 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package app.model.files;
+package app.model.userconstructure;
+
+import app.model.files.EmployeeFieldFileElement;
 
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by steve on 11/28/15.
+ * Created by steve on 11/30/15.
  */
 @Entity
-public class EmployeeFieldFileElement extends QuestionFileElement {
-    public EmployeeFieldFileElement() {
-        setLeaf(true);
-        setRoot(false);
-        setType(FileType.EMPLOYEE_FIELD);
-    }
+public class FullEmployee extends Employee {
+    @OneToOne
+    private Employee employee;
+
+    @OneToMany
+    private List<EmployeeFieldFileElement> otherFields = new ArrayList<>();
+
 
 }

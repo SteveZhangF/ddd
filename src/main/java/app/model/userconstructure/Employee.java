@@ -1,12 +1,20 @@
 package app.model.userconstructure;
 
+import app.model.files.EmployeeFieldFileElement;
 import app.model.forms.FormType;
+import app.model.report.Record;
 import app.model.userfield.EmploymentStatus;
 import app.model.userfield.JobTitle;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Entity
@@ -38,6 +46,33 @@ public class Employee extends OrganizationElement {
 
     private Date startDate;
     private Date endDate;
+
+    @Transient
+    private double percent;
+
+    public double getPercent() {
+        return percent;
+    }
+
+    public void setPercent(double percent) {
+        this.percent = percent;
+    }
+    //    @ElementCollection(fetch=FetchType.EAGER)
+//    @Column(name="tableName")
+//    private Map<EmployeeFieldFileElement,String> customizedFields = new HashMap();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
+    private List<Record> records = new ArrayList<>();
+
+    public List<Record> getRecords() {
+        return records;
+    }
+
+    public void setRecords(List<Record> records) {
+        this.records = records;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -136,5 +171,11 @@ public class Employee extends OrganizationElement {
         this.imagePath = imagePath;
     }
 
-
+//    public Map<EmployeeFieldFileElement, String> getCustomizedFields() {
+//        return customizedFields;
+//    }
+//
+//    public void setCustomizedFields(Map<EmployeeFieldFileElement, String> customizedFields) {
+//        this.customizedFields = customizedFields;
+//    }
 }

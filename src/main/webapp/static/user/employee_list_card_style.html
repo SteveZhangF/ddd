@@ -1,6 +1,6 @@
 <div cg-busy="userEmployeeListPromise" ng-controller="UserEmployeeController" class="container">
 
-    <div class="container row">
+    <div class="container row" cg-busy="employeeAllPromise">
         <div  ng-class="{'col-md-3':editing,'col-md-12':!editing}" id="card-parent" ng-style="{'overflow':'auto','height':'620px'}">
             <div ng-class="{'col-md-3':!editing,'col-md-12':editing}"  class="fade-in" ng-repeat="element in employees track by $index">
                 <div customized-element-card  class="panel panel-info" cg-busy="allElement[{{$index}}].promise" ng-class="{'customized-element-card-selected':element.uuid==editedEmployee.uuid}" ng-click="editEmployee($index)">

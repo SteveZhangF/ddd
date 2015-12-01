@@ -1,5 +1,5 @@
 app.controller('FolderEmployeeFieldController', ['$scope', 'FolderService', 'filterFilter', '$timeout', 'MessageService', function ($scope, FolderService, filterFilter, $timeout, MessageService) {
-    var EmployeeField = function (name, EmployeeFieldType, options, description) {
+    var EmployeeField = function (name, questionType, options, description) {
 
     };
     $scope.types = ['textarea', "select", "text", "file"];
@@ -54,7 +54,7 @@ app.controller('FolderEmployeeFieldController', ['$scope', 'FolderService', 'fil
         f.editing = true;
         f.name_ = f.name;
         f.description_ = f.description;
-        f.EmployeeFieldType_ = f.EmployeeFieldType;
+        f.questionType_ = f.questionType;
         f.options_ = angular.copy(f.options);
     };
 
@@ -65,7 +65,7 @@ app.controller('FolderEmployeeFieldController', ['$scope', 'FolderService', 'fil
         EmployeeField.name = EmployeeField.name_;
         EmployeeField.options = angular.copy(EmployeeField.options_);
         EmployeeField.description = EmployeeField.description_;
-        EmployeeField.EmployeeFieldType = EmployeeField.EmployeeFieldType_;
+        EmployeeField.questionType = EmployeeField.questionType_;
         $scope.newEmployeeFieldPromise = FolderService.saveEmployeeField($scope.thisFolder.id, EmployeeField)
             .then(
             function (d) {
@@ -145,5 +145,93 @@ app.controller('FolderEmployeeFieldController', ['$scope', 'FolderService', 'fil
 
     $scope.removeOption = function (EmployeeField, i) {
         EmployeeField.options_.splice(i, 1);
+    };
+
+    // for edit employee report
+    $scope.froalaOptions = {
+        heightMin: 600,
+        heightMax: 800,
+        events: {
+            'froalaEditor.focus': function (e, editor) {
+                editor.selection.restore();
+
+            },
+            'froalaEditor.blur': function (e, editor) {
+                editor.selection.save();
+            }
+        }
+    };
+
+    $scope.editEmployeeReport = function () {
+        $scope.employeeReportPromise = FolderService.loadEmployeeReport($scope.thisFolder.id)
+            .then(
+            function (data) {
+                var report = MessageService.handleMsg(data);
+                if (report) {
+                    $scope.editedEmployeeReport = report;
+                    $scope.editingEmployeeReport = true;
+                    $scope.froalaOptions.froalaEditor('html.set', '');
+                    if ($scope.editedEmployeeReport.content) {
+                        var i = $scope.froalaOptions.froalaEditor('html.insert', $scope.editedEmployeeReport.content, true);
+                    }
+                }
+            },
+            function (err) {
+                MessageService.handleServerErr(err);
+            }
+        );
     }
+
+    $scope.selectEmployeeFieldForEmployeeReport = function (field) {
+        angular.forEach($scope.EmployeeFieldNodeList, function (itm) {
+            itm.selectedForReport = false;
+        });
+        field.selectedForReport = true;
+        $scope.selectedEmployeeFieldForReport = field;
+    };
+
+    $scope.insertEmployeeFieldToEmployeeReport = function () {
+        var data = $scope.selectedEmployeeFieldForReport;
+        var plugin = angular.element('<plugin></plugin>');
+        plugin.attr("question_id", data.id).attr('name', data.name).attr("questionType", data.questionType);
+
+        var formField;
+        switch (data.questionType) {
+            case 'text':
+                formField = angular.element('input');
+                formField.attr('type', 'text');
+                break;
+            case 'select':
+                formField = angular.element('select');
+                var options = data.options;
+                for (var i = 0; i < options.length; i++) {
+                    var opt = angular.element("<option></option>");
+                    opt.text(options[i].name);
+                    opt.attr('value', options[i].value);
+                    formField.append(opt);
+                }
+                if (options.length == 0) {
+                    var optN = angular.element("<option></option>");
+                    optN.text('Null');
+                    formField.append(optN);
+                }
+                break;
+            case 'textarea':
+                formField = angular.element('textarea');
+                break;
+            case 'file':
+                formField = angular.element('input');
+                formField.attr('type', 'file');
+                break;
+        }
+        formField.attr('disabled', 'true');
+        plugin.append(formField);
+        var el = angular.element("<div></div>");
+        el.append(plugin);
+        var txt = "{-" + el.html() + "-}";
+        $scope.froalaOptions.froalaEditor('html.insert', txt, true);
+        el = null;
+    }
+
+
 }]);

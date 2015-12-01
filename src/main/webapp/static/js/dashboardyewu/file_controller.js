@@ -241,7 +241,7 @@ app.controller('FileTreeController', ['$scope', '$filter', 'FolderService', '$ti
     };
 
     /**
-     * when click create a new file
+     * when click create a new file or edit file
      * */
     $scope.editFile = function (fileNode) {
         $scope.thisFolder.showFileEditor = true;
@@ -254,6 +254,7 @@ app.controller('FileTreeController', ['$scope', '$filter', 'FolderService', '$ti
                         $scope.editingFileNode = file;
                         $scope.editingFileNode.name_ = $scope.editingFileNode.name;
                         $scope.editingFileNode.description_ = $scope.editingFileNode.description;
+                        $scope.editingFileNode.fileType_ = $scope.editingFileNode.fileType;
                     }
                 },
                 function (err) {
@@ -465,20 +466,40 @@ app.controller('FileController', ['$scope', 'FolderService', 'filterFilter', '$t
         }
     };
 
+    $scope.fileTypes = ['CompanyFile','EmployeeReport'];
+
     $scope.loadQuestionsForFile = function () {
         var parentId = $scope.editingFileNode.parent_id;
-        $scope.questionsForFilePromise = FolderSerice.loadQuestionNodesForFile(parentId)
-            .then(
-            function (data) {
-                var questions = MessageService.handleMsg(data);
-                if (questions) {
-                    $scope.questionsForFile = questions;
-                }
-            },
-            function (err) {
-                $scope.stopSpin(false, 'loading questions failed, please try later');
-            }
-        );
+        switch ($scope.editingFileNode.fileType_){
+            case 'CompanyFile':
+                $scope.questionsForFilePromise = FolderSerice.loadQuestionNodesForFile(parentId)
+                    .then(
+                    function (data) {
+                        var questions = MessageService.handleMsg(data);
+                        if (questions) {
+                            $scope.questionsForFile = questions;
+                        }
+                    },
+                    function (err) {
+                        $scope.stopSpin(false, 'loading questions failed, please try later');
+                    }
+                );
+                break;
+            case 'EmployeeReport':
+                $scope.questionsForFilePromise = FolderSerice.getElementBasedOnType(parentId,'EMPLOYEE_FIELD')
+                    .then(
+                    function (data) {
+                        var questions = MessageService.handleMsg(data);
+                        if (questions) {
+                            $scope.questionsForFile = questions.children;
+                        }
+                    },
+                    function (err) {
+                        $scope.stopSpin(false, 'loading questions failed, please try later');
+                    }
+                );
+
+        }
     };
 
     var init = function () {
@@ -490,6 +511,7 @@ app.controller('FileController', ['$scope', 'FolderService', 'filterFilter', '$t
                 }
                 $scope.editingFileNode.name_ = $scope.editingFileNode.name;
                 $scope.editingFileNode.description_ = $scope.editingFileNode.description;
+                $scope.editingFileNode.fileType_ = $scope.editingFileNode.fileType;
                 $scope.loadQuestionsForFile();
             }
         );
@@ -518,22 +540,14 @@ app.controller('FileController', ['$scope', 'FolderService', 'filterFilter', '$t
     // insert a selected node in to the file
     $scope.insertQuestionToFile = function () {
         var data = $scope.selectedQuestionNodeForFile;
-        var plugin = angular.element(data.content);
-        if (data.options) {
-            var options = data.options;
-            //if type is select question
-            if (data.questionType == "select") {
-                for (var i = 0; i < options.length; i++) {
-                    var opt = angular.element("<option></option>");
-                    opt.text(options[i].name);
-                    opt.attr('value', options[i].value);
-                    plugin.find('select').append(opt);
-                }
-            }
-        }
-
-        plugin.find(".form-control").attr('disabled', 'true').attr('title', data.name).removeClass("form-control");
+        var plugin = angular.element('<plugin></plugin>');
+        var formField = angular.element('<input>');
+        formField.attr('type', 'text');
+        formField.attr('value',data.name);
+        formField.attr('disabled', 'true');
+        plugin.append(formField);
         plugin.attr("question_id", data.id).attr('name', data.name).attr("questionType", data.questionType);
+
         var el = angular.element("<div></div>");
         el.append(plugin);
         var txt = "{-" + el.html() + "-}";
@@ -572,6 +586,7 @@ app.controller('FileController', ['$scope', 'FolderService', 'filterFilter', '$t
         console.log(fileNode);
         fileNode.name = fileNode.name_;
         fileNode.description = fileNode.description_;
+        fileNode.fileType = fileNode.fileType_;
         if (fileNode.isNew) {
             $scope.fileEditPromise = FolderSerice.saveFile(fileNode.parent_id, fileNode)
                 .then(
@@ -613,30 +628,6 @@ app.controller('FileController', ['$scope', 'FolderService', 'filterFilter', '$t
                 }
             );
         }
-
-
-        //if (fileNode.isNew) {
-        //    $scope.fileEditPromise = FormService.createForm(fileNode).then(
-        //        function (data) {
-        //            fileNode.file = data;
-        //            $scope.parseFileFormat(fileNode);
-        //            $scope.stopSpin(true, 'save new file success');
-        //        },
-        //        function (err) {
-        //            $scope.stopSpin(false, 'save new file failed, please try later');
-        //        }
-        //    );
-        //} else {
-        //    FormService.updateForm(fileNode.file, fileNode.file.id).then(
-        //        function (data) {
-        //            $scope.parseFileFormat(fileNode);
-        //            $scope.stopSpin(true, 'update file success');
-        //        },
-        //        function (err) {
-        //            $scope.stopSpin(false, 'update file failed, please try later');
-        //        }
-        //    );
-        //}
     }
 }]);
 
@@ -864,6 +855,18 @@ app.factory('FolderService', ['$http', '$q', function ($http, $q) {
             return $http.put('/admin/files/employee_field/' + parentId, employeeField)
                 .then(
                 function (response) {
+                    return response.data;
+                },
+                function (err) {
+                    return $q.reject(err);
+                }
+            );
+        },
+        
+        loadEmployeeReport: function (folderId) {
+            return $http.get('/admin/files/employee_report/' + folderId)
+                .then(
+                function(response){
                     return response.data;
                 },
                 function (err) {

@@ -70,17 +70,18 @@ public class EmployeeServiceImpl extends BaseGenericServiceImpl<Employee, String
 
     @Override
     public Employee getEmployeePersonDetailbyId(String uuid) {
-        String[] fields = {"uuid","firstName", "lastName", "driverLicenseNum", "ssn", "driverLicenseExp", "maritalStatus", "gender", "nationality", "birthday"};
+        String[] fields = {"uuid", "firstName", "lastName", "driverLicenseNum", "ssn", "driverLicenseExp", "maritalStatus", "gender", "nationality", "birthday"};
         HashMap<String, Object> map = new HashMap<>();
         map.put("uuid", uuid);
         List<Employee> list = employeeDAO.getListbyFieldAndParams(fields, map);
-        if(list.size() == 0){
+        if (list.size() == 0) {
             return null;
-        }else{
+        } else {
             return list.get(0);
         }
     }
-// @ManyToOne()
+
+    // @ManyToOne()
 //private JobPosition jobPosition;
 //    @ManyToOne()
 //    private EmploymentStatus employmentStatus;
@@ -90,14 +91,18 @@ public class EmployeeServiceImpl extends BaseGenericServiceImpl<Employee, String
 //    private String contractDetail;
     @Override
     public Employee getEmployeeJobDetailbyId(String uuid) {
-        String[] fields = {"uuid",  "startDate", "endDate" };
+        String[] fields = {"uuid", "startDate", "endDate"};
         HashMap<String, Object> map = new HashMap<>();
         map.put("uuid", uuid);
         List<Employee> list = employeeDAO.getListbyFieldAndParams(fields, map);
-        if(list.size() == 0){
-            return null;
-        }else{
-            return list.get(0);
-        }
+        return list.get(0);
     }
+
+    @Override
+    public List<Employee> getListWithRecordsforListByUserId(int userid) {
+        List<Employee> list = employeeDAO.getListbyParam("userId", userid);
+        return list;
+    }
+
+
 }

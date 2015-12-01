@@ -21,8 +21,11 @@ app.controller('DocumentViewTreeController',
                 if (node.type == "FILE") {
                     $scope.FormChoose(node);
                 }
-                if (node.type == "FOLDER") {
+                if (node.type == "FOLDER" && node.fileType == 'CompanyFile') {
                     $scope.FolderChoose(node);
+                }
+                if (node.type == 'FOLDER' && node.fileType == 'EmployeeReport') {
+                    $scope.EmployeeReportChoose(node);
                 }
 
             };
@@ -60,6 +63,10 @@ app.controller('DocumentViewTreeController',
                 $scope.viewForm = true;
                 $scope.viewTableForm = false;
                 $scope.getFullFormWhichWithRecord(f);
+            };
+            //when choose a employee report
+            $scope.EmployeeReportChoose = function (report) {
+
             };
 
 
@@ -383,14 +390,13 @@ app.controller('UserDocumentCompanyQuestionControllerForTree', ['$scope', 'UserF
         for (var i = 0; i < nodes.length; i++) {
             if (nodes[i].type == 'Normal') {
                 normal = normal + 1;
-            }else
-            if (nodes[i].record.value && nodes[i].record.value != '') {
+            } else if (nodes[i].record.value && nodes[i].record.value != '') {
                 finish = finish + 1;
             }
         }
         return finish / (nodes.length - normal);
     };
-    
+
     var savePercentOfFlow = function () {
 
     };
@@ -405,7 +411,7 @@ app.controller('UserDocumentCompanyQuestionControllerForTree', ['$scope', 'UserF
                     var percent = $scope.calComplete($scope.nodesAll);
 
                     console.log(percent);
-                    
+
 
                     if (typeof (success) == "function") {
                         success();
@@ -602,3 +608,123 @@ app.controller('UserDocumentCompanyQuestionControllerForTree', ['$scope', 'UserF
 
 }])
 ;
+
+
+app.controller('UserEmployeeRecordController', ['$scope', 'EmployeeService', 'LoginService', 'MessageService', '$timeout', 'UserFolderService', function ($scope, EmployeeService, LoginService, MessageService, $timeout, UserFolderService) {
+    $scope.employees = [];
+    $scope.selectedAll = false;
+    var userId = LoginService.getUserInfo().userId;
+    $scope.loadAll = function () {
+        $scope.employeeAllPromise = EmployeeService.getEmployeeWithPercentByUserId(LoginService.getUserInfo().userId, $scope.folderTree.currentNode.id).then(
+            function (data) {
+                var list = MessageService.handleMsg(data);
+                if (list) {
+                    $scope.employees = list;
+                }
+            }, function (err) {
+                MessageService.handleServerErr(err);
+            }
+        );
+    };
+
+    $timeout(function () {
+        $scope.loadAll();
+    });
+
+
+    $scope.selectAndShowEmployee = function (employee) {
+        angular.forEach($scope.employees, function (rep) {
+            rep.selected = rep.uuid == employee.uuid;
+        });
+        $timeout(function () {
+            var reports = [];
+            reports.push($scope.folderTree.currentNode);
+            handleEmployeeReports(reports, employee);
+        });
+    };
+
+    var handleEmployeeReports = function (reports, employee) {
+        var customizedFields = employee.records;
+        for (var i = 0; i < reports.length; i++) {
+            var report = reports[i];
+            var cfs = report.questions;
+            var finish = 0;
+            for (var k = 0; k < cfs.length; k++) {
+                var j = 0;
+                for (j = 0; j < customizedFields.length; j++) {
+                    if (customizedFields[j].questionId == cfs[k].id) {
+                        cfs[k].value = customizedFields[j].value;
+                        if (cfs[k].value && cfs[k].value != '') {
+                            finish++;
+                        }
+                        break;
+                    }
+                }
+                if (j == customizedFields.length || cfs[k].value == '') {
+                    cfs[k].value = '{PLEASE FILL FIELD ' + cfs[k].name + ' }';
+                }
+            }
+            report.percent = 100 * finish / cfs.length;
+        }
+        $scope.selectAndShowReport(reports[0]);
+    };
+
+    $scope.selectAndShowReport = function (report) {
+        angular.forEach($scope.employeeReports, function (rep) {
+            rep.selected = rep.id == report.id;
+        });
+        $timeout(function () {
+            viewPDF(report);
+        });
+
+    };
+
+    var viewPDF = function (file) {
+        var formElement = angular.element(file.content.replace(/{-/gi, '').replace(/-}/gi, ''));
+        var records = file.questions;
+        for (var j = 0; j < records.length; j++) {
+            var record = records[j];
+            var record_question_id = record.id;
+            var questionElement = angular.element(formElement.find("plugin[question_id='" + record_question_id + "']"));
+            var span = angular.element("<span></span>");
+            span.text(record.value);
+            questionElement.replaceWith(span);
+        }
+        angular.element('#form_container').html('').append(formElement);
+        $scope.showPDF();
+    }
+    // show pdf
+    $scope.showPDF = function () {
+        var pdf = new jsPDF('p', 'pt', 'a4');
+        var source = $('#form_container').get(0);
+        angular.element(source).css("display", "block");
+        var specialElementHandlers = {
+            '#bypassme': function (element, renderer) {
+                return true
+            }
+        };
+        var margins = {
+            top: 80,
+            bottom: 60,
+            left: 40,
+            width: 522
+        };
+        // all coords and widths are in jsPDF instance's declared units
+        // 'inches' in this case
+        pdf.fromHTML(
+            source, // HTML string or DOM elem ref.
+            margins.left, // x coord
+            margins.top, { // y coord
+                'width': margins.width, // max width of content on PDF
+                'elementHandlers': specialElementHandlers
+            },
+
+            function (dispose) {
+                $scope.content = pdf.output("dataurlstring");
+                //pdf.autoPrint();  // <<--------------------- !!
+                //pdf.output('dataurlnewwindow');
+            }, margins);
+        angular.element(source).css("display", "none");
+    };
+
+}]);
