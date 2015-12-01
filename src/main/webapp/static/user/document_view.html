@@ -113,31 +113,34 @@ div[data-angular-treeview] > ul {
                             class="btn btn-default btn-sm">Save All
                     </button>
                 </div>
-                <div class="panel-body">
-                    <div cg-busy="folderTree.currentNode.questions[{{$index}}].promise"
-                         class="questionCard panel panel-primary fade-in col-md-3"
-                         ng-repeat="question in folderTree.currentNode.questions">
-                        <div class="panel-heading">{{question.name}}</div>
-                        <div class="panel-body" style="height: 539px;
+                <div class="panel-body" style="height: 539px;
     overflow: scroll">
-                            {{question.description}}
-                            <div id="node-data-content">
-                                <div ng-switch="question.questionType">
-                                    <select class="form-control" ng-switch-when="select" ng-model="question.value">
-                                        <option ng-repeat="opt in question.options" value="{{opt.name}}">{{opt.name}}
-                                        </option>
-                                    </select>
-                                    <input class="form-control" ng-switch-when="text" type="text"
-                                           ng-model="question.value">
+                    <div class="col-md-3">
+                        <div cg-busy="folderTree.currentNode.questions[{{$index}}].promise"
+                             class="questionCard panel panel-primary fade-in "
+                             ng-repeat="question in folderTree.currentNode.questions">
+                            <div class="panel-heading">{{question.name}}</div>
+                            <div class="panel-body">
+                                {{question.description}}
+                                <div id="node-data-content">
+                                    <div ng-switch="question.questionType">
+                                        <select class="form-control" ng-switch-when="select" ng-model="question.value">
+                                            <option ng-repeat="opt in question.options" value="{{opt.name}}">
+                                                {{opt.name}}
+                                            </option>
+                                        </select>
+                                        <input class="form-control" ng-switch-when="text" type="text"
+                                               ng-model="question.value">
                             <textarea class="form-control" ng-switch-when="textarea"
                                       ng-model="question.value"></textarea>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="panel-footer">
-                            <div class="panel-footer-buttons">
-                                <button class="btn btn-default btn sm" ng-click="saveQuestionValue(question)">Save
-                                </button>
+                            <div class="panel-footer">
+                                <div class="panel-footer-buttons">
+                                    <button class="btn btn-default btn sm" ng-click="saveQuestionValue(question)">Save
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -150,15 +153,17 @@ div[data-angular-treeview] > ul {
              ng-if="folderTree.currentNode.type=='FILE' && folderTree.currentNode.fileType =='EmployeeReport'">
             <div class="row" style="height: 600px;">
                 <div class="panel panel-default">
-                    <div class="panel-body">
-                        <div class="list-group col-md-2" scrollable>
+                    <div class="panel-body" style="height: 100%;">
+                        <div class="list-group col-md-2" style="height: 100%" scrollable>
                             <a ng-repeat="employee in employees" href="" class="list-group-item"
                                ng-class="{'active':employee.selected}" ng-click="selectAndShowEmployee(employee)">
                                 <span class="badge">{{employee.percent*100}}%<i class="glyphicon glyphicon-ok"
-                                                                                ng-show="employee.percent == 1"></i></span>{{employee.firstName + ' ' +
+                                                                                ng-show="employee.percent == 1"></i></span>{{employee.firstName
+                                + ' ' +
                                 employee.lastName}}
                                 <div class="progress" style="height: 10px;    margin-bottom: 0;">
-                                    <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
+                                    <div class="progress-bar progress-bar-success progress-bar-striped"
+                                         role="progressbar"
                                          aria-valuenow="{{employee.percent*100}}" aria-valuemin="0"
                                          aria-valuemax="100" style="width: {{employee.percent*100}}%;">
                                         <span class="sr-only">{{employee.percent*100}}% Complete</span>
