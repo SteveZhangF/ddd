@@ -60,27 +60,33 @@ app.controller('UserEmployeeController', ['$scope', 'EmployeeService', 'LoginSer
     };
 
     $scope.editEmployee = function (index) {
-        $scope.editing = true;
-        $timeout(function () {
-            var all = angular.element('#card-parent').children('div');
-            angular.element('#card-parent').animate({'scrollTop': all[index].offsetTop}, 500);
-        });
-        $scope.employeeEditPromise = EmployeeService.getEmployee(LoginService.getUserInfo().userId, $scope.employees[index].uuid)
-            .then(
-            function (msg) {
-                var employee = MessageService.handleMsg(msg);
-                if (employee) {
-                    $scope.editedEmployee = employee;
-                    setCustomizedEmployeeFieldsValue($scope.customizedEmployeeFields, employee.records);
-                    //if($scope.viewingReports){
-                    //    $scope.viewReports($scope.editedEmployee);
-                    //}
+        if (!$scope.employees[index].isNew) {
+            $timeout(function () {
+                var all = angular.element('#card-parent').children('div');
+                angular.element('#card-parent').animate({'scrollTop': all[index].offsetTop}, 500);
+            });
+            $scope.employeeEditPromise = EmployeeService.getEmployee(LoginService.getUserInfo().userId, $scope.employees[index].uuid)
+                .then(
+                function (msg) {
+                    var employee = MessageService.handleMsg(msg);
+                    if (employee) {
+                        $scope.editedEmployee = employee;
+                        setCustomizedEmployeeFieldsValue($scope.customizedEmployeeFields, employee.records);
+                        $scope.editing = true;
+                        //if($scope.viewingReports){
+                        //    $scope.viewReports($scope.editedEmployee);
+                        //}
+                    }
+                },
+                function (err) {
+                    MessageService.handleServerErr(err);
                 }
-            },
-            function (err) {
-                MessageService.handleServerErr(err);
-            }
-        );
+            );
+        } else {
+            $scope.editedEmployee = $scope.employees[index];
+            $scope.editing = true;
+        }
+
     };
 
     $scope.saveEmployee = function (employee) {
@@ -209,7 +215,7 @@ app.controller('UserEmployeeController', ['$scope', 'EmployeeService', 'LoginSer
                 var employee = MessageService.handleMsg(msg);
                 if (employee) {
                     $timeout(function () {
-                        var reports=[];
+                        var reports = [];
                         reports.push($scope.folderTree.currentNode);
                         handleEmployeeReports(reports, employee);
                     });

@@ -13,7 +13,7 @@
 
                     <div class="panel-body">
                         <plus-div ng-if="element.isNew" mouse-click-event="editEmployee"
-                                  mouse-click-param="element"></plus-div>
+                                  mouse-click-param="$index"></plus-div>
                         <div ng-show="!element.isNew">
                             <ul class="list-unstyled invoice-details">
                                 <li>
