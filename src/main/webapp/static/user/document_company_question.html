@@ -2,11 +2,11 @@
     <div class="panel-heading">
         {{nodesAll[flowIndex].name}}
     </div>
-    <div class="panel-body" ng-if="showQuestion">
+    <div class="panel-body" >
         <p>{{nodesAll[flowIndex].question.description}}</p>
 
         <div class="row">
-            <div id="node-data-content" class="col-md-9">
+            <div id="node-data-content" class="col-md-9 fade-in" ng-if="showQuestion">
                 <hr>
                 <div ng-switch="nodesAll[flowIndex].question.questionType">
                     <select class="form-control" ng-switch-when="select"
