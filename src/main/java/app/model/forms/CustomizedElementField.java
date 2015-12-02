@@ -16,7 +16,7 @@ import javax.persistence.*;
  * Created by steve on 11/21/15.
  */
 @Entity
-public class CustomizedElementField {
+public class CustomizedElementField implements Cloneable{
     @Id
     @GeneratedValue(generator = "idGenerator")
     @GenericGenerator(name = "idGenerator", strategy = "uuid")
@@ -61,5 +61,11 @@ public class CustomizedElementField {
     }
     enum CustomizedElementFieldType {
         String, Number, Date
+    }
+
+    public CustomizedElementField clone() throws CloneNotSupportedException {
+        CustomizedElementField p;
+        p = (CustomizedElementField) super.clone();
+        return p;
     }
 }

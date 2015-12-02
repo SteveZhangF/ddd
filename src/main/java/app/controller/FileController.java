@@ -546,5 +546,26 @@ public class FileController {
         }
     }
 
+
+    /**
+     * clone a folder and it's sub folder or files
+     * */
+    @RequestMapping(value = "/admin/files/folder/clone/{folderId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Message> cloneFolder(@PathVariable String folderId) {
+        FileElement parent = fileService.get(folderId);
+        if (parent == null) {
+            return new ResponseEntity<>(Message.getFailMsg("No such parent folder"), HttpStatus.OK);
+        }
+        if (!parent.getType().equals(FileElement.FileType.FOLDER)) {
+            return new ResponseEntity<>(Message.getFailMsg("parent is not a folder"), HttpStatus.OK);
+        }
+        FileElement folderCopyed = fileService.cloneFolder(parent,parent.getParent_id());
+        folderCopyed.setName(parent.getName()+"_copy");
+        fileService.update(folderCopyed);
+        JsonNode root = fileService.loadAllFolderTree();
+        Message msg = Message.getSuccessMsg("Load Files Tree Success!", root);
+        return new ResponseEntity<>(msg, HttpStatus.OK);
+    }
+
 }
 

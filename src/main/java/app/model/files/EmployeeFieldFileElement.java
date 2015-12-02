@@ -20,5 +20,9 @@ public class EmployeeFieldFileElement extends QuestionFileElement {
         setRoot(false);
         setType(FileType.EMPLOYEE_FIELD);
     }
-
+    public EmployeeFieldFileElement clone() throws CloneNotSupportedException {
+        EmployeeFieldFileElement p;
+        p = (EmployeeFieldFileElement) super.clone();
+        return p;
+    }
 }

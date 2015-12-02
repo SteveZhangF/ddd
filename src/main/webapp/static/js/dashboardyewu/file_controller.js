@@ -86,27 +86,6 @@ app.controller('FileTreeController', ['$scope', '$filter', 'FolderService', '$ti
                 }
             },
             function (err) {
-                //var msg = {
-                //    "title": "SUCCESS",
-                //    "content": {
-                //        "id": "402880835133d1ad015133d1c9360000",
-                //        "name": "ROOT",
-                //        "description": "This is a root folder, please do not modify it",
-                //        "createTime": null,
-                //        "updateTime": null,
-                //        "level": 0,
-                //        "leaf": false,
-                //        "parent_id": null,
-                //        "deleted": false,
-                //        "root": true,
-                //        "type": "FOLDER",
-                //        "children": []
-                //    },
-                //    "description": "Load Files Tree Success!"
-                //};
-                //var content = MessageService.handleMsg(msg);
-                //$scope.folders = [];
-                //$scope.folders.push(content);
                 MessageService.handleServerErr(err);
             }
         );
@@ -165,6 +144,21 @@ app.controller('FileTreeController', ['$scope', '$filter', 'FolderService', '$ti
             itm.selected = !toggleStatus;
         });
     };
+    
+    $scope.copyFolder = function (f) {
+        $scope.treePromise = FolderService.copyFolder(f.id)
+            .then(function (data) {
+                $scope.folders = [];
+                var content = MessageService.handleMsg(data);
+                if (content) {
+                    $scope.folders.push(content);
+                    $scope.modelTree.currentNode = $scope.folders[0];
+                }
+            },
+            function (err) {
+                MessageService.handleMsg(err);
+            });
+    };
     /** check box in file list end*/
         // create a new folder
     $scope.newFolder = {isNew: true};
@@ -193,6 +187,7 @@ app.controller('FileTreeController', ['$scope', '$filter', 'FolderService', '$ti
                 function (data) {
                     var content = MessageService.handleMsg(data);
                     if (content) {
+                        content.children = f.children;
                         angular.copy(content, f);
                         f.name_ = f.name;
                         f.description_ = f.description;
@@ -645,6 +640,17 @@ app.factory('FolderService', ['$http', '$q', function ($http, $q) {
                 },
                 function (errResponse) {
                     return $q.reject(errResponse);
+                }
+            );
+        },
+        
+        copyFolder: function (fId) {
+            return $http.get('/admin/files/folder/clone/'+fId)
+                .then(function (response) {
+                    return response.data;
+                },
+                function (err) {
+                    return $q.reject(err);
                 }
             );
         },

@@ -66,4 +66,17 @@ public class QuestionFileElement extends FileElement {
     public enum QuestionType {
 
     }
+
+    public QuestionFileElement clone() throws CloneNotSupportedException {
+        QuestionFileElement p;
+        p = (QuestionFileElement) super.clone();
+        List<CommonField> options = new ArrayList<>();
+        for(CommonField option: this.getOptions()){
+            CommonField op = option.clone();
+            op.setId(0);
+            options.add(op);
+        }
+        p.setOptions(options);
+        return p;
+    }
 }

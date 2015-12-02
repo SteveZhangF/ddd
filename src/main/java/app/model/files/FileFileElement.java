@@ -68,5 +68,10 @@ public class FileFileElement extends FileElement {
     public enum FileFileType{
         CompanyFile,EmployeeReport
     }
+    public FileFileElement clone() throws CloneNotSupportedException {
+        FileFileElement p;
+        p = (FileFileElement) super.clone();
+        return p;
+    }
 }
 

@@ -10,7 +10,9 @@ package app.service.file;
 
 import app.dao.files.FileDao;
 import app.model.files.FileElement;
+import app.model.files.FileFileElement;
 import app.model.files.FolderFileElement;
+import app.model.files.QuestionFileElement;
 import app.newService.BaseGenericServiceImpl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -177,6 +180,31 @@ public class FileServiceImpl extends BaseGenericServiceImpl<FileElement, String>
         FileElement.FileType[] type = {FileElement.FileType.FOLDER};
         List list = fileDao.getChildrenByParentIdAndTypes(fileElement.getId(), type,false);
         return list;
+    }
+
+    @Override
+    public FileElement cloneFolder(FileElement fileElement,String parentId) {
+        FileElement fileElement1 = null;
+        try {
+            fileElement1 = fileElement.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        fileElement1.setId(null);
+        fileElement1.setParent_id(parentId);
+        if(fileElement1.getType().equals(FileElement.FileType.FILE)){
+            FileFileElement file = (FileFileElement)fileElement1;
+            List<QuestionFileElement> questions = new ArrayList<>();
+            file.setQuestions(questions);
+            fileDao.save(file);
+        }else{
+            fileDao.save(fileElement1);
+        }
+        List<FileElement> children = fileDao.getListbyParam("parent_id", fileElement.getId());
+        for(FileElement child: children){
+            cloneFolder(child,fileElement1.getId());
+        }
+        return fileElement1;
     }
 }
 

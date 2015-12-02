@@ -8,13 +8,10 @@
 
 package app.model.files;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by steve on 11/23/15.
@@ -22,7 +19,7 @@ import java.util.List;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "file_element")
-public abstract class FileElement {
+public abstract class FileElement implements Cloneable {
 
     @Id
     @GeneratedValue(generator = "idGenerator")
@@ -125,9 +122,6 @@ public abstract class FileElement {
     }
 
 
-
-
-
     public FileType getType() {
         return type;
     }
@@ -137,7 +131,13 @@ public abstract class FileElement {
     }
 
     public enum FileType {
-        FILE, FOLDER, QUESTION,CUSTOMIZED_ELEMENT,EMPLOYEE_FIELD,EMPLOYEE_REPORT
+        FILE, FOLDER, QUESTION, CUSTOMIZED_ELEMENT, EMPLOYEE_FIELD, EMPLOYEE_REPORT
 
+    }
+
+    public FileElement clone() throws CloneNotSupportedException {
+        FileElement p;
+        p = (FileElement) super.clone();
+        return p;
     }
 }

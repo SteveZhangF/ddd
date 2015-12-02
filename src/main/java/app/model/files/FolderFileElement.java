@@ -32,4 +32,11 @@ public class FolderFileElement extends FileElement {
     public void setWorkFlow_id(String workFlow_id) {
         this.workFlow_id = workFlow_id;
     }
+
+    public FolderFileElement clone() throws CloneNotSupportedException {
+        FolderFileElement p;
+        p = (FolderFileElement) super.clone();
+        p.setWorkFlow_id(null);
+        return p;
+    }
 }

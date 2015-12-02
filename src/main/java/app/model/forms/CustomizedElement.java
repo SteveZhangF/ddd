@@ -8,6 +8,7 @@
 
 package app.model.forms;
 
+import app.model.common.CommonField;
 import app.model.files.FileElement;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.GenericGenerator;
@@ -37,30 +38,12 @@ public class CustomizedElement extends FileElement {
         this.fields = fields;
     }
 
-//    @Id
-//    @GeneratedValue(generator = "idGenerator")
-//    @GenericGenerator(name = "idGenerator", strategy = "uuid")
-//    @Column(name = "id", nullable = false)
-//    private String id;
-//    private String name;
-//    @Lob
-//    @Column(columnDefinition = "BLOB")
-//    private String description;
-//    private Timestamp createTime;
-//    private Timestamp updateTime;
 
     @OneToMany(cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
     private List<CustomizedElementField> fields = new ArrayList<>();
 
-//    public String getId() {
-//        return id;
-//    }
-//
-//    public void setId(String id) {
-//        this.id = id;
-//    }
 
     public List<CustomizedElementField> getFields() {
         return fields;
@@ -70,37 +53,18 @@ public class CustomizedElement extends FileElement {
         this.fields = fields;
     }
 
-//    public Timestamp getUpdateTime() {
-//        return updateTime;
-//    }
-//
-//    public void setUpdateTime(Timestamp updateTime) {
-//        this.updateTime = updateTime;
-//    }
-//
-//    public Timestamp getCreateTime() {
-//        return createTime;
-//    }
-//
-//    public void setCreateTime(Timestamp createTime) {
-//        this.createTime = createTime;
-//    }
-//
-//    public String getDescription() {
-//        return description;
-//    }
-//
-//    public void setDescription(String description) {
-//        this.description = description;
-//    }
-//
-//    public String getName() {
-//        return name;
-//    }
-//
-//    public void setName(String name) {
-//        this.name = name;
-//    }
 
+    public CustomizedElement clone() throws CloneNotSupportedException {
+        CustomizedElement p;
+        p = (CustomizedElement) super.clone();
+        List<CustomizedElementField> options = new ArrayList<>();
+        for(CustomizedElementField option: this.getFields()){
+            CustomizedElementField op = option.clone();
+            op.setId(null);
+            options.add(op);
+        }
+        p.setFields(options);
+        return p;
+    }
 
 }

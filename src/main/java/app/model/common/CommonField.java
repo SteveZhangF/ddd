@@ -17,7 +17,7 @@ import javax.persistence.Id;
  * Created by steve on 11/23/15.
  */
 @Entity
-public class CommonField {
+public class CommonField implements  Cloneable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -46,5 +46,11 @@ public class CommonField {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public CommonField clone() throws CloneNotSupportedException {
+        CommonField p;
+        p = (CommonField) super.clone();
+        return p;
     }
 }

@@ -19,7 +19,11 @@
     </div>
     <div class="row">
         <div class="col-md-6">
-            <button class="btn btn-primary" ng-click="saveFolder(thisFolder)" ng-disabled="thisFolder.id=='0'">Save</button>
+            <button class="btn btn-primary" ng-click="saveFolder(thisFolder)" ng-disabled="thisFolder.level==0">Save</button>
+            <button class="btn btn-primary" ng-click="copyFolder(thisFolder)" ng-disabled="thisFolder.level!=1">Copy</button>
+        </div>
+        <div class="col-md-6">
+
         </div>
     </div>
 </div>
