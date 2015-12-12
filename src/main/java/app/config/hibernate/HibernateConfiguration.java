@@ -47,6 +47,7 @@ public class HibernateConfiguration {
 //        dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
 //        dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
         env = System.getenv("CLEARDB_DATABASE_URL");
+        System.out.println(env);
         if (env == null) {
 
 
