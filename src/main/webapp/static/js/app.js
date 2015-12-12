@@ -1,7 +1,7 @@
 'use strict';
 
 var app = angular.module('clientApp', ['ngRoute', 'ui.bootstrap','ngAnimate' , 'angularFileUpload', 'customizedDirective', 'smart-table', 'ngDialog', 'angularSpinner','cgBusy']);
-var debug = true;
+var debug = false;
 var redirect = function ($location) {
     console.log('debug:true');
     if (!debug) {
