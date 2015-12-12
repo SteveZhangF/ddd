@@ -125,6 +125,10 @@ app.config(['$routeProvider', function ($routeProvider) {
         .when("/start_document",{
             templateUrl:"user/document_start.html"
         })
+        .when("/customized_element",{
+            templateUrl:"user/customized_element_menu.html",
+            resolve:resolve
+        })
     ;
 }]);
 

@@ -333,9 +333,37 @@ app.controller('UserEmployeeController', ['$scope', 'EmployeeService', 'LoginSer
                 //pdf.autoPrint();  // <<--------------------- !!
                 //pdf.output('dataurlnewwindow');
             }, margins);
-        angular.element(source).css("display", "none");
+        //angular.element(source).css("display", "none");
     };
+    $scope.printPdf = function () {
+        var pdf = new jsPDF('p', 'pt', 'a4');
+        var source = $('#form_container').get(0);
+        angular.element(source).css("display", "block");
+        var specialElementHandlers = {
+            '#bypassme': function (element, renderer) {
+                return true
+            }
+        };
+        var margins = {
+            top: 80,
+            bottom: 60,
+            left: 40,
+            width: 522
+        };
+        pdf.fromHTML(
+            source, // HTML string or DOM elem ref.
+            margins.left, // x coord
+            margins.top, { // y coord
+                'width': margins.width, // max width of content on PDF
+                'elementHandlers': specialElementHandlers
+            },
 
+            function (dispose) {
+                pdf.autoPrint();  // <<--------------------- !!打印吧pdf君
+                pdf.output('dataurlnewwindow');
+            }, margins);
+        //angular.element(source).css("display", "none");
+    };
 }]);
 
 

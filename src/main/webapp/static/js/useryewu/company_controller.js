@@ -28,7 +28,8 @@ app.directive('phone', function () {
 
 app.controller("UserCompanyNavController", ['$scope', function ($scope) {
     $scope.companyMenu = [{name: "Company Information", subMenu: [], href: "user/company_edit.html"},
-        {name: "Employee List", subMenu: [], href: "user/employee_list.html"}
+        {name: "Employee List", subMenu: [], href: "user/employee_list.html"},
+        {name: 'Equipment', href: 'user/customized_element_menu.html', subMenu:[]}
     ];
     $scope.selectedMenu = $scope.companyMenu[0];
     $scope.menuSelect = function (menu) {

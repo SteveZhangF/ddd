@@ -186,7 +186,7 @@ app.controller('DocumentViewTreeController',
                         //pdf.autoPrint();  // <<--------------------- !!
                         //pdf.output('dataurlnewwindow');
                     }, margins);
-                angular.element(source).css("display", "none");
+                //angular.element(source).css("display", "none");
             };
 
             $scope.editNode = function (node) {
@@ -220,6 +220,7 @@ app.controller('DocumentViewTreeController',
                 $scope.questionAllPromise = UserFormRecordService.saveQuestionValues(records).then(
                     function (data) {
                         $scope.folderTree.currentNode.isEditing = false;
+                        $scope.viewFile($scope.folderTree.currentNode);
                     },
                     function (err) {
                         MessageService.handleServerErr(err);
@@ -277,7 +278,7 @@ app.controller('DocumentViewTreeController',
                         pdf.autoPrint();  // <<--------------------- !!打印吧pdf君
                         pdf.output('dataurlnewwindow');
                     }, margins);
-                angular.element(source).css("display", "none");
+                //angular.element(source).css("display", "none");
             };
             $scope.cancelEditForm = function () {
                 $scope.folderTree.currentNode.isEditing = false;
@@ -724,7 +725,7 @@ app.controller('UserEmployeeRecordController', ['$scope', 'EmployeeService', 'Lo
                 //pdf.autoPrint();  // <<--------------------- !!
                 //pdf.output('dataurlnewwindow');
             }, margins);
-        angular.element(source).css("display", "none");
+        //angular.element(source).css("display", "none");
     };
 
 }]);

@@ -7,17 +7,19 @@ app.controller('UserNavController', ['$scope', function ($scope) {
             {
                 name: "My Company", subMenu: [
                 {name: "Company Information", subMenu: [], href: "#/company_edit"},
-                {name: "Employee List", subMenu: [], href: "#/employee_list"}]
-            },
-            {
-                name: "My Documents", subMenu: [
-                {name:"Start Document",href:"#/start_document"},
-                {name:"View Document",href:"#/view_document"}
+                {name: "Employee List", subMenu: [], href: "#/employee_list"},
+                {name: 'Equipment', href: '#/customized_element', subMenu: []}
             ]
             },
             {
-                name: "Config", subMenu: [], href: "#/config"
+                name: "My Documents", subMenu: [
+                //{name:"Start Document",href:"#/start_document"},
+                {name:"View Document",href:"#/view_document"}
+            ]
             }
+            //{
+            //    name: "Config", subMenu: [], href: "#/config"
+            //}
         ]
     ;
     $scope.selectedMenu = {selectedParentMenu: {}, selectedChildMenu: {}};

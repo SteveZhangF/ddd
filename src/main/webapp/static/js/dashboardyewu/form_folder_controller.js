@@ -442,7 +442,7 @@ app.controller('FolderQuestionController', ['$scope', 'QuestionService', 'Folder
     var Question = function (name, type, options, description) {
 
     };
-    $scope.types = ['textarea', "select", "text", "checkbox", "selectEmployee", "selectDepartment", "file"];
+    $scope.types = ['textarea', "select", "text", "file"];
     $scope.selectQuestion = function () {
         $scope.selectedAllQuestion = $scope.questionNodeList.every(function (itm) {
             return itm.selected;

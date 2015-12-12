@@ -61,7 +61,7 @@ div[data-angular-treeview] > ul {
 
 <div ng-controller="DocumentViewTreeController" class=" row fade-in">
     <div class="panel panel-default col-md-2 " cg-busy="userFolderTreePromise">
-        <div class="panel-body" scrollable>
+        <div class="panel-body" style="overflow-x:scroll;overflow-y: auto">
             <div
                     data-angular-treeview="true"
                     data-tree-id="folderTree"
@@ -74,7 +74,7 @@ div[data-angular-treeview] > ul {
             </div>
         </div>
     </div>
-    <div class="col-md-10 container ">
+    <div class="col-md-10 container" >
 
         <!--folder viewer-->
         <div cg-busy="userViewFlowPromise" id="folder_view" ng-if="folderTree.currentNode.type=='FOLDER'">
@@ -101,9 +101,10 @@ div[data-angular-treeview] > ul {
                     </div>
                 </div>
 
-                <div class="panel-body" style="height: 539px">
-                    <object id="pdf-object" style="width:100%;height: 100%" data="{{content}}"
-                            type="application/pdf"></object>
+                <div class="panel-body" style="height: 539px" scrollable>
+                    <div id="form_container"></div>
+                    <!--<object id="pdf-object" style="width:100%;height: 100%" data="{{content}}"-->
+                            <!--type="application/pdf"></object>-->
                 </div>
             </div>
             <!--file editor-->
@@ -152,8 +153,21 @@ div[data-angular-treeview] > ul {
         <div id="report_view" ng-controller="UserEmployeeRecordController" cg-busy="userViewFilePromise" class="fade-in"
              ng-if="folderTree.currentNode.type=='FILE' && folderTree.currentNode.fileType =='EmployeeReport'">
             <div class="row" style="height: 600px;">
-                <div class="panel panel-default">
-                    <div class="panel-body" style="height: 100%;">
+                <div class="panel panel-primary fade-in">
+                    <div class="panel-heading">
+                        <div class="row">
+                            {{folderTree.currentNode.name}}
+                            <div class="pull-right">
+                                <button ng-click="printPdf()" class=" btn btn-sm btn-default">Print
+                                </button>
+                                <!--<button ng-click="editNode(folderTree.currentNode)" class=" btn btn-sm btn-default">-->
+                                    <!--Edit-->
+                                <!--</button>-->
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="panel-body"  style="height: 539px"  >
                         <div class="list-group col-md-2" style="height: 100%" scrollable>
                             <a ng-repeat="employee in employees" href="" class="list-group-item"
                                ng-class="{'active':employee.selected}" ng-click="selectAndShowEmployee(employee)">
@@ -171,9 +185,10 @@ div[data-angular-treeview] > ul {
                                 </div>
                             </a>
                         </div>
-                        <div class="col-md-10" cg-busy="viewEmployeeReportPromise">
-                            <object id="pdf-object" style="width:100%;height: 100%" data="{{content}}"
-                                    type="application/pdf"></object>
+                        <div class="col-md-10" cg-busy="viewEmployeeReportPromise" scrollable style="height: 100%">
+                            <!--<object id="pdf-object" style="width:100%;height: 100%" data="{{content}}"-->
+                                    <!--type="application/pdf"></object>-->
+                            <div id="form_container"></div>
                         </div>
                     </div>
                 </div>
@@ -182,6 +197,6 @@ div[data-angular-treeview] > ul {
         </div>
 
     </div>
-    <div id="form_container" style="color:white">
+    <div id="form_container1" style="color:white">
     </div>
 </div>
