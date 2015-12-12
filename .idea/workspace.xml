@@ -2,17 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="92c2b9c7-ccdd-447e-a71e-94b865c07d44" name="Default" comment="d">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/static/js/app.js" afterPath="$PROJECT_DIR$/src/main/webapp/static/js/app.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/static/js/useryewu/company_controller.js" afterPath="$PROJECT_DIR$/src/main/webapp/static/js/useryewu/company_controller.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/static/user/company_edit.html" afterPath="$PROJECT_DIR$/src/main/webapp/static/user/company_edit.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/static/user/document_view.html" afterPath="$PROJECT_DIR$/src/main/webapp/static/user/document_view.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/static/js/useryewu/document_view_tree.js" afterPath="$PROJECT_DIR$/src/main/webapp/static/js/useryewu/document_view_tree.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/static/js/useryewu/employee_controller.js" afterPath="$PROJECT_DIR$/src/main/webapp/static/js/useryewu/employee_controller.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/static/user/employee_list_card_style_edit.html" afterPath="$PROJECT_DIR$/src/main/webapp/static/user/employee_list_card_style_edit.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/static/dashboard/folder_employee_field.html" afterPath="$PROJECT_DIR$/src/main/webapp/static/dashboard/folder_employee_field.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/static/js/dashboardyewu/form_folder_controller.js" afterPath="$PROJECT_DIR$/src/main/webapp/static/js/dashboardyewu/form_folder_controller.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/static/js/useryewu/user_document_controller.js" afterPath="$PROJECT_DIR$/src/main/webapp/static/js/useryewu/user_document_controller.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/static/js/useryewu/user_nav_controller.js" afterPath="$PROJECT_DIR$/src/main/webapp/static/js/useryewu/user_nav_controller.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ddd.iws" />
@@ -1935,7 +1924,7 @@
       <workItem from="1448538856168" duration="2756000" />
       <workItem from="1448687553393" duration="16694000" />
       <workItem from="1448894544323" duration="17763000" />
-      <workItem from="1449899554252" duration="4298000" />
+      <workItem from="1449899554252" duration="4730000" />
     </task>
     <task id="LOCAL-00001" summary="d">
       <created>1445040271299</created>
@@ -1947,7 +1936,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="549143000" />
+    <option name="totallyTimeSpent" value="549575000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
